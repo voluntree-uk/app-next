@@ -3,25 +3,19 @@ import { supabase } from "../utils/supabaseClient";
 import Auth from "../components/Auth";
 import Account from "../components/Account";
 import { Session } from "@supabase/supabase-js";
+import enforceAuthenticated from "../utils/enforceAuthenticated";
+import { useSession } from "../utils/hooks";
 
 export default function Home() {
-  const [session, setSession] = useState<Session | null>(null);
-
-  useEffect(() => {
-    setSession(supabase.auth.session());
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
+  const session = useSession();
 
   return (
     <div className="container" style={{ padding: "50px 0 100px 0" }}>
-      {!session ? (
-        <Auth />
-      ) : (
-        <Account key={(session as any).user.id} session={session} />
-      )}
+      {session && session.user ? (
+        <Account key={session.user.id} session={session} />
+      ) : null}
     </div>
   );
 }
+
+export const getServerSideProps = enforceAuthenticated();
