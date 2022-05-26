@@ -1,8 +1,9 @@
+import { Session } from "@supabase/supabase-js";
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabaseClient";
 import Avatar from "./Avatar";
 
-export default function Account({ session }: any) {
+export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<null | string>(null);
   const [avatar_url, setAvatarUrl] = useState<null | string>(null);
@@ -85,7 +86,12 @@ export default function Account({ session }: any) {
 
       <div>
         <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={session.user.email} disabled />
+        <input
+          id="email"
+          type="text"
+          value={(session as any).user.email}
+          disabled
+        />
       </div>
       <div>
         <label htmlFor="username">Name</label>

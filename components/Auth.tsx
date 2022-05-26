@@ -1,3 +1,4 @@
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 
@@ -19,34 +20,39 @@ export default function Auth() {
   };
 
   return (
-    <div className="row flex flex-center">
-      <div className="col-6 form-widget">
-        <h1 className="header">Supabase + Next.js</h1>
-        <p className="description">
+    <Box>
+      <Box sx={{ width: "40%", margin: "0 auto", mt: 20 }}>
+        <Typography variant="h2" sx={{ mb: 1 }}>
+          Shared.
+        </Typography>
+        <Typography sx={{ mb: 2 }}>
           Sign in via magic link with your email below
-        </p>
-        <div>
-          <input
-            className="inputField"
-            type="email"
-            placeholder="Your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleLogin(email);
-            }}
-            className="button block"
-            disabled={loading}
-          >
-            <span>{loading ? "Loading" : "Send magic link"}</span>
-          </button>
-        </div>
-      </div>
-    </div>
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              type="email"
+              placeholder="Your email"
+              value={email}
+              fullWidth
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                handleLogin(email);
+              }}
+              disabled={loading}
+              fullWidth
+              variant="contained"
+            >
+              <span>{loading ? "Loading" : "Send magic link"}</span>
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
   );
 }
