@@ -58,8 +58,8 @@ export default function AccountAvatar({ url, onUpload }: any) {
   return (
     <Box>
       {avatarUrl ? (
-        <Box pos={"relative"} display="inline-block">
-          <Avatar size={"2xl"} src={avatarUrl} />
+        <Box pos={"relative"} display="flex" justifyContent={"center"}>
+          {avatarUrl ? <Avatar size={"2xl"} src={avatarUrl} /> : null}
           <FormLabel
             className="button primary block"
             htmlFor="single"
@@ -69,9 +69,8 @@ export default function AccountAvatar({ url, onUpload }: any) {
               fontSize: "20px",
               cursor: "pointer",
               position: "absolute",
-              top: 0,
-              left: -5,
-              border: "1px solid lightgray",
+              bottom: -10,
+              right: 70,
               padding: "7px",
               borderRadius: "100%",
               backgroundColor: "white",
@@ -79,7 +78,7 @@ export default function AccountAvatar({ url, onUpload }: any) {
             color="brand.800"
             _hover={{ color: "brand.700" }}
           >
-            {uploading ? "Uploading ..." : <BiEdit />}
+            {<BiEdit />}
           </FormLabel>
         </Box>
       ) : null}

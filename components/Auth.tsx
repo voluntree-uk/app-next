@@ -20,7 +20,6 @@ export default function Auth() {
     reset,
     formState: { errors },
     handleSubmit,
-    getValues,
   } = useForm<AuthFormState>();
 
   const handleLogin = async (formData: AuthFormState) => {
@@ -62,7 +61,6 @@ export default function Auth() {
               type="email"
               isVisible
               error={errors["email"]}
-              getValues={getValues}
             />
             <ActionButton
               text="Send"

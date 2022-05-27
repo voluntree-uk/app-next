@@ -16,20 +16,17 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
-  Heading,
 } from "@chakra-ui/react";
 
 import { IconType } from "react-icons";
 import { ReactText } from "react";
 import { useRouter } from "next/router";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
-import { MdBookmarkBorder, MdCalendarToday, MdLogout } from "react-icons/md";
+import { MdCalendarToday, MdLogout } from "react-icons/md";
 
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { BiBell } from "react-icons/bi";
 import { FaHouseUser } from "react-icons/fa";
-
-import { useSession } from "../utils/hooks";
 
 interface LinkItemProps {
   name: string;
@@ -101,16 +98,13 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         />
       </Flex>
 
-      <Box mx={10} mb={4}>
+      <Box mx={10}>
         <Avatar
           size="lg"
           name="Harry Davies"
           src="https://bit.ly/kent-c-dodds"
           mb={4}
         />
-        <Heading size={"md"} letterSpacing="widest" color={"brand.700"}>
-          Harry Davies
-        </Heading>
       </Box>
 
       {LinkItems.map((link) => (

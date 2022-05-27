@@ -9,9 +9,7 @@ export default function MyProfile() {
 
   return (
     <Layout>
-      <Box p={8}>
-        {session && session.user ? <Account session={session} /> : null}
-      </Box>
+      {session && session.user ? <Account session={session} /> : null}
     </Layout>
   );
 }

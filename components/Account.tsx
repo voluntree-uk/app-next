@@ -1,18 +1,30 @@
-import { Box, Button, Divider, Flex, Heading, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  Grid,
+  Heading,
+} from "@chakra-ui/react";
 import { Session } from "@supabase/supabase-js";
-import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { FaSignOutAlt } from "react-icons/fa";
-import { MdUpdate } from "react-icons/md";
+import { useForm } from "react-hook-form";
 import { supabase } from "../utils/supabaseClient";
 import AccountAvatar from "./AccountAvatar";
+import FormInput from "./FormInput";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState<null | string>(null);
-  const [avatar_url, setAvatarUrl] = useState<null | string>(null);
 
-  const router = useRouter();
+  const {
+    register,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const { username, avatar_url } = watch();
 
   useEffect(() => {
     getProfile();
@@ -38,8 +50,8 @@ export default function Account({ session }: { session: Session }) {
       }
 
       if (data) {
-        setUsername(data.username);
-        setAvatarUrl(data.avatar_url);
+        setValue("username", data.username);
+        setValue("avatar_url", data.avatar_url);
       }
     } catch (error: any) {
       alert(error.message);
@@ -79,59 +91,69 @@ export default function Account({ session }: { session: Session }) {
   }
 
   return (
-    <Box>
+    <Box p={10} mt={8}>
       <AccountAvatar
         url={avatar_url}
         onUpload={(url: any) => {
-          setAvatarUrl(url);
+          setValue("avatar_url", url);
           updateProfile({ username, avatar_url: url });
         }}
       />
 
-      <Heading my={7} size="xl">
-        {username}
-      </Heading>
+      <Center mt={4}>
+        <Heading
+          size={"md"}
+          color={"gray.500"}
+          fontWeight="thin"
+          fontStyle={"italic"}
+        >
+          {session.user?.email}
+        </Heading>
+      </Center>
 
-      <Box mt={5}>
-        <Input
-          id="email"
-          type="text"
-          value={(session as any).user.email}
-          disabled
-          mb={3}
-        />
+      <Divider my={8} />
 
-        <Input
-          id="username"
-          type="text"
-          value={username || ""}
-          onChange={(e) => setUsername(e.target.value)}
-          mb={3}
-        />
+      <Box>
+        <Grid templateColumns="repeat(1, 1fr)" gap={4}>
+          <FormInput
+            field="username"
+            type="text"
+            placeholder="Username"
+            register={register}
+            error={errors["username"]}
+            isVisible
+          />
 
-        <Flex justifyContent={"space-between"} mt={3}>
+          <FormInput
+            field="role"
+            type="text"
+            placeholder="Volunteer"
+            register={register}
+            error={errors["role"]}
+            isVisible
+            disabled
+          />
+
+          <FormInput
+            field="city"
+            type="text"
+            placeholder="Bristol"
+            register={register}
+            error={errors["city"]}
+            isVisible
+            disabled
+          />
+        </Grid>
+
+        <Flex justifyContent={"center"}>
           <Button
             className="button block primary"
             onClick={() => updateProfile({ username, avatar_url })}
             disabled={loading}
-            mr={1}
-            color="white"
-            bg="brand.700"
-            _hover={{ backgroundColor: "#4A43EC" }}
-            rightIcon={<MdUpdate />}
+            mt={6}
+            w={"100%"}
           >
             {loading ? "Loading ..." : "Update"}
-          </Button>
-
-          <Button
-            className="button block"
-            rightIcon={<FaSignOutAlt />}
-            onClick={() => {
-              supabase.auth.signOut();
-              router.push("/auth");
-            }}
-          >
-            Sign Out
           </Button>
         </Flex>
       </Box>
