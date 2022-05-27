@@ -8,7 +8,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { Session } from "@supabase/supabase-js";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../utils/supabaseClient";
 import AccountAvatar from "./AccountAvatar";
@@ -26,11 +26,7 @@ export default function Account({ session }: { session: Session }) {
 
   const { username, avatar_url } = watch();
 
-  useEffect(() => {
-    getProfile();
-  }, [session]);
-
-  async function getProfile() {
+  const getProfile = useCallback(async () => {
     try {
       setLoading(true);
       const user = supabase.auth.user();
@@ -58,7 +54,7 @@ export default function Account({ session }: { session: Session }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [setValue]);
 
   async function updateProfile({ username, avatar_url }: any) {
     try {
@@ -90,8 +86,12 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
+  useEffect(() => {
+    getProfile();
+  }, [session, getProfile]);
+
   return (
-    <Box p={10} mt={8}>
+    <Box px={8} pt={20}>
       <AccountAvatar
         url={avatar_url}
         onUpload={(url: any) => {
@@ -111,9 +111,7 @@ export default function Account({ session }: { session: Session }) {
         </Heading>
       </Center>
 
-      <Divider my={8} />
-
-      <Box>
+      <Box mt={10}>
         <Grid templateColumns="repeat(1, 1fr)" gap={4}>
           <FormInput
             field="username"
@@ -145,17 +143,18 @@ export default function Account({ session }: { session: Session }) {
           />
         </Grid>
 
-        <Flex justifyContent={"center"}>
-          <Button
-            className="button block primary"
-            onClick={() => updateProfile({ username, avatar_url })}
-            disabled={loading}
-            mt={6}
-            w={"100%"}
-          >
-            {loading ? "Loading ..." : "Update"}
-          </Button>
-        </Flex>
+        <Button
+          className="button block primary"
+          onClick={() => updateProfile({ username, avatar_url })}
+          disabled={loading}
+          mt={6}
+          w={"100%"}
+          bg="brand.700"
+          color={"white"}
+          _hover={{ backgroundColor: "#4A43EC" }}
+        >
+          {loading ? "Loading ..." : "Update"}
+        </Button>
       </Box>
     </Box>
   );

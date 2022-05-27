@@ -61,7 +61,6 @@ export default function AccountAvatar({ url, onUpload }: any) {
         <Box pos={"relative"} display="flex" justifyContent={"center"}>
           {avatarUrl ? <Avatar size={"2xl"} src={avatarUrl} /> : null}
           <FormLabel
-            className="button primary block"
             htmlFor="single"
             boxShadow={"lg"}
             style={{
@@ -70,7 +69,7 @@ export default function AccountAvatar({ url, onUpload }: any) {
               cursor: "pointer",
               position: "absolute",
               bottom: -10,
-              right: 70,
+              right: 100,
               padding: "7px",
               borderRadius: "100%",
               backgroundColor: "white",
