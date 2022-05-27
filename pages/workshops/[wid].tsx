@@ -30,9 +30,7 @@ export default function Workshop() {
 
   return (
     <Layout>
-      <Box>{workshop.name}</Box>
-      <Box>{workshop.description}</Box>
-      <Box>{workshop.category}</Box>
+      <Box></Box>
     </Layout>
   );
 }
