@@ -56,18 +56,19 @@ export default function AuthenticationForm(): JSX.Element {
   async function onSubmit(formData: any): Promise<void> {
     switch (mode) {
       case Mode.SIGNUP:
-        await supabase.auth.signUp({
-          email: formData.email,
-          password: formData.password,
-        });
-        break;
-      case Mode.LOGIN:
-        const signInReponse = await supabase.auth.signIn({
+        const supRes = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
         });
 
-        if (signInReponse.error === null) {
+        break;
+      case Mode.LOGIN:
+        const siRes = await supabase.auth.signIn({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (siRes.error === null) {
           router.push("/");
         }
         break;

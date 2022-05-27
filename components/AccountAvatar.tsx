@@ -57,30 +57,29 @@ export default function AccountAvatar({ url, onUpload }: any) {
 
   return (
     <Box>
-      {avatarUrl ? (
-        <Box pos={"relative"} display="flex" justifyContent={"center"}>
-          {avatarUrl ? <Avatar size={"2xl"} src={avatarUrl} /> : null}
-          <FormLabel
-            htmlFor="single"
-            boxShadow={"lg"}
-            style={{
-              fontWeight: 600,
-              fontSize: "20px",
-              cursor: "pointer",
-              position: "absolute",
-              bottom: -10,
-              right: 100,
-              padding: "7px",
-              borderRadius: "100%",
-              backgroundColor: "white",
-            }}
-            color="brand.800"
-            _hover={{ color: "brand.700" }}
-          >
-            {<BiEdit />}
-          </FormLabel>
-        </Box>
-      ) : null}
+      <Box pos={"relative"} display="flex" justifyContent={"center"}>
+        {avatarUrl ? <Avatar size={"2xl"} src={avatarUrl} /> : null}
+        <FormLabel
+          htmlFor="single"
+          boxShadow={"lg"}
+          style={{
+            fontWeight: 600,
+            fontSize: "20px",
+            cursor: "pointer",
+            position: "absolute",
+            bottom: -10,
+            right: 100,
+            padding: "7px",
+            borderRadius: "100%",
+            backgroundColor: "white",
+          }}
+          color="brand.800"
+          _hover={{ color: "brand.700" }}
+        >
+          {<BiEdit />}
+        </FormLabel>
+      </Box>
+
       <Box>
         <Input
           type="file"
