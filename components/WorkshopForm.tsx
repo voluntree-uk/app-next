@@ -11,55 +11,74 @@ import {
   Switch,
   Flex,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useSession } from "../utils/hooks";
+import { supabase } from "../utils/supabaseClient";
 
 type WorkshopFormState = {
-  title: string;
+  name: string;
   description: string;
   category: string;
   organiser: string;
-  houseNo: string;
-  streetName: string;
+  house: string;
+  street: string;
   postcode: string;
-  isVirtual: boolean;
+  virtual: boolean;
 };
 
 /**
  * Renders a form for creating workshops
  */
 export default function WorkshopForm(): JSX.Element {
+  const session = useSession();
+
   const {
     handleSubmit,
     register,
     watch,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm<WorkshopFormState>({ defaultValues: { isVirtual: true } });
+  } = useForm<WorkshopFormState>({
+    defaultValues: { virtual: true },
+  });
 
-  const { isVirtual } = watch();
+  const router = useRouter();
 
-  async function onSubmit(data: WorkshopFormState) {}
+  const { virtual } = watch();
+
+  async function onSubmit(formData: WorkshopFormState) {
+    const { data, error } = await supabase
+      .from("workshops")
+      .insert([{ ...formData, organiser: session?.user?.id }]);
+
+    if (error == null) {
+      reset();
+      router.push(`/workshops/${data[0].id}`);
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
         <FormControl>
-          <FormLabel htmlFor="title">Title</FormLabel>
+          <FormLabel htmlFor="name">Name</FormLabel>
           <Input
-            id="title"
-            placeholder="Name your workshop"
+            id="name"
+            placeholder="Trading for Beginners"
             bg={"white"}
             focusBorderColor="brand.700"
             boxShadow={"sm"}
             borderRadius="xl"
             size="lg"
             p={7}
-            {...register("title", {
+            {...register("name", {
               required: "This is required",
             })}
           />
           <FormErrorMessage>
-            {errors.title && errors.title.message}
+            {errors.name && errors.name.message}
           </FormErrorMessage>
         </FormControl>
 
@@ -67,7 +86,7 @@ export default function WorkshopForm(): JSX.Element {
           <FormLabel htmlFor="description">Description</FormLabel>
           <Textarea
             id="description"
-            placeholder="Give it a description"
+            placeholder="A brief introduction into everything..."
             bg={"white"}
             focusBorderColor="brand.700"
             boxShadow={"sm"}
@@ -97,57 +116,57 @@ export default function WorkshopForm(): JSX.Element {
             <Switch
               id="isVirtual"
               colorScheme={"twitter"}
-              {...register("isVirtual", {
+              {...register("virtual", {
                 required: "This is required",
               })}
             />
           </Flex>
         </FormControl>
 
-        {!isVirtual ? (
+        {!virtual ? (
           <>
             <FormControl>
               <Input
                 id="houseNo"
-                placeholder="House No"
+                placeholder="21"
                 bg={"white"}
                 focusBorderColor="brand.700"
                 boxShadow={"sm"}
                 borderRadius="xl"
                 size="lg"
                 p={7}
-                {...register("houseNo", {
+                {...register("house", {
                   required: "This is required",
                 })}
               />
               <FormErrorMessage>
-                {errors.houseNo && errors.houseNo.message}
+                {errors.house && errors.house.message}
               </FormErrorMessage>
             </FormControl>
 
             <FormControl>
               <Input
                 id="streetName"
-                placeholder="Steet Name"
+                placeholder="Square Gardens"
                 bg={"white"}
                 focusBorderColor="brand.700"
                 boxShadow={"sm"}
                 borderRadius="xl"
                 size="lg"
                 p={7}
-                {...register("streetName", {
+                {...register("street", {
                   required: "This is required",
                 })}
               />
               <FormErrorMessage>
-                {errors.streetName && errors.streetName.message}
+                {errors.street && errors.street.message}
               </FormErrorMessage>
             </FormControl>
 
             <FormControl>
               <Input
                 id="postcode"
-                placeholder="Postcode"
+                placeholder="B14 6PZ"
                 bg={"white"}
                 focusBorderColor="brand.700"
                 boxShadow={"sm"}
