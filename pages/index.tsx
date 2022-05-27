@@ -1,4 +1,5 @@
 import Account from "../components/Account";
+import Layout from "../components/Layout";
 import enforceAuthenticated from "../utils/enforceAuthenticated";
 import { useSession } from "../utils/hooks";
 
@@ -6,9 +7,9 @@ export default function Home() {
   const session = useSession();
 
   return (
-    <div className="container" style={{ padding: "50px 0 100px 0" }}>
+    <Layout>
       {session && session.user ? <Account session={session} /> : null}
-    </div>
+    </Layout>
   );
 }
 

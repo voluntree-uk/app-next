@@ -19,15 +19,7 @@ type AuthenticationInputProps = {
 export default function AuthenticationInput(
   props: AuthenticationInputProps
 ): JSX.Element {
-  const {
-    error,
-    register,
-    placeholder,
-    field,
-    type,
-    getValues,
-    shouldMatchField,
-  } = props;
+  const { error, register, placeholder, field, type } = props;
 
   return (
     <>
@@ -43,16 +35,7 @@ export default function AuthenticationInput(
             borderRadius="xl"
             size="lg"
             p={7}
-            {...register(field, {
-              validate: shouldMatchField
-                ? {
-                    confirmMatch: (value) =>
-                      value === getValues()[shouldMatchField] ||
-                      `Must match ${shouldMatchField}`,
-                  }
-                : {},
-              required: `Field is required`,
-            })}
+            {...register(field)}
           />
           <FormErrorMessage>{error && error.message}</FormErrorMessage>
         </FormControl>
