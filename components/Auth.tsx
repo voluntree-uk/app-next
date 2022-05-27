@@ -97,13 +97,7 @@ export default function AuthenticationForm(): JSX.Element {
   ];
 
   return (
-    <Box
-      mt={40}
-      pl={9}
-      pr={9}
-      pb={9}
-      w={{ base: "100%", md: "40%", lg: "40%" }}
-    >
+    <Box w={{ base: "100%", md: "40%", lg: "40%" }} m="0 auto" p={9} mt={20}>
       <Box mb={5}>
         <Heading fontSize={"2xl"} fontWeight="bold">
           {isLogginIn() && "Sign in"}
@@ -111,11 +105,16 @@ export default function AuthenticationForm(): JSX.Element {
           {isResettingPassword() && "Reset password"}
         </Heading>
 
-        {isResettingPassword() && (
-          <Text fontSize={"sm"} mt={3} w={"95%"}>
-            Please enter your email address to request a password reset
-          </Text>
-        )}
+        <Box mt={3} w={"95%"}>
+          {isLogginIn() && <Text fontSize={"sm"}>Log into your account</Text>}
+
+          {isResettingPassword() && (
+            <Text fontSize={"sm"}>
+              Please enter your email address to request a password reset
+            </Text>
+          )}
+          {isSigningUp() && <Text fontSize={"sm"}>Create a new account</Text>}
+        </Box>
       </Box>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -138,24 +137,23 @@ export default function AuthenticationForm(): JSX.Element {
           justifyContent={"space-between"}
           alignItems="center"
           display={isResettingPassword() ? "none" : "flex"}
-          mt={5}
+          mt={7}
         >
-          {!isSigningUp() && (
-            <Text fontSize={"sm"} display="flex" alignItems={"center"}>
-              <Switch size={"md"} mr={2} colorScheme="brand.700" isChecked />
-              Remember Me
-            </Text>
-          )}
-
-          {!isSigningUp() && (
-            <Text
-              fontSize={"sm"}
-              style={{ cursor: "pointer" }}
-              onClick={() => setMode(Mode.RESETPASSWORD)}
-            >
-              Forgot Password?
-            </Text>
-          )}
+          {!isSigningUp() ? (
+            <>
+              <Text fontSize={"sm"} display="flex" alignItems={"center"}>
+                <Switch size={"md"} mr={2} colorScheme="brand.700" isChecked />
+                Remember Me
+              </Text>
+              <Text
+                fontSize={"sm"}
+                style={{ cursor: "pointer" }}
+                onClick={() => setMode(Mode.RESETPASSWORD)}
+              >
+                Forgot Password?
+              </Text>
+            </>
+          ) : null}
         </Flex>
 
         <Center mt={10} mb={6}>
