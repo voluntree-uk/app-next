@@ -27,6 +27,8 @@ import { MdBookmarkBorder, MdCalendarToday, MdLogout } from "react-icons/md";
 
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { BiBell } from "react-icons/bi";
+import { FaHouseUser } from "react-icons/fa";
+
 import { useSession } from "../utils/hooks";
 
 interface LinkItemProps {
@@ -74,8 +76,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const router = useRouter();
 
   const LinkItems: Array<LinkItemProps> = [
+    { name: "Profile", icon: FaHouseUser, href: "/users/myprofile" },
     { name: "Workshops", icon: MdCalendarToday, href: "/workshops" },
-    { name: "Bookings", icon: MdBookmarkBorder, href: "/bookings" },
     { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
     { name: "Sign out", icon: MdLogout, href: "/login" },
   ];

@@ -1,8 +1,9 @@
-import Image from "next/image";
+import { Avatar, Box, Button, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { BiEdit } from "react-icons/bi";
 import { supabase } from "../utils/supabaseClient";
 
-export default function Avatar({ url, size, onUpload }: any) {
+export default function AccountAvatar({ url, onUpload }: any) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -10,7 +11,7 @@ export default function Avatar({ url, size, onUpload }: any) {
     if (url) downloadImage(url);
   }, [url]);
 
-  async function downloadImage(path: string) {
+  async function downloadImage(path: any) {
     try {
       const { data, error } = await supabase.storage
         .from("avatars")
@@ -55,38 +56,45 @@ export default function Avatar({ url, size, onUpload }: any) {
   }
 
   return (
-    <div>
+    <Box>
       {avatarUrl ? (
-        <Image
-          src={avatarUrl}
-          alt="Avatar"
-          className="avatar image"
-          height={size}
-          width={size}
-          style={{ height: size, width: size }}
-        />
-      ) : (
-        <div
-          className="avatar no-image"
-          style={{ height: size, width: size }}
-        />
-      )}
-      <div style={{ width: size }}>
-        <label className="button primary block" htmlFor="single">
-          {uploading ? "Uploading ..." : "Upload"}
-        </label>
-        <input
-          style={{
-            visibility: "hidden",
-            position: "absolute",
-          }}
+        <Box pos={"relative"} display="inline-block">
+          <Avatar size={"2xl"} src={avatarUrl} />
+          <FormLabel
+            className="button primary block"
+            htmlFor="single"
+            boxShadow={"lg"}
+            style={{
+              fontWeight: 600,
+              fontSize: "20px",
+              cursor: "pointer",
+              position: "absolute",
+              top: 0,
+              left: -5,
+              border: "1px solid lightgray",
+              padding: "7px",
+              borderRadius: "100%",
+              backgroundColor: "white",
+            }}
+            color="brand.800"
+            _hover={{ color: "brand.700" }}
+          >
+            {uploading ? "Uploading ..." : <BiEdit />}
+          </FormLabel>
+        </Box>
+      ) : null}
+      <Box>
+        <Input
           type="file"
           id="single"
           accept="image/*"
           onChange={uploadAvatar}
           disabled={uploading}
+          style={{
+            display: "none",
+          }}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
