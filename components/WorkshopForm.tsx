@@ -14,19 +14,9 @@ import {
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { Workshop } from "../shared/schemas";
 import { useSession } from "../utils/hooks";
 import { supabase } from "../utils/supabaseClient";
-
-type WorkshopFormState = {
-  name: string;
-  description: string;
-  category: string;
-  organiser: string;
-  house: string;
-  street: string;
-  postcode: string;
-  virtual: boolean;
-};
 
 /**
  * Renders a form for creating workshops
@@ -40,7 +30,7 @@ export default function WorkshopForm(): JSX.Element {
     watch,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<WorkshopFormState>({
+  } = useForm<Workshop>({
     defaultValues: { virtual: true },
   });
 
@@ -48,14 +38,23 @@ export default function WorkshopForm(): JSX.Element {
 
   const { virtual } = watch();
 
-  async function onSubmit(formData: WorkshopFormState) {
-    const { data, error } = await supabase
-      .from("workshops")
-      .insert([{ ...formData, organiser: session?.user?.id }]);
+  async function onSubmit(formData: Workshop) {
+    const newWorkshop: Workshop = formData;
 
-    if (error == null) {
-      reset();
-      router.push(`/workshops/${data[0].id}`);
+    // Current user
+    const createdBy = session?.user?.id;
+
+    if (createdBy) {
+      newWorkshop.user_id = createdBy;
+
+      const { data, error } = await supabase
+        .from("workshops")
+        .insert([newWorkshop]);
+
+      if (error == null) {
+        reset();
+        router.push(`/workshops/${data[0].id}`);
+      }
     }
   }
 
