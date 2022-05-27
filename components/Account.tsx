@@ -1,4 +1,5 @@
 import { Session } from "@supabase/supabase-js";
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabaseClient";
 import Avatar from "./Avatar";
@@ -7,6 +8,8 @@ export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<null | string>(null);
   const [avatar_url, setAvatarUrl] = useState<null | string>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     getProfile();
@@ -116,7 +119,10 @@ export default function Account({ session }: { session: Session }) {
       <div>
         <button
           className="button block"
-          onClick={() => supabase.auth.signOut()}
+          onClick={() => {
+            supabase.auth.signOut();
+            router.push("/auth");
+          }}
         >
           Sign Out
         </button>

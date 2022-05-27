@@ -1,15 +1,29 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Flex, Heading, Input, Text } from "@chakra-ui/react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { supabase } from "../utils/supabaseClient";
+import AuthenticationInput from "./AuthInput";
+import { FiSend } from "react-icons/fi";
+import ActionButton from "./ActionButton";
+
+type AuthFormState = {
+  email: string;
+};
 
 export default function Auth() {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
 
-  const handleLogin = async (email: string) => {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    getValues,
+  } = useForm<AuthFormState>();
+
+  const handleLogin = async (formData: AuthFormState) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signIn({ email });
+      const { error } = await supabase.auth.signIn({ email: formData.email });
       if (error) throw error;
       alert("Check your email for the login link!");
     } catch (error: any) {
@@ -20,38 +34,35 @@ export default function Auth() {
   };
 
   return (
-    <Box>
-      <Box sx={{ width: "40%", margin: "0 auto", mt: 20 }}>
-        <Typography variant="h2" sx={{ mb: 1 }}>
-          Shared.
-        </Typography>
-        <Typography sx={{ mb: 2 }}>
+    <Box h="100vh" bgImage="linear-gradient(to top, #dfe9f3 0%, white 100%);">
+      <Box pt={44} m={"0 auto"} w={{ base: "100%", md: "40%", lg: "40%" }}>
+        <Heading size={"2xl"} mb={8} color="gray.700">
+          Login
+        </Heading>
+        <Text mb={7} color="gray.700">
           Sign in via magic link with your email below
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
+        </Text>
+
+        <form onSubmit={handleSubmit(handleLogin)}>
+          <Flex alignItems={"baseline"}>
+            <AuthenticationInput
+              field="email"
+              placeholder="youremail@email.com"
+              register={register}
               type="email"
-              placeholder="Your email"
-              value={email}
-              fullWidth
-              onChange={(e) => setEmail(e.target.value)}
+              isVisible
+              error={errors["email"]}
+              getValues={getValues}
             />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                handleLogin(email);
-              }}
-              disabled={loading}
-              fullWidth
-              variant="contained"
-            >
-              <span>{loading ? "Loading" : "Send magic link"}</span>
-            </Button>
-          </Grid>
-        </Grid>
+            <ActionButton
+              text="Send"
+              icon={<FiSend />}
+              type="submit"
+              loading={loading}
+              style={{ marginLeft: 5, width: "30%" }}
+            />
+          </Flex>
+        </form>
       </Box>
     </Box>
   );
