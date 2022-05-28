@@ -14,7 +14,6 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../utils/supabaseClient";
@@ -22,7 +21,7 @@ import { OAuthButtonGroup } from "./0AuthButtonGroup";
 import { Logo } from "./Logo";
 import { useToast } from "@chakra-ui/react";
 
-export default function SignIn({ toggleMode }: any) {
+export default function AuthenticationForm() {
   const { register, handleSubmit } = useForm();
 
   const toast = useToast();

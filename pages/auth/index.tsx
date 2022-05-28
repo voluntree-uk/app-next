@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import SignIn from "../../components/signIn";
+import AuthenticationForm from "../../components/AuthenticationForm";
 import enforceRedirect from "../../utils/enforceRedirect";
 import { useSession } from "../../utils/hooks";
 
@@ -15,7 +15,7 @@ export default function Authentication() {
     }
   }, [session, router]);
 
-  return <SignIn />;
+  return <AuthenticationForm />;
 }
 
 export const getServerSideProps = enforceRedirect();
