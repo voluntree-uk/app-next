@@ -6,5 +6,9 @@ type LayoutProps = {
 };
 
 export default function Layout(props: LayoutProps) {
-  return <Menu>{props.children}</Menu>;
+  return (
+    <>
+      <Menu>{props.children}</Menu>
+    </>
+  );
 }

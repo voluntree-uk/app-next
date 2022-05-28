@@ -155,6 +155,17 @@ export default function Account({ session }: { session: Session }) {
         >
           {loading ? "Loading ..." : "Update"}
         </Button>
+
+        <Button
+          className="button block primary"
+          onClick={() => supabase.auth.signOut()}
+          disabled={loading}
+          mt={6}
+          w={"100%"}
+          _hover={{ backgroundColor: "#4A43EC" }}
+        >
+          Sign out
+        </Button>
       </Box>
     </Box>
   );

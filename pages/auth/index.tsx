@@ -1,9 +1,10 @@
-import React from "react";
-import Auth from "../../components/Auth";
+import { Box } from "@chakra-ui/react";
+import React, { useState } from "react";
+import SignIn from "../../components/signIn";
 import enforceRedirect from "../../utils/enforceRedirect";
 
 export default function Authentication() {
-  return <Auth />;
+  return <SignIn />;
 }
 
 export const getServerSideProps = enforceRedirect();

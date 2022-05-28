@@ -18,9 +18,6 @@ import { Workshop } from "../shared/schemas";
 import { useSession } from "../utils/hooks";
 import { supabase } from "../utils/supabaseClient";
 
-/**
- * Renders a form for creating workshops
- */
 export default function WorkshopForm(): JSX.Element {
   const session = useSession();
 
@@ -38,8 +35,8 @@ export default function WorkshopForm(): JSX.Element {
 
   const { virtual } = watch();
 
-  async function onSubmit(formData: Workshop) {
-    const newWorkshop: Workshop = formData;
+  async function onSubmit(data: Workshop) {
+    const newWorkshop: Workshop = data;
 
     // Current user
     const createdBy = session?.user?.id;
