@@ -20,19 +20,32 @@ import { useForm } from "react-hook-form";
 import { supabase } from "../utils/supabaseClient";
 import { OAuthButtonGroup } from "./0AuthButtonGroup";
 import { Logo } from "./Logo";
+import { useToast } from "@chakra-ui/react";
 
 export default function SignIn({ toggleMode }: any) {
   const { register, handleSubmit } = useForm();
 
-  const router = useRouter();
+  const toast = useToast();
 
   const onSubmit = async (data: any) => {
-    const { user, session, error } = await supabase.auth.signIn({
+    const { error } = await supabase.auth.signIn({
       email: data.email,
     });
 
     if (error === null) {
-      router.push("/users/myprofile");
+      toast({
+        title: "Sign in link sent.",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -51,7 +64,9 @@ export default function SignIn({ toggleMode }: any) {
                 Log in to your account
               </Heading>
               <HStack spacing="1" justify="center">
-                <Text color="muted">We'll send a login link to your email</Text>
+                <Text color="muted">
+                  We&apos;ll send a login link to your email
+                </Text>
               </HStack>
             </Stack>
           </Stack>
