@@ -76,7 +76,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     { name: "Profile", icon: FaHouseUser, href: "/users/myprofile" },
     { name: "Workshops", icon: MdCalendarToday, href: "/workshops" },
     { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
-    { name: "Sign out", icon: MdLogout, href: "/login" },
   ];
 
   return (
