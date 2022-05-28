@@ -27,9 +27,14 @@ export default function AuthenticationForm() {
   const toast = useToast();
 
   const onSubmit = async (data: any) => {
-    const { error } = await supabase.auth.signIn({
-      email: data.email,
-    });
+    const { error } = await supabase.auth.signIn(
+      {
+        email: data.email,
+      },
+      {
+        redirectTo: process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_URL,
+      }
+    );
 
     if (error === null) {
       toast({
