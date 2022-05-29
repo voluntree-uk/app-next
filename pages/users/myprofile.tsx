@@ -14,11 +14,11 @@ export default function MyProfile() {
       <Box>
         <HeadingBar>
           <Heading
-            fontSize={"2xl"}
+            fontSize={"md"}
             color={"white"}
-            fontWeight="light"
+            fontWeight="semibold"
             pl={8}
-            py={4}
+            pb={4}
           >
             Profile
           </Heading>
