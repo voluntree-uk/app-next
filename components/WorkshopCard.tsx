@@ -1,31 +1,40 @@
-import { Box, Button, Center, Heading, Img, Text } from "@chakra-ui/react";
+import { ViewIcon } from "@chakra-ui/icons";
+import { Box, Button, Heading, Img, Tag, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
-import { MdStarOutline } from "react-icons/md";
-import HeadingBar from "./HeadingBar";
+import { Workshop } from "../shared/schemas";
 
-export default function WorkshopCard() {
+export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
+  const router = useRouter();
+
   return (
-    <Box>
+    <Box cursor={"pointer"}>
       <Img src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg" />
-      <Box borderTopWidth={1} borderTopColor={"gray.100"} p={3} bg="white">
+      <Box borderTopWidth={1} borderTopColor={"gray.100"} p={4} bg="white">
         <Box mb={4}>
           <Heading color={"gray.700"} size={"sm"} fontWeight="semibold" py={2}>
-            Forex Trading
+            {workshop.name}
           </Heading>
-          <Text color={"gray.600"} fontSize="medium">
-            Introductory session where all the basics of Forex trading will be
-            covered.
+          <Text color={"gray.500"} fontSize="medium">
+            {workshop.description}
           </Text>
+
+          <Box mt={3}>
+            <Tag mr={1}>{workshop.category}</Tag>
+            {workshop.virtual ? <Tag>virtual</Tag> : null}
+          </Box>
         </Box>
+
         <Button
           color={"gray.600"}
-          leftIcon={<MdStarOutline />}
+          leftIcon={<ViewIcon />}
           variant={"outline"}
           w={"100%"}
           borderColor="gray.100"
           fontSize="medium"
+          onClick={() => router.push(`/workshops/${workshop.id}`)}
         >
-          Star
+          View
         </Button>
       </Box>
     </Box>
