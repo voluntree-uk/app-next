@@ -64,7 +64,7 @@ export default function WorkshopForm(): JSX.Element {
             id="name"
             placeholder="Trading for Beginners"
             bg={"white"}
-            focusBorderColor="brand.700"
+            focusBorderColor="none"
             boxShadow={"sm"}
             borderRadius="xl"
             size="lg"
@@ -84,7 +84,7 @@ export default function WorkshopForm(): JSX.Element {
             id="description"
             placeholder="A brief introduction into everything..."
             bg={"white"}
-            focusBorderColor="brand.700"
+            focusBorderColor="none"
             boxShadow={"sm"}
             borderRadius="xl"
             size="lg"
@@ -126,7 +126,7 @@ export default function WorkshopForm(): JSX.Element {
                 id="houseNo"
                 placeholder="21"
                 bg={"white"}
-                focusBorderColor="brand.700"
+                focusBorderColor="none"
                 boxShadow={"sm"}
                 borderRadius="xl"
                 size="lg"
@@ -145,7 +145,7 @@ export default function WorkshopForm(): JSX.Element {
                 id="streetName"
                 placeholder="Square Gardens"
                 bg={"white"}
-                focusBorderColor="brand.700"
+                focusBorderColor="none"
                 boxShadow={"sm"}
                 borderRadius="xl"
                 size="lg"
@@ -164,7 +164,7 @@ export default function WorkshopForm(): JSX.Element {
                 id="postcode"
                 placeholder="B14 6PZ"
                 bg={"white"}
-                focusBorderColor="brand.700"
+                focusBorderColor="none"
                 boxShadow={"sm"}
                 borderRadius="xl"
                 size="lg"
@@ -186,7 +186,7 @@ export default function WorkshopForm(): JSX.Element {
             id="category"
             placeholder="Pick a category"
             bg={"white"}
-            focusBorderColor="brand.700"
+            focusBorderColor="none"
             boxShadow={"sm"}
             borderRadius="xl"
             size="lg"

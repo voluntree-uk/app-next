@@ -27,6 +27,7 @@ import { MdCalendarToday, MdLogout } from "react-icons/md";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { BiBell } from "react-icons/bi";
 import { FaHouseUser } from "react-icons/fa";
+import { AddIcon } from "@chakra-ui/icons";
 
 interface LinkItemProps {
   name: string;
@@ -168,6 +169,7 @@ interface MobileProps extends FlexProps {
 }
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+  const router = useRouter();
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -195,7 +197,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         <IconButton
           variant="outline"
           aria-label="open menu"
-          icon={<BiBell />}
+          icon={<AddIcon />}
+          onClick={() => router.push("/workshops/new")}
           border="none"
           size={"xs"}
           transform={"scale(1.5)"}

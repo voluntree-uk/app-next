@@ -8,7 +8,10 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
   const router = useRouter();
 
   return (
-    <Box cursor={"pointer"}>
+    <Box
+      cursor={"pointer"}
+      onClick={() => router.push(`/workshops/${workshop.id}`)}
+    >
       <Img src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg" />
       <Box borderTopWidth={1} borderTopColor={"gray.100"} p={4} bg="white">
         <Box mb={4}>
@@ -32,7 +35,6 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
           w={"100%"}
           borderColor="gray.100"
           fontSize="medium"
-          onClick={() => router.push(`/workshops/${workshop.id}`)}
         >
           View
         </Button>
