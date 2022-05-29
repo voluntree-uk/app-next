@@ -39,7 +39,14 @@ export default function WorkshopListing({ data }: { data: Workshop[] }) {
 export async function getServerSideProps(context: any) {
   const id = context.query.wid;
 
-  let { data } = await supabase.from("workshops").select("*").eq("id", id);
+  let { data, error } = await supabase
+    .from("workshops")
+    .select("*")
+    .eq("id", id);
+
+  if (error) {
+    return { props: {}, redirect: { destination: "/workshops" } };
+  }
 
   return { props: { data } };
 }

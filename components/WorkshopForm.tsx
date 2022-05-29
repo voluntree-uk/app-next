@@ -52,17 +52,24 @@ export default function WorkshopForm(): JSX.Element {
         .from("workshops")
         .insert([newWorkshop]);
 
+      console.log(data);
+
       if (data) {
         const newSlots: Slot[] = slots.map((s) => {
           return {
-            workshop_id: data && data[0].id,
+            workshop_id: "haha",
             date: s.date,
-            startTime: s.startTime,
-            endTime: s.endTime,
+            start_time: s.startTime,
+            end_time: s.endTime,
+            capacity: s.capacity,
           };
         });
 
-        const { data } = await supabase.from("slots").insert([newSlots]);
+        const { data, error } = await supabase
+          .from("slots")
+          .insert([...newSlots]);
+
+        console.log(error);
       }
 
       // insert slots

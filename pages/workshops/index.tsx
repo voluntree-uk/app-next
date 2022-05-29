@@ -34,8 +34,7 @@ export default function Workshops({ data }: { data: Workshop[] }) {
     let { data: searchData } = await supabase
       .from("workshops")
       .select("*")
-      .ilike("name", `%${str}%`)
-      .limit(10);
+      .ilike("name", `%${str}%`);
 
     if (searchData) {
       setSearchWorkshops(searchData);

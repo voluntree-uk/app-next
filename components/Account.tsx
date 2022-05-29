@@ -94,7 +94,7 @@ export default function Account({ session }: { session: Session }) {
         />
         <Flex flexDirection={"column"} justifyContent="center" ml={1}>
           <Heading size={"md"}>{username}</Heading>
-          <Text size={"sm"} color={"gray.400"}>
+          <Text size={"sm"} color={"gray.600"}>
             {session.user?.email}
           </Text>
         </Flex>
