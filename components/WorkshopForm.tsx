@@ -83,17 +83,10 @@ export default function WorkshopForm(): JSX.Element {
           <FormControl>
             <FormLabel htmlFor="name">Name</FormLabel>
             <Input
-              id="name"
-              placeholder="Trading for Beginners"
-              bg={"white"}
-              focusBorderColor="none"
-              boxShadow={"sm"}
-              borderRadius="xl"
-              size="lg"
-              p={7}
               {...register("name", {
                 required: "This is required",
               })}
+              variant="filled"
             />
             <FormErrorMessage>
               {errors.name && errors.name.message}
@@ -103,18 +96,10 @@ export default function WorkshopForm(): JSX.Element {
           <FormControl>
             <FormLabel htmlFor="description">Description</FormLabel>
             <Textarea
-              id="description"
-              placeholder="A brief introduction into everything..."
-              bg={"white"}
-              focusBorderColor="none"
-              boxShadow={"sm"}
-              borderRadius="xl"
-              size="lg"
-              p={7}
-              minH={40}
               {...register("description", {
                 required: "This is required",
               })}
+              variant="filled"
             />
             <FormErrorMessage>
               {errors.description && errors.description.message}
@@ -137,6 +122,7 @@ export default function WorkshopForm(): JSX.Element {
                 {...register("virtual", {
                   required: "This is required",
                 })}
+                variant="filled"
               />
             </Flex>
           </FormControl>
@@ -145,17 +131,10 @@ export default function WorkshopForm(): JSX.Element {
             <>
               <FormControl>
                 <Input
-                  id="houseNo"
-                  placeholder="21"
-                  bg={"white"}
-                  focusBorderColor="none"
-                  boxShadow={"sm"}
-                  borderRadius="xl"
-                  size="lg"
-                  p={7}
                   {...register("house", {
                     required: "This is required",
                   })}
+                  variant="filled"
                 />
                 <FormErrorMessage>
                   {errors.house && errors.house.message}
@@ -164,14 +143,6 @@ export default function WorkshopForm(): JSX.Element {
 
               <FormControl>
                 <Input
-                  id="streetName"
-                  placeholder="Square Gardens"
-                  bg={"white"}
-                  focusBorderColor="none"
-                  boxShadow={"sm"}
-                  borderRadius="xl"
-                  size="lg"
-                  p={7}
                   {...register("street", {
                     required: "This is required",
                   })}
@@ -183,17 +154,10 @@ export default function WorkshopForm(): JSX.Element {
 
               <FormControl>
                 <Input
-                  id="postcode"
-                  placeholder="B14 6PZ"
-                  bg={"white"}
-                  focusBorderColor="none"
-                  boxShadow={"sm"}
-                  borderRadius="xl"
-                  size="lg"
-                  p={7}
                   {...register("postcode", {
                     required: "This is required",
                   })}
+                  variant="filled"
                 />
                 <FormErrorMessage>
                   {errors.postcode && errors.postcode.message}
@@ -205,16 +169,10 @@ export default function WorkshopForm(): JSX.Element {
           <FormControl>
             <FormLabel htmlFor="category">Category</FormLabel>
             <Select
-              id="category"
-              placeholder="Pick a category"
-              bg={"white"}
-              focusBorderColor="none"
-              boxShadow={"sm"}
-              borderRadius="xl"
-              size="lg"
               {...register("category", {
                 required: "This is required",
               })}
+              variant="filled"
             >
               <option value="it">IT</option>
               <option value="legal">Legal</option>
@@ -232,15 +190,7 @@ export default function WorkshopForm(): JSX.Element {
             Add Slot
           </Button>
 
-          <Button
-            bg="brand.700"
-            color="white"
-            size="md"
-            py={7}
-            borderRadius="2xl"
-            type="submit"
-            isLoading={isSubmitting}
-          >
+          <Button type="submit" isLoading={isSubmitting}>
             Submit
           </Button>
         </Stack>
