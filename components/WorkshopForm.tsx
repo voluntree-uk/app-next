@@ -87,6 +87,8 @@ export default function WorkshopForm(): JSX.Element {
                 required: "This is required",
               })}
               variant="filled"
+              placeholder="Title"
+              autoFocus={true}
             />
             <FormErrorMessage>
               {errors.name && errors.name.message}
@@ -100,6 +102,7 @@ export default function WorkshopForm(): JSX.Element {
                 required: "This is required",
               })}
               variant="filled"
+              placeholder="About"
             />
             <FormErrorMessage>
               {errors.description && errors.description.message}
@@ -135,6 +138,7 @@ export default function WorkshopForm(): JSX.Element {
                     required: "This is required",
                   })}
                   variant="filled"
+                  placeholder="Building No"
                 />
                 <FormErrorMessage>
                   {errors.house && errors.house.message}
@@ -146,6 +150,8 @@ export default function WorkshopForm(): JSX.Element {
                   {...register("street", {
                     required: "This is required",
                   })}
+                  variant="filled"
+                  placeholder="Street"
                 />
                 <FormErrorMessage>
                   {errors.street && errors.street.message}
@@ -158,6 +164,7 @@ export default function WorkshopForm(): JSX.Element {
                     required: "This is required",
                   })}
                   variant="filled"
+                  placeholder="Postcode"
                 />
                 <FormErrorMessage>
                   {errors.postcode && errors.postcode.message}

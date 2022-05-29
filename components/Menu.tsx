@@ -61,7 +61,9 @@ export default function Menu({ children }: { children: ReactNode }) {
         {/* mobilenav */}
         <MobileNav onOpen={onOpen} />
       </>
-      <Box ml={{ base: 0, md: 60 }}>{children}</Box>
+      <Box ml={{ base: 0, md: 60 }} bg="gray.100" minH={"100vh"}>
+        {children}
+      </Box>
     </Box>
   );
 }

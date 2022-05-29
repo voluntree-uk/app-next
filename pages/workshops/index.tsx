@@ -1,4 +1,4 @@
-import { AddIcon, Search2Icon } from "@chakra-ui/icons";
+import { Search2Icon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -63,7 +63,7 @@ export default function Workshops({ data }: { data: Workshop[] }) {
           </Heading>
         </HeadingBar>
       )}
-      <Box bg="gray.100">
+      <Box pb={2}>
         <Box p={2}>
           <Flex alignItems={"center"} justifyContent="space-between">
             {isSearching && (

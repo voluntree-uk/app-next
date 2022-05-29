@@ -12,17 +12,6 @@ export default function MyProfile() {
   return (
     <Layout>
       <Box>
-        <HeadingBar>
-          <Heading
-            fontSize={"md"}
-            color={"white"}
-            fontWeight="semibold"
-            pl={8}
-            pb={4}
-          >
-            Profile
-          </Heading>
-        </HeadingBar>
         {session && session.user ? <Account session={session} /> : null}
       </Box>
     </Layout>
