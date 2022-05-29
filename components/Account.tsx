@@ -84,7 +84,7 @@ export default function Account({ session }: { session: Session }) {
 
   return (
     <Box>
-      <Flex px={5} pt={5} mb={3}>
+      <Flex px={5} pt={5} pb={3} bg="white">
         <AccountAvatar
           url={avatar_url}
           onUpload={(url: any) => {
@@ -94,9 +94,9 @@ export default function Account({ session }: { session: Session }) {
         />
         <Flex flexDirection={"column"} justifyContent="center" ml={1}>
           <Heading size={"md"}>{username}</Heading>
-          <Heading size={"sm"} color={"gray.500"} fontWeight="thin">
+          <Text size={"sm"} color={"gray.400"}>
             {session.user?.email}
-          </Heading>
+          </Text>
         </Flex>
       </Flex>
 
