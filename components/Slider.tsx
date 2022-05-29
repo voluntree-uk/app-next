@@ -33,13 +33,13 @@ export default function Slider(props: CustomSlideProps): JSX.Element {
         p="40px"
         bg="white"
         boxShadow="dark-lg"
-        borderTopRadius="50px"
+        borderTopRadius="xl"
       >
         <Flex alignItems={"center"} justifyContent="space-between" mb={6}>
-          <Heading size={"lg"} fontWeight="semibold">
+          <Heading size={"md"} fontWeight="semibold">
             {props.title}
           </Heading>
-          <CloseButton onClick={props.onClose} size="lg" color="brand.700" />
+          <CloseButton onClick={props.onClose} size="md" color="brand.700" />
         </Flex>
         {props.children}
       </Box>

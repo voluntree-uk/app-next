@@ -1,15 +1,17 @@
-import { Search2Icon } from "@chakra-ui/icons";
+import { AddIcon, Search2Icon } from "@chakra-ui/icons";
 import {
   Box,
-  Divider,
+  Button,
   Flex,
   Heading,
   IconButton,
   Input,
   InputGroup,
   InputLeftElement,
+  Select,
   SimpleGrid,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
@@ -19,6 +21,8 @@ import { supabase } from "../../utils/supabaseClient";
 import { GoSettings } from "react-icons/go";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
+import Slider from "../../components/Slider";
+import { IoMdArrowBack } from "react-icons/io";
 
 export default function Workshops({ data }: { data: Workshop[] }) {
   const { register, watch } = useForm();
@@ -26,19 +30,12 @@ export default function Workshops({ data }: { data: Workshop[] }) {
   const [isSearching, setIsSearching] = useState(false);
   const [searchedWorkshops, setSearchWorkshops] = useState<Workshop[]>([]);
 
-  useEffect(() => {
-    if (search === "") {
-      setIsSearching(false);
-    } else {
-      setIsSearching(true);
-    }
-  }, [search]);
-
   const searchWorkshops = useCallback(async (str: string) => {
-    let { data: searchData, error } = await supabase
+    let { data: searchData } = await supabase
       .from("workshops")
       .select("*")
-      .ilike("name", `%${str}%`);
+      .ilike("name", `%${str}%`)
+      .limit(10);
 
     if (searchData) {
       setSearchWorkshops(searchData);
@@ -48,6 +45,8 @@ export default function Workshops({ data }: { data: Workshop[] }) {
   useEffect(() => {
     searchWorkshops(search);
   }, [search, searchWorkshops]);
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
     <Layout>
@@ -64,32 +63,52 @@ export default function Workshops({ data }: { data: Workshop[] }) {
           </Heading>
         </HeadingBar>
       )}
-      <Box bg="gray.100" h="100vh">
+      <Box bg="gray.100">
         <Box p={2}>
           <Flex alignItems={"center"} justifyContent="space-between">
+            {isSearching && (
+              <Flex w="10%" justifyContent={"center"} color="brand.700">
+                <IconButton
+                  size={"lg"}
+                  aria-label="Search database"
+                  onClick={() => {
+                    setIsSearching(false);
+                  }}
+                  icon={<IoMdArrowBack />}
+                  style={{ fontSize: "25px" }}
+                />
+              </Flex>
+            )}
             <InputGroup>
-              <InputLeftElement pointerEvents="none">
-                <Search2Icon color="gray.300" />
-              </InputLeftElement>
+              {!isSearching && (
+                <InputLeftElement pointerEvents="none">
+                  <Search2Icon color="gray.300" />
+                </InputLeftElement>
+              )}
               <Input
-                type="tel"
-                bg="gray.200"
+                type="text"
+                bg={isSearching ? "gray.100" : "gray.200"}
                 placeholder="Search"
                 border={"none"}
                 {...register("search")}
+                onFocus={() => setIsSearching(true)}
+                focusBorderColor="transparent"
               />
             </InputGroup>
-            <Flex w="15%" justifyContent={"center"} color="brand.700">
-              <IconButton
-                size={"lg"}
-                aria-label="Search database"
-                icon={
-                  <GoSettings
-                    style={{ transform: "rotate(90deg)", fontSize: "25px" }}
-                  />
-                }
-              />
-            </Flex>
+            {!isSearching && (
+              <Flex w="10%" justifyContent={"center"} color="brand.700">
+                <IconButton
+                  size={"lg"}
+                  aria-label="Search database"
+                  onClick={onOpen}
+                  icon={
+                    <GoSettings
+                      style={{ transform: "rotate(90deg)", fontSize: "25px" }}
+                    />
+                  }
+                />
+              </Flex>
+            )}
           </Flex>
         </Box>
         {!isSearching && (
@@ -116,6 +135,34 @@ export default function Workshops({ data }: { data: Workshop[] }) {
             </SimpleGrid>
           </Box>
         )}
+        <Slider title="Filter" isOpen={isOpen} onClose={onClose}>
+          <Box h="60vh">
+            <Box mb={4}>
+              <Text fontSize={"sm"} fontWeight={"semibold"}>
+                Category
+              </Text>
+              <Select id="category" defaultValue={""} bg={"white"} mt={4}>
+                <option value="bristol">Finance</option>
+                <option value="bristol">Legal</option>
+                <option value="bristol">Languages</option>
+              </Select>
+            </Box>
+            <Flex>
+              <Button size={"lg"} w="35%" mr={3} onClick={onClose}>
+                Reset
+              </Button>
+              <Button
+                size={"lg"}
+                bg="brand.800"
+                color={"white"}
+                w="65%"
+                onClick={onClose}
+              >
+                Apply
+              </Button>
+            </Flex>
+          </Box>
+        </Slider>
       </Box>
     </Layout>
   );
