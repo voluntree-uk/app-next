@@ -6,13 +6,13 @@ import {
   Flex,
   Grid,
   Heading,
+  Input,
 } from "@chakra-ui/react";
 import { Session } from "@supabase/supabase-js";
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../utils/supabaseClient";
 import AccountAvatar from "./AccountAvatar";
-import FormInput from "./FormInput";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -112,36 +112,7 @@ export default function Account({ session }: { session: Session }) {
       </Center>
 
       <Box mt={10}>
-        <Grid templateColumns="repeat(1, 1fr)" gap={4}>
-          <FormInput
-            field="username"
-            type="text"
-            placeholder="Username"
-            register={register}
-            error={errors["username"]}
-            isVisible
-          />
-
-          <FormInput
-            field="role"
-            type="text"
-            placeholder="Volunteer"
-            register={register}
-            error={errors["role"]}
-            isVisible
-            disabled
-          />
-
-          <FormInput
-            field="city"
-            type="text"
-            placeholder="Bristol"
-            register={register}
-            error={errors["city"]}
-            isVisible
-            disabled
-          />
-        </Grid>
+        <Grid templateColumns="repeat(1, 1fr)" gap={4}></Grid>
 
         <Button
           className="button block primary"
