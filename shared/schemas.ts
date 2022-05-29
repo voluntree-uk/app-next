@@ -33,5 +33,6 @@ export interface Slot {
   created_at?: number;
   workshop_id: string;
   date: string;
-  time: string;
+  startTime: string;
+  endTime: string;
 }
