@@ -6,21 +6,7 @@ import WorkshopCard from "../../components/WorkshopCard";
 import { Workshop } from "../../shared/schemas";
 import { supabase } from "../../utils/supabaseClient";
 
-export default function Workshops() {
-  const [workshops, setWorkshops] = useState<Workshop[]>([]);
-
-  const getWorkshops = useCallback(async () => {
-    let { data, error } = await supabase.from("workshops").select("*");
-
-    if (data) {
-      setWorkshops(data);
-    }
-  }, []);
-
-  useEffect(() => {
-    getWorkshops();
-  }, [getWorkshops]);
-
+export default function Workshops({ data }: { data: Workshop[] }) {
   return (
     <Layout>
       <HeadingBar>
@@ -36,11 +22,16 @@ export default function Workshops() {
       </HeadingBar>
       <Box bg="gray.100">
         <SimpleGrid columns={1} spacing={3}>
-          {workshops.map((w) => (
+          {data.map((w) => (
             <WorkshopCard key={w.id} workshop={w} />
           ))}
         </SimpleGrid>
       </Box>
     </Layout>
   );
+}
+
+export async function getServerSideProps() {
+  const { data } = await supabase.from("workshops").select("*");
+  return { props: { data } };
 }
