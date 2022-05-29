@@ -21,7 +21,7 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
       cursor={"pointer"}
       onClick={() => router.push(`/workshops/${workshop.id}`)}
     >
-      <Skeleton isLoaded={!loaded}>
+      <Skeleton isLoaded={loaded}>
         <Img
           alt=""
           onLoad={() => setLoaded(true)}
