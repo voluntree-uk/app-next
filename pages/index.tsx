@@ -1,26 +1,14 @@
-import { Divider, Heading } from "@chakra-ui/react";
-import HeadingBar from "../components/HeadingBar";
+import { Box } from "@chakra-ui/react";
 import Layout from "../components/Layout";
 
-import enforceAuthenticated from "../utils/enforceAuthenticated";
+import enforceRedirect from "../utils/enforceRedirect";
 
 export default function Home() {
   return (
     <Layout>
-      <HeadingBar>
-        <Heading
-          fontSize={"2xl"}
-          color={"white"}
-          fontWeight="light"
-          pl={8}
-          py={4}
-        >
-          Home
-        </Heading>
-      </HeadingBar>
-      <Divider />
+      <Box></Box>
     </Layout>
   );
 }
 
-export const getServerSideProps = enforceAuthenticated();
+export const getServerSideProps = enforceRedirect();

@@ -9,7 +9,7 @@ const enforceRedirect: (inner?: GetServerSideProps) => GetServerSideProps = (
     const { user } = await supabase.auth.api.getUserByCookie(req);
 
     if (user) {
-      return { props: {}, redirect: { destination: "/" } };
+      return { props: {}, redirect: { destination: "/workshops" } };
     }
 
     if (inner) {

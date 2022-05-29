@@ -111,6 +111,7 @@ export default function Account({ session }: { session: Session }) {
           alignItems="center"
           px={4}
           cursor="pointer"
+          boxShadow={"sm"}
         >
           <Text color={"gray.600"} display={"flex"} alignItems={"center"}>
             <Box color={"brand.700"} mr={2}>
@@ -143,6 +144,7 @@ export default function Account({ session }: { session: Session }) {
           alignItems="center"
           px={4}
           cursor="pointer"
+          boxShadow={"sm"}
         >
           <Text color={"gray.600"} display={"flex"} alignItems={"center"}>
             <Box color={"brand.700"} mr={2}>

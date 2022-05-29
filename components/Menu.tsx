@@ -23,11 +23,9 @@ import { ReactText } from "react";
 import { useRouter } from "next/router";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { MdCalendarToday, MdLogout } from "react-icons/md";
-
 import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { BiBell } from "react-icons/bi";
 import { FaHouseUser } from "react-icons/fa";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
 
 interface LinkItemProps {
   name: string;
@@ -199,7 +197,13 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         <IconButton
           variant="outline"
           aria-label="open menu"
-          icon={<AddIcon />}
+          icon={
+            router.pathname === "/users/myprofile" ? (
+              <SettingsIcon />
+            ) : (
+              <AddIcon />
+            )
+          }
           onClick={() => router.push("/workshops/new")}
           border="none"
           size={"xs"}
