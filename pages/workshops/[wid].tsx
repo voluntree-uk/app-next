@@ -1,4 +1,4 @@
-import { CalendarIcon } from "@chakra-ui/icons";
+import { AddIcon, CalendarIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -11,6 +11,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { IoIosAdd } from "react-icons/io";
+import { MdAddAlert, MdAddIcCall } from "react-icons/md";
 import Layout from "../../components/Layout";
 import { Slot, Workshop } from "../../shared/schemas";
 import { dateToReadable } from "../../utils/dates";
@@ -55,7 +57,7 @@ export default function WorkshopListing({
           </Heading>
         </Flex>
 
-        <Box transform={"translateY(-13%)"}>
+        <Box transform={"translateY(-10%)"}>
           <Box px={4} pt={4} bg="white" mx={2}>
             <Flex alignItems={"center"}>
               <Img
@@ -114,18 +116,20 @@ export default function WorkshopListing({
             </Text>
           </Box>
 
-          <Box bg="white" mx={2} mt={1}>
+          <Box bg="white" mx={2} mt={2}>
             {slots.map((s, i) => (
               <Flex
                 key={i}
                 px={3}
-                mb={0.5}
                 py={2}
                 justifyContent="space-between"
                 alignItems={"center"}
                 cursor={"pointer"}
                 onClick={() => setSlotSelected(s)}
-                boxShadow={slotSelected.id === s.id ? "2xl" : "none"}
+                borderLeftColor={
+                  slotSelected.id === s.id ? "green.400" : "none"
+                }
+                borderLeftWidth={5}
               >
                 <Flex flexDirection="column">
                   <Text fontSize={"sm"} fontWeight="medium">
@@ -168,12 +172,12 @@ export default function WorkshopListing({
               color={"white"}
               variant="contained"
               bg="brand.700"
-              _hover={{ backgroundColor: "#6b66f3ef" }}
               boxShadow="xl"
               w={"30%"}
-              size="md"
+              leftIcon={<IoIosAdd />}
+              size="sm"
             >
-              Join
+              Book
             </Button>
           </Flex>
         </Box>
