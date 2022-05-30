@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { AuthChangeEvent, createClient, Session } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { ChakraProvider } from "@chakra-ui/react";

@@ -1,4 +1,4 @@
-export function dateToReadable(str: string) {
+export function dateToReadable(date: string) {
   const options = {
     weekday: "long" as any,
     year: "numeric" as any,
@@ -6,7 +6,11 @@ export function dateToReadable(str: string) {
     day: "numeric" as any,
   };
 
-  const date = new Date(str);
+  const dateObj = new Date(date);
 
-  return date.toLocaleDateString("en-US", options);
+  return dateObj.toLocaleDateString("en-US", options);
+}
+
+export function timeToReadable(start_time: string, end_time: string) {
+  return `${start_time.slice(0, 5)} - ${end_time.slice(0, 5)}`;
 }

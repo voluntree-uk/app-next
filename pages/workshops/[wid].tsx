@@ -1,4 +1,4 @@
-import { AddIcon, CalendarIcon, EditIcon, StarIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -6,51 +6,54 @@ import {
   Divider,
   Flex,
   Heading,
-  IconButton,
   Img,
-  Skeleton,
   Text,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { IoIosAdd } from "react-icons/io";
-import { MdAddAlert, MdAddIcCall, MdStarOutline } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
 import Layout from "../../components/Layout";
-import { Slot, Workshop } from "../../shared/schemas";
-import { dateToReadable } from "../../utils/dates";
+import { Booking, Slot, Workshop } from "../../shared/schemas";
+import { dateToReadable, timeToReadable } from "../../utils/dates";
 import { supabase } from "../../utils/supabaseClient";
 
 export default function WorkshopListing({
   workshop,
   slots,
+  bookings,
 }: {
   workshop: Workshop;
   slots: Slot[];
+  bookings: Booking[];
 }) {
-  const [loaded, setLoaded] = useState(false);
-
   const [slotSelected, setSlotSelected] = useState<Slot>(slots[0]);
+
+  const getActiveBookingsForSlot = (slot: Slot): Booking[] => {
+    return bookings.filter((b) => b.slot_id === slot.id && b.active);
+  };
+
+  const selectSlotIsFullyBooked = (): boolean => {
+    return (
+      slotSelected.capacity - getActiveBookingsForSlot(slotSelected).length ===
+      0
+    );
+  };
+
+  const directToNewBooking = () => {
+    router.push(
+      `/bookings/new?workshop_id=${slotSelected.workshop_id}&slot_id=${slotSelected.id}`
+    );
+  };
+
+  const router = useRouter();
 
   return (
     <Layout>
       <Box>
-        <Skeleton isLoaded={loaded} pos={"relative"}>
-          <Img
-            alt=""
-            onLoad={() => setLoaded(true)}
-            src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg"
-          />
-          <IconButton
-            aria-label=""
-            zIndex={200}
-            pos="absolute"
-            top={3}
-            right={3}
-            size="sm"
-          >
-            <MdStarOutline />
-          </IconButton>
-        </Skeleton>
-
+        <Img
+          alt=""
+          src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg"
+        />
         <Flex
           py={4}
           px={4}
@@ -67,7 +70,6 @@ export default function WorkshopListing({
             {workshop.name}
           </Heading>
         </Flex>
-
         <Box transform={"translateY(-10%)"}>
           <Box px={4} pt={4} bg="white" mx={2}>
             <Flex alignItems={"center"}>
@@ -121,14 +123,14 @@ export default function WorkshopListing({
             <Divider pt={3} />
           </Box>
 
-          <Box bg="white" mx={2} px={4} pb={4}>
+          <Box bg="white" mx={2} px={4} pb={4} color="gray.600">
             <Text fontSize={"sm"} fontWeight={"normal"}>
               {workshop.description}
             </Text>
           </Box>
 
           <Box bg="white" mx={2} mt={2}>
-            {slots.map((s, i) => (
+            {slots.map((slot, i) => (
               <Flex
                 key={i}
                 px={3}
@@ -136,31 +138,31 @@ export default function WorkshopListing({
                 justifyContent="space-between"
                 alignItems={"center"}
                 cursor={"pointer"}
-                onClick={() => setSlotSelected(s)}
-                bg={slotSelected.id === s.id ? "green.50" : "none"}
+                onClick={() => setSlotSelected(slot)}
+                bg={slotSelected.id === slot.id ? "green.50" : "none"}
                 borderLeftColor={
-                  slotSelected.id === s.id ? "green.400" : "none"
+                  slotSelected.id === slot.id ? "green.400" : "none"
                 }
                 borderLeftWidth={5}
               >
                 <Flex flexDirection="column">
                   <Text fontSize={"sm"} fontWeight="medium">
-                    {dateToReadable(s.date)}
+                    {dateToReadable(slot.date)}
                   </Text>
                   <Text fontSize={"sm"} fontWeight="normal" color="gray.500">
-                    {s.start_time.slice(0, 5)} - {s.end_time.slice(0, 5)}
+                    {timeToReadable(slot.start_time, slot.end_time)}
                   </Text>
                 </Flex>
                 <Box>
                   <Badge variant={"subtle"} colorScheme="green">
-                    {s.capacity} spaces
+                    {slot.capacity - getActiveBookingsForSlot(slot).length}{" "}
+                    spaces
                   </Badge>
                 </Box>
               </Flex>
             ))}
           </Box>
         </Box>
-
         <Box
           borderTopColor={"gray.200"}
           borderTopWidth={"thin"}
@@ -176,8 +178,7 @@ export default function WorkshopListing({
                 {dateToReadable(slotSelected.date)}
               </Text>
               <Text fontWeight={"normal"} fontSize="sm" color="gray.500">
-                {slotSelected.start_time.slice(0, 5)} -{" "}
-                {slotSelected.end_time.slice(0, 5)}
+                {timeToReadable(slotSelected.start_time, slotSelected.end_time)}
               </Text>
             </Flex>
             <Button
@@ -186,10 +187,12 @@ export default function WorkshopListing({
               bg="brand.700"
               boxShadow="xl"
               w={"30%"}
-              leftIcon={<IoIosAdd />}
+              leftIcon={selectSlotIsFullyBooked() ? <FaUsers /> : <AddIcon />}
               size="sm"
+              disabled={selectSlotIsFullyBooked()}
+              onClick={directToNewBooking}
             >
-              Book
+              {selectSlotIsFullyBooked() ? "Full" : "Book"}
             </Button>
           </Flex>
         </Box>
@@ -197,10 +200,11 @@ export default function WorkshopListing({
     </Layout>
   );
 }
+
 export async function getServerSideProps(context: any) {
   const id = context.query.wid;
 
-  let { data, error } = await supabase
+  const { data: workshopData, error } = await supabase
     .from("workshops")
     .select("*")
     .eq("id", id);
@@ -209,17 +213,23 @@ export async function getServerSideProps(context: any) {
     return { props: {}, redirect: { destination: "/workshops" } };
   }
 
-  if (!data) {
+  if (!workshopData) {
     return { props: {}, redirect: { destination: "/workshops" } };
   }
 
-  let { data: slotsData } = await supabase
+  const { data: slotsData } = await supabase
     .from("slots")
     .select("*")
-    .eq("workshop_id", data[0].id);
+    .eq("workshop_id", workshopData[0].id);
 
-  const workshop = data[0];
+  const { data: bookingsData } = await supabase
+    .from("bookings")
+    .select("*")
+    .eq("workshop_id", workshopData[0].id);
+
+  const workshop = workshopData[0];
   const slots = slotsData;
+  const bookings = bookingsData;
 
-  return { props: { workshop, slots } };
+  return { props: { workshop, slots, bookings } };
 }
