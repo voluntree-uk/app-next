@@ -74,7 +74,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const router = useRouter();
 
   const LinkItems: Array<LinkItemProps> = [
-    { name: "Profile", icon: FaHouseUser, href: "/users/myprofile" },
+    { name: "Profile", icon: FaHouseUser, href: "/myprofile" },
     { name: "Workshops", icon: MdCalendarToday, href: "/workshops" },
     { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
   ];

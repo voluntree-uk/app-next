@@ -1,12 +1,12 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { Session } from "@supabase/supabase-js";
+import { Session, User } from "@supabase/supabase-js";
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { MdMailOutline, MdStarOutline, MdWorkOutline } from "react-icons/md";
 import { supabase } from "../utils/supabaseClient";
 import AccountAvatar from "./AccountAvatar";
 
-export default function Account({ session }: { session: Session }) {
+export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(true);
 
   const {
@@ -80,7 +80,7 @@ export default function Account({ session }: { session: Session }) {
 
   useEffect(() => {
     getProfile();
-  }, [session, getProfile]);
+  }, [user, getProfile]);
 
   return (
     <Box>
@@ -95,7 +95,7 @@ export default function Account({ session }: { session: Session }) {
         <Flex flexDirection={"column"} justifyContent="center" ml={1}>
           <Heading size={"md"}>{username}</Heading>
           <Text size={"sm"} color={"gray.600"}>
-            {session.user?.email}
+            {user?.email}
           </Text>
         </Flex>
       </Flex>
