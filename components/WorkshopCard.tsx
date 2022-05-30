@@ -14,20 +14,17 @@ import { Workshop } from "../shared/schemas";
 
 export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
   const router = useRouter();
-  const [loaded, setLoaded] = useState(false);
 
   return (
     <Box
       cursor={"pointer"}
       onClick={() => router.push(`/workshops/${workshop.id}`)}
     >
-      <Skeleton isLoaded={loaded}>
-        <Img
-          alt=""
-          onLoad={() => setLoaded(true)}
-          src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg"
-        />
-      </Skeleton>
+      <Img
+        alt=""
+        src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg"
+      />
+
       <Box borderTopWidth={1} borderTopColor={"gray.100"} p={4} bg="white">
         <Box mb={4}>
           <Heading color={"gray.700"} size={"sm"} fontWeight="semibold" py={2}>

@@ -23,8 +23,15 @@ import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import Slider from "../../components/Slider";
 import { IoMdArrowBack } from "react-icons/io";
+import { User } from "@supabase/supabase-js";
 
-export default function Workshops({ data }: { data: Workshop[] }) {
+export default function Workshops({
+  data,
+  user,
+}: {
+  data: Workshop[];
+  user: User;
+}) {
   const { register, watch } = useForm();
   const { search } = watch();
   const [isSearching, setIsSearching] = useState(false);
@@ -170,10 +177,19 @@ export default function Workshops({ data }: { data: Workshop[] }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req }: any) {
+  const { user } = await supabase.auth.api.getUserByCookie(req);
+
+  if (!user) {
+    return { props: {}, redirect: { destination: "/auth" } };
+  }
+
   const { data } = await supabase
     .from("workshops")
     .select("*")
     .order("created_at", { ascending: false });
-  return { props: { data } };
+
+  return {
+    props: { user, data },
+  };
 }
