@@ -85,7 +85,7 @@ export default function Workshops({
                 />
               </Flex>
             )}
-            <InputGroup>
+            <InputGroup display={"flex"} alignItems="center">
               {!isSearching && (
                 <InputLeftElement pointerEvents="none">
                   <Search2Icon color="gray.300" />
@@ -101,7 +101,6 @@ export default function Workshops({
                 focusBorderColor="transparent"
                 boxShadow={"sm"}
                 borderRadius="xl"
-                size="lg"
               />
             </InputGroup>
             {!isSearching && (
