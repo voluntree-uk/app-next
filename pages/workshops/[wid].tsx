@@ -1,4 +1,4 @@
-import { AddIcon, CalendarIcon } from "@chakra-ui/icons";
+import { AddIcon, CalendarIcon, EditIcon, StarIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -6,13 +6,14 @@ import {
   Divider,
   Flex,
   Heading,
+  IconButton,
   Img,
   Skeleton,
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { IoIosAdd } from "react-icons/io";
-import { MdAddAlert, MdAddIcCall } from "react-icons/md";
+import { MdAddAlert, MdAddIcCall, MdStarOutline } from "react-icons/md";
 import Layout from "../../components/Layout";
 import { Slot, Workshop } from "../../shared/schemas";
 import { dateToReadable } from "../../utils/dates";
@@ -32,12 +33,22 @@ export default function WorkshopListing({
   return (
     <Layout>
       <Box>
-        <Skeleton isLoaded={loaded}>
+        <Skeleton isLoaded={loaded} pos={"relative"}>
           <Img
             alt=""
             onLoad={() => setLoaded(true)}
             src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg"
           />
+          <IconButton
+            aria-label=""
+            zIndex={200}
+            pos="absolute"
+            top={3}
+            right={3}
+            size="sm"
+          >
+            <MdStarOutline />
+          </IconButton>
         </Skeleton>
 
         <Flex
@@ -126,6 +137,7 @@ export default function WorkshopListing({
                 alignItems={"center"}
                 cursor={"pointer"}
                 onClick={() => setSlotSelected(s)}
+                bg={slotSelected.id === s.id ? "green.50" : "none"}
                 borderLeftColor={
                   slotSelected.id === s.id ? "green.400" : "none"
                 }
