@@ -23,10 +23,11 @@ import { useToast } from "@chakra-ui/react";
 
 export default function AuthenticationForm() {
   const { register, handleSubmit } = useForm();
-
   const toast = useToast();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const onSubmit = async (data: any) => {
+    setIsLoading(true);
     const { error } = await supabase.auth.signIn(
       {
         email: data.email,
@@ -51,6 +52,7 @@ export default function AuthenticationForm() {
         isClosable: true,
       });
     }
+    setIsLoading(false);
   };
 
   return (
@@ -94,6 +96,8 @@ export default function AuthenticationForm() {
                   variant="contained"
                   bg="brand.700"
                   type="submit"
+                  isLoading={isLoading}
+                  _hover={{ backgroundColor: "#5c56eeF0" }}
                 >
                   Send link
                 </Button>

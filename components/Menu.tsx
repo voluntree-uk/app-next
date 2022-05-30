@@ -98,15 +98,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         />
       </Flex>
 
-      <Box mx={10}>
-        <Avatar
-          size="lg"
-          name="Harry Davies"
-          src="https://bit.ly/kent-c-dodds"
-          mb={4}
-        />
-      </Box>
-
       {LinkItems.map((link) => (
         <NavItem
           key={link.name}
