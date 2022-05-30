@@ -1,15 +1,7 @@
 import { Box, Spinner } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import Layout from "../components/Layout";
+import { supabase } from "../utils/supabaseClient";
 
 export default function Home() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push("/workshops");
-  }, [router]);
-
   return (
     <Box
       h="100vh"
@@ -28,4 +20,14 @@ export default function Home() {
       />
     </Box>
   );
+}
+
+export async function getServerSideProps({ req }: any) {
+  const { user } = await supabase.auth.api.getUserByCookie(req);
+
+  if (user) {
+    return { props: { user }, redirect: { destination: "/workshops" } };
+  }
+
+  return { props: {}, redirect: { destination: "/auth" } };
 }
