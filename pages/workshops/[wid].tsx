@@ -41,107 +41,108 @@ export default function WorkshopListing({
         <Flex
           py={4}
           px={4}
-          borderTopWidth={1}
-          bg="white"
           alignItems="center"
           mx={2}
           my={1}
-          color="gray.700"
+          color="gray.600"
+          bg="white"
+          transform={"translateY(-40%)"}
           borderLeftWidth={5}
           borderBottomWidth={5}
-          borderLeftColor={"brand.700"}
         >
-          <Heading fontSize={"17px"} fontWeight={"semibold"}>
+          <Heading fontSize={"22px"} fontWeight={"semibold"}>
             {workshop.name}
           </Heading>
         </Flex>
 
-        <Box px={4} pt={4} bg="white" mx={2}>
-          <Flex alignItems={"center"}>
-            <Img
-              src="https://bit.ly/dan-abramov"
-              h="50"
-              w="50"
-              borderRadius={"100%"}
-              alt=""
-              mr={3}
-            />
-            <Flex flexDirection={"column"}>
-              <Heading
-                fontSize={"sm"}
-                fontWeight={"semibold"}
-                letterSpacing="wide"
-              >
-                {"Organiser"}
-              </Heading>
-              <Text fontSize={"sm"} color={"gray.600"}>
-                {workshop.user_id}
-              </Text>
-            </Flex>
-          </Flex>
-          <Divider pt={3} />
-        </Box>
-
-        <Box px={4} py={4} bg="white" mx={2}>
-          <Flex alignItems={"center"}>
-            <Img
-              src={"/map.svg"}
-              h="50"
-              w="50"
-              borderRadius={"100%"}
-              alt=""
-              mr={3}
-            />
-            <Flex flexDirection={"column"}>
-              <Heading
-                fontSize={"sm"}
-                fontWeight={"semibold"}
-                letterSpacing="wide"
-              >
-                {"Location"}
-              </Heading>
-              <Text fontSize={"sm"} color={"gray.600"}>
-                {workshop.virtual ? "Virtual" : workshop.street}
-              </Text>
-            </Flex>
-          </Flex>
-          <Divider pt={3} />
-        </Box>
-
-        <Box bg="white" mx={2} px={4} pb={4}>
-          <Text fontSize={"sm"} fontWeight={"normal"}>
-            {workshop.description}
-          </Text>
-        </Box>
-
-        <Box bg="white" mx={2} mt={1}>
-          {slots.map((s, i) => (
-            <Flex
-              key={i}
-              px={3}
-              mb={0.5}
-              py={2}
-              justifyContent="space-between"
-              alignItems={"center"}
-              cursor={"pointer"}
-              onClick={() => setSlotSelected(s)}
-              boxShadow={slotSelected.id === s.id ? "2xl" : "none"}
-            >
-              <Flex flexDirection="column">
-                <Text fontSize={"sm"} fontWeight="medium">
-                  {dateToReadable(s.date)}
-                </Text>
-                <Text fontSize={"sm"} fontWeight="normal" color="gray.500">
-                  {s.start_time.slice(0, 5)} - {s.end_time.slice(0, 5)}
+        <Box transform={"translateY(-13%)"}>
+          <Box px={4} pt={4} bg="white" mx={2}>
+            <Flex alignItems={"center"}>
+              <Img
+                src="https://bit.ly/dan-abramov"
+                h="50"
+                w="50"
+                borderRadius={"100%"}
+                alt=""
+                mr={3}
+              />
+              <Flex flexDirection={"column"}>
+                <Heading
+                  fontSize={"sm"}
+                  fontWeight={"semibold"}
+                  letterSpacing="wide"
+                >
+                  {"Organiser"}
+                </Heading>
+                <Text fontSize={"sm"} color={"gray.600"}>
+                  {workshop.user_id}
                 </Text>
               </Flex>
-              <Box>
-                <Badge variant={"subtle"} colorScheme="green">
-                  {s.capacity} spaces
-                </Badge>
-              </Box>
             </Flex>
-          ))}
+            <Divider pt={3} />
+          </Box>
+
+          <Box px={4} py={4} bg="white" mx={2}>
+            <Flex alignItems={"center"}>
+              <Img
+                src={"/map.svg"}
+                h="50"
+                w="50"
+                borderRadius={"100%"}
+                alt=""
+                mr={3}
+              />
+              <Flex flexDirection={"column"}>
+                <Heading
+                  fontSize={"sm"}
+                  fontWeight={"semibold"}
+                  letterSpacing="wide"
+                >
+                  {"Location"}
+                </Heading>
+                <Text fontSize={"sm"} color={"gray.600"}>
+                  {workshop.virtual ? "Virtual" : workshop.street}
+                </Text>
+              </Flex>
+            </Flex>
+            <Divider pt={3} />
+          </Box>
+
+          <Box bg="white" mx={2} px={4} pb={4}>
+            <Text fontSize={"sm"} fontWeight={"normal"}>
+              {workshop.description}
+            </Text>
+          </Box>
+
+          <Box bg="white" mx={2} mt={1}>
+            {slots.map((s, i) => (
+              <Flex
+                key={i}
+                px={3}
+                mb={0.5}
+                py={2}
+                justifyContent="space-between"
+                alignItems={"center"}
+                cursor={"pointer"}
+                onClick={() => setSlotSelected(s)}
+                boxShadow={slotSelected.id === s.id ? "2xl" : "none"}
+              >
+                <Flex flexDirection="column">
+                  <Text fontSize={"sm"} fontWeight="medium">
+                    {dateToReadable(s.date)}
+                  </Text>
+                  <Text fontSize={"sm"} fontWeight="normal" color="gray.500">
+                    {s.start_time.slice(0, 5)} - {s.end_time.slice(0, 5)}
+                  </Text>
+                </Flex>
+                <Box>
+                  <Badge variant={"subtle"} colorScheme="green">
+                    {s.capacity} spaces
+                  </Badge>
+                </Box>
+              </Flex>
+            ))}
+          </Box>
         </Box>
 
         <Box
