@@ -38,15 +38,7 @@ export default function WorkshopSlotForm(
    */
   const onSubmit = (newSlot: any) => {
     reset();
-
     props.onSubmit({ ...newSlot, id: uuidv4() });
-
-    toast({
-      title: "Slot added",
-      status: "success",
-      duration: 4000,
-      isClosable: true,
-    });
   };
 
   return (
@@ -139,12 +131,13 @@ export default function WorkshopSlotForm(
           </FormErrorMessage>
         </FormControl>
         <Button
-          py={7}
-          borderRadius="xl"
+          color={"white"}
+          variant="contained"
+          bg="brand.700"
           type="submit"
-          bg={"brand.800"}
-          color="white"
           isLoading={isSubmitting}
+          _hover={{ backgroundColor: "#5c56eeF0" }}
+          boxShadow="lg"
         >
           Save
         </Button>

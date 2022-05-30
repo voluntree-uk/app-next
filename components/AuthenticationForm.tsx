@@ -87,7 +87,15 @@ export default function AuthenticationForm() {
               <Stack spacing="5">
                 <FormControl>
                   <FormLabel htmlFor="email">Email</FormLabel>
-                  <Input {...register("email")} id="email" type="email" />
+                  <Input
+                    {...register("email")}
+                    id="email"
+                    type="email"
+                    focusBorderColor="brand.700"
+                    boxShadow={"sm"}
+                    borderRadius="xl"
+                    size="lg"
+                  />
                 </FormControl>
               </Stack>
               <Stack spacing="6">
@@ -98,6 +106,7 @@ export default function AuthenticationForm() {
                   type="submit"
                   isLoading={isLoading}
                   _hover={{ backgroundColor: "#5c56eeF0" }}
+                  boxShadow="lg"
                 >
                   Send link
                 </Button>
