@@ -51,12 +51,7 @@ export default function WorkshopListing({
           borderBottomWidth={5}
           borderLeftColor={"brand.700"}
         >
-          <Heading
-            fontSize={"17px"}
-            fontWeight={"semibold"}
-            bgGradient="linear(to-r, red.500, yellow.500)"
-            bgClip="text"
-          >
+          <Heading fontSize={"17px"} fontWeight={"semibold"}>
             {workshop.name}
           </Heading>
         </Flex>
@@ -130,6 +125,7 @@ export default function WorkshopListing({
               alignItems={"center"}
               cursor={"pointer"}
               onClick={() => setSlotSelected(s)}
+              boxShadow={slotSelected.id === s.id ? "2xl" : "none"}
             >
               <Flex flexDirection="column">
                 <Text fontSize={"sm"} fontWeight="medium">
@@ -172,8 +168,9 @@ export default function WorkshopListing({
               variant="contained"
               bg="brand.700"
               _hover={{ backgroundColor: "#6b66f3ef" }}
-              boxShadow="lg"
+              boxShadow="xl"
               w={"30%"}
+              size="md"
             >
               Join
             </Button>
