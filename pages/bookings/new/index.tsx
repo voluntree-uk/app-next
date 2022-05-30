@@ -69,7 +69,7 @@ export default function Index() {
         }
 
         // Redirect if booking created successfully
-        router.push("/myprofile");
+        router.push("/mybookings");
       }
     } catch (error) {
       const message = (error as any).message;

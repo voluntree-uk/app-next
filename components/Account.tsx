@@ -99,61 +99,6 @@ export default function Account({ user }: { user: User }) {
           </Text>
         </Flex>
       </Flex>
-
-      <Box>
-        <Flex
-          bg="white"
-          h="12"
-          borderBottomColor={"gray.200"}
-          borderBottomWidth={1}
-          borderTopColor={"gray.200"}
-          borderTopWidth={1}
-          alignItems="center"
-          px={4}
-          cursor="pointer"
-          boxShadow={"sm"}
-        >
-          <Text color={"gray.600"} display={"flex"} alignItems={"center"}>
-            <Box color={"brand.700"} mr={2}>
-              <MdMailOutline />
-            </Box>
-            Bookings
-          </Text>
-        </Flex>
-        <Flex
-          bg="white"
-          h="12"
-          borderBottomColor={"gray.200"}
-          borderBottomWidth={1}
-          alignItems="center"
-          px={4}
-          cursor="pointer"
-        >
-          <Text color={"gray.600"} display={"flex"} alignItems={"center"}>
-            <Box color={"brand.700"} mr={2}>
-              <MdWorkOutline />
-            </Box>
-            Workshops
-          </Text>
-        </Flex>
-        <Flex
-          bg="white"
-          h="12"
-          borderBottomColor={"gray.200"}
-          borderBottomWidth={1}
-          alignItems="center"
-          px={4}
-          cursor="pointer"
-          boxShadow={"sm"}
-        >
-          <Text color={"gray.600"} display={"flex"} alignItems={"center"}>
-            <Box color={"brand.700"} mr={2}>
-              <MdStarOutline />
-            </Box>
-            Saved
-          </Text>
-        </Flex>
-      </Box>
     </Box>
   );
 }

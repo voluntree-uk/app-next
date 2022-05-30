@@ -1,4 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -9,8 +9,9 @@ import {
   Img,
   Text,
 } from "@chakra-ui/react";
+import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import Layout from "../../components/Layout";
 import { Booking, Slot, Workshop } from "../../shared/schemas";
@@ -21,10 +22,12 @@ export default function WorkshopListing({
   workshop,
   slots,
   bookings,
+  user,
 }: {
   workshop: Workshop;
   slots: Slot[];
   bookings: Booking[];
+  user: User;
 }) {
   const [slotSelected, setSlotSelected] = useState<Slot>(slots[0]);
 
@@ -45,7 +48,30 @@ export default function WorkshopListing({
     );
   };
 
+  const userOwnsWorkshop = () => {
+    return user.id === workshop.user_id;
+  };
+
+  const userHasBookedSlot = () => {
+    return bookings
+      .filter((b) => b.active)
+      .some((b) => b.slot_id === slotSelected.id && b.user_id === user.id);
+  };
+
   const router = useRouter();
+
+  const getBookButtonIcon = (): ReactElement => {
+    if (selectSlotIsFullyBooked()) {
+      return <FaUsers />;
+    }
+    if (!selectSlotIsFullyBooked() && !userHasBookedSlot()) {
+      return <AddIcon />;
+    }
+    if (userHasBookedSlot()) {
+      return <CheckIcon />;
+    }
+    return <AddIcon />;
+  };
 
   return (
     <Layout>
@@ -184,15 +210,18 @@ export default function WorkshopListing({
             <Button
               color={"white"}
               variant="contained"
-              bg="brand.700"
+              bg={userHasBookedSlot() ? "green.300" : "brand.700"}
               boxShadow="xl"
               w={"30%"}
-              leftIcon={selectSlotIsFullyBooked() ? <FaUsers /> : <AddIcon />}
+              leftIcon={getBookButtonIcon()}
               size="sm"
               disabled={selectSlotIsFullyBooked()}
-              onClick={directToNewBooking}
+              onClick={userHasBookedSlot() ? () => "" : directToNewBooking}
+              _hover={{ bg: userHasBookedSlot() ? "green.300" : "brand.700" }}
             >
-              {selectSlotIsFullyBooked() ? "Full" : "Book"}
+              {selectSlotIsFullyBooked() && "Full"}
+              {!selectSlotIsFullyBooked() && !userHasBookedSlot() && "Book"}
+              {userHasBookedSlot() && "Booked"}
             </Button>
           </Flex>
         </Box>
@@ -203,6 +232,12 @@ export default function WorkshopListing({
 
 export async function getServerSideProps(context: any) {
   const id = context.query.wid;
+
+  const { user } = await supabase.auth.api.getUserByCookie(context.req);
+
+  if (!user) {
+    return { props: {}, redirect: { destination: "/auth" } };
+  }
 
   const { data: workshopData, error } = await supabase
     .from("workshops")
@@ -231,5 +266,5 @@ export async function getServerSideProps(context: any) {
   const slots = slotsData;
   const bookings = bookingsData;
 
-  return { props: { workshop, slots, bookings } };
+  return { props: { workshop, slots, bookings, user } };
 }

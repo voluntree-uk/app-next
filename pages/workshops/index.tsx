@@ -127,7 +127,7 @@ export default function Workshops({
                 Newly added workshops
               </Text>
             </Box>
-            <SimpleGrid columns={1} spacing={3}>
+            <SimpleGrid columns={[1, 2, 3]} spacing={3}>
               {data.map((w) => (
                 <WorkshopCard key={w.id} workshop={w} />
               ))}
@@ -136,7 +136,7 @@ export default function Workshops({
         )}
         {isSearching && (
           <Box px={3}>
-            <SimpleGrid columns={1} spacing={3}>
+            <SimpleGrid columns={[1, 2, 3]} spacing={3}>
               {searchedWorkshops.map((w) => (
                 <WorkshopCard key={w.id} workshop={w} />
               ))}

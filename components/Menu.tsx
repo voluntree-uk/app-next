@@ -16,6 +16,7 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
+  Divider,
 } from "@chakra-ui/react";
 
 import { IconType } from "react-icons";
@@ -26,6 +27,8 @@ import { MdCalendarToday, MdLogout } from "react-icons/md";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FaHouseUser } from "react-icons/fa";
 import { AddIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
+import { BiBookAdd } from "react-icons/bi";
+import Footer from "./Footer";
 
 interface LinkItemProps {
   name: string;
@@ -75,6 +78,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
   const LinkItems: Array<LinkItemProps> = [
     { name: "Profile", icon: FaHouseUser, href: "/myprofile" },
+    { name: "Bookings", icon: BiBookAdd, href: "/mybookings" },
     { name: "Workshops", icon: MdCalendarToday, href: "/workshops" },
     { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
   ];
@@ -99,17 +103,21 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       </Flex>
 
       {LinkItems.map((link) => (
-        <NavItem
-          key={link.name}
-          icon={link.icon}
-          onClick={() => {
-            router.push(link.href);
-            onClose();
-          }}
-        >
-          {link.name}
-        </NavItem>
+        <>
+          <NavItem
+            key={link.name}
+            icon={link.icon}
+            onClick={() => {
+              router.push(link.href);
+              onClose();
+            }}
+          >
+            {link.name}
+          </NavItem>
+          <Divider />
+        </>
       ))}
+      <Footer />
     </Box>
   );
 };
@@ -128,13 +136,13 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
       <Flex
         align="center"
         p="4"
-        mx="8"
-        borderRadius="lg"
         role="group"
         cursor="pointer"
         _hover={{
-          bg: "brand.700",
+          bg: "brand.800",
           color: "white",
+          fontWeight: "semibold",
+          fontSize: "lg",
         }}
         {...rest}
       >
