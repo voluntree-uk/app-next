@@ -92,10 +92,13 @@ export default function Workshops({ data }: { data: Workshop[] }) {
                 {...register("search")}
                 onFocus={() => setIsSearching(true)}
                 focusBorderColor="transparent"
+                boxShadow={"sm"}
+                borderRadius="xl"
+                size="lg"
               />
             </InputGroup>
             {!isSearching && (
-              <Flex w="10%" justifyContent={"center"} color="brand.700">
+              <Flex w="14%" justifyContent={"center"} color="brand.700">
                 <IconButton
                   size={"lg"}
                   aria-label="Search database"

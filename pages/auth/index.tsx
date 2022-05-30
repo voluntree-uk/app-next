@@ -6,15 +6,6 @@ import enforceRedirect from "../../utils/enforceRedirect";
 import { useSession } from "../../utils/hooks";
 
 export default function Authentication() {
-  const session = useSession();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (session?.user) {
-      router.push("/users/myprofile");
-    }
-  }, [session, router]);
-
   return <AuthenticationForm />;
 }
 
