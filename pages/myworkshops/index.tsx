@@ -19,13 +19,7 @@ import WorkshopCard from "../../components/WorkshopCard";
 import { Workshop } from "../../shared/schemas";
 import { supabase } from "../../utils/supabaseClient";
 
-export default function MyWorkshops({
-  workshops,
-  category,
-}: {
-  workshops: Workshop[];
-  category: string;
-}) {
+export default function MyWorkshops({ workshops }: { workshops: Workshop[] }) {
   return (
     <Layout>
       <HeadingBar>
@@ -36,7 +30,7 @@ export default function MyWorkshops({
           pl={8}
           pb={4}
         >
-          My Workshops
+          Volunteer Dashboard
         </Heading>
       </HeadingBar>
 

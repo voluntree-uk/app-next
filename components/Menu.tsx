@@ -23,20 +23,15 @@ import { ReactText } from "react";
 import { useRouter } from "next/router";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 
-import {
-  MdCalendarToday,
-  MdPersonOutline,
-  MdWorkOutline,
-} from "react-icons/md";
+import { MdPersonOutline, MdSearch } from "react-icons/md";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
 import { BiBookAdd } from "react-icons/bi";
-import Footer from "./Footer";
 import { useSession } from "../utils/hooks";
 import config from "../app-config";
 import { capitalize } from "lodash";
-import { Logo } from "./Logo";
+import { IoMdHelpBuoy } from "react-icons/io";
 
 interface LinkItemProps {
   name: string;
@@ -98,15 +93,20 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
   const LinkItems: Array<LinkItemProps> = [
     {
-      name: session?.user?.email || "Profile",
+      name: "Me",
       icon: MdPersonOutline,
       href: "/myprofile",
     },
-    { name: "My Bookings", icon: BiBookAdd, href: "/mybookings" },
-    { name: "Workshops", icon: MdCalendarToday, href: "/workshops" },
+    { name: "Bookings", icon: BiBookAdd, href: "/mybookings", sub: true },
+
+    { name: "Workshops", icon: MdSearch, href: "/workshops" },
     ...categoryLinkItems,
-    { name: "My Workshops", icon: MdWorkOutline, href: "/myworkshops" },
     { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
+    {
+      name: "Volunteer Dashboard",
+      icon: IoMdHelpBuoy,
+      href: "/myworkshops",
+    },
   ];
 
   return (
@@ -124,6 +124,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         alignItems="center"
         justifyContent="space-between"
         bg="brand.800"
+        mb={6}
       >
         <CloseButton
           display={{ base: "flex", md: "none" }}
@@ -135,11 +136,12 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       </Flex>
 
       {LinkItems.map((link) => (
-        <Box key={link.name}>
+        <Box key={link.name} bg="white">
           <NavItem
             icon={link.icon}
-            mx={link.sub ? "6" : "2"}
+            mx={link.sub ? "8" : "2"}
             color={link.sub ? "gray.500" : "gray.600"}
+            bg="white"
             onClick={() => {
               router.push(link.href);
               onClose();
@@ -165,11 +167,13 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
       href="#"
       style={{ textDecoration: "none" }}
       _focus={{ boxShadow: "none" }}
+      bg="white"
     >
       <Flex
         align="center"
         p="3"
         role="group"
+        bg="white"
         cursor="pointer"
         _hover={{
           color: "gray.800",
