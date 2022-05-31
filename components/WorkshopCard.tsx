@@ -2,14 +2,18 @@ import { ViewIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Divider,
+  Flex,
   Heading,
   Img,
+  MenuIcon,
   Skeleton,
   Tag,
   Text,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { BiLaptop, BiMenu } from "react-icons/bi";
 import { Workshop } from "../shared/schemas";
 
 export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
@@ -19,37 +23,48 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
     <Box
       cursor={"pointer"}
       onClick={() => router.push(`/workshops/${workshop.id}`)}
+      boxShadow="sm"
     >
       <Img
         alt=""
         src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg"
       />
 
-      <Box borderTopWidth={1} borderTopColor={"gray.100"} p={4} bg="white">
-        <Box mb={4}>
-          <Heading color={"gray.700"} size={"sm"} fontWeight="semibold" py={2}>
+      <Box borderTopWidth={1} borderTopColor={"gray.100"} bg="white">
+        <Box>
+          <Heading
+            color={"gray.700"}
+            size={"md"}
+            fontWeight="semibold"
+            py={4}
+            px={4}
+          >
             {workshop.name}
           </Heading>
-          <Text color={"gray.500"} fontSize="medium">
+
+          <Divider />
+
+          <Text color={"gray.500"} fontSize="sm" py={3} px={4} pb={4}>
             {workshop.description}
           </Text>
-
-          <Box mt={3}>
-            <Tag mr={1}>{workshop.category}</Tag>
-            {workshop.virtual ? <Tag>virtual</Tag> : null}
-          </Box>
+          <Flex px={4} pb={4}>
+            <Tag
+              mr={1}
+              display="flex"
+              alignItems={"center"}
+              colorScheme="cyan"
+              boxShadow="sm"
+            >
+              <BiMenu style={{ marginRight: "5px" }} />
+              {workshop.category}
+            </Tag>
+            {workshop.virtual ? (
+              <Tag display="flex" alignItems={"center"} boxShadow="sm">
+                <BiLaptop style={{ marginRight: "5px" }} /> virtual session
+              </Tag>
+            ) : null}
+          </Flex>
         </Box>
-
-        <Button
-          color={"gray.600"}
-          leftIcon={<ViewIcon />}
-          variant={"outline"}
-          w={"100%"}
-          borderColor="gray.100"
-          fontSize="medium"
-        >
-          View
-        </Button>
       </Box>
     </Box>
   );

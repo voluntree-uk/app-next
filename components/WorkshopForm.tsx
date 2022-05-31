@@ -257,6 +257,7 @@ export default function WorkshopForm(): JSX.Element {
               isLoading={isSubmitting}
               _hover={{ backgroundColor: "#5c56eeF0" }}
               boxShadow="lg"
+              disabled={slots.length === 0}
             >
               Save
             </Button>
