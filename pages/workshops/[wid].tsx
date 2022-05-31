@@ -85,10 +85,9 @@ export default function WorkshopListing({
           px={4}
           alignItems="center"
           mx={2}
-          my={1}
+          my={4}
           color="gray.600"
           bg="white"
-          transform={"translateY(-40%)"}
           borderLeftWidth={5}
           borderBottomWidth={5}
         >
@@ -96,7 +95,7 @@ export default function WorkshopListing({
             {workshop.name}
           </Heading>
         </Flex>
-        <Box transform={"translateY(-10%)"}>
+        <Box>
           <Box px={4} pt={4} bg="white" mx={2}>
             <Flex alignItems={"center"}>
               <Img
@@ -149,13 +148,13 @@ export default function WorkshopListing({
             <Divider pt={3} />
           </Box>
 
-          <Box bg="white" mx={2} px={4} pb={4} color="gray.600">
+          <Box bg="white" mx={2} px={8} pb={4} color="gray.600">
             <Text fontSize={"sm"} fontWeight={"normal"}>
               {workshop.description}
             </Text>
           </Box>
 
-          <Box bg="white" mx={2} mt={2}>
+          <Box bg="white" mx={2} my={4}>
             {slots.map((slot, i) => (
               <Flex
                 key={i}

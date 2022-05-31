@@ -15,10 +15,12 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
+import { capitalize } from "lodash";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiTrash } from "react-icons/bi";
+import config from "../app-config";
 import { Slot, Workshop } from "../shared/schemas";
 import { useSession } from "../utils/hooks";
 import { supabase } from "../utils/supabaseClient";
@@ -203,12 +205,13 @@ export default function WorkshopForm(): JSX.Element {
                 borderRadius="xl"
                 size="lg"
               >
-                <option value="it">IT</option>
-                <option value="legal">Legal</option>
-                <option value="finance">Finance</option>
-                <option value="languages">Languages</option>
-                <option value="arts">Arts</option>
-                <option value="other">Other</option>
+                {config.categories.map((category) => {
+                  return (
+                    <option key={category} value={category}>
+                      {capitalize(category)}
+                    </option>
+                  );
+                })}
               </Select>
               <FormErrorMessage>
                 {errors.category && errors.category.message}

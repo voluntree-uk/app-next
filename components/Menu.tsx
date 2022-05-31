@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 
 import {
   IconButton,
-  Avatar,
   Box,
   CloseButton,
   Flex,
@@ -23,17 +22,27 @@ import { IconType } from "react-icons";
 import { ReactText } from "react";
 import { useRouter } from "next/router";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
-import { MdCalendarToday, MdLogout } from "react-icons/md";
+
+import {
+  MdCalendarToday,
+  MdPersonOutline,
+  MdWorkOutline,
+} from "react-icons/md";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
-import { FaHouseUser } from "react-icons/fa";
-import { AddIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
+import { FiMenu } from "react-icons/fi";
+import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
 import { BiBookAdd } from "react-icons/bi";
 import Footer from "./Footer";
+import { useSession } from "../utils/hooks";
+import config from "../app-config";
+import { capitalize } from "lodash";
+import { Logo } from "./Logo";
 
 interface LinkItemProps {
   name: string;
   href: string;
   icon: IconType;
+  sub?: boolean;
 }
 
 export default function Menu({ children }: { children: ReactNode }) {
@@ -76,10 +85,27 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const router = useRouter();
 
+  const session = useSession();
+
+  const categoryLinkItems = config.categories.map((category) => {
+    return {
+      name: capitalize(category),
+      icon: FiMenu,
+      href: `/workshops/category/${category}`,
+      sub: true,
+    };
+  }) as any;
+
   const LinkItems: Array<LinkItemProps> = [
-    { name: "Profile", icon: FaHouseUser, href: "/myprofile" },
-    { name: "Bookings", icon: BiBookAdd, href: "/mybookings" },
-    { name: "Workshops", icon: MdCalendarToday, href: "/workshops" },
+    {
+      name: session?.user?.email || "Profile",
+      icon: MdPersonOutline,
+      href: "/myprofile",
+    },
+    { name: "My Bookings", icon: BiBookAdd, href: "/mybookings" },
+    { name: "Browse Workshops", icon: MdCalendarToday, href: "/workshops" },
+    ...categoryLinkItems,
+    { name: "My Workshops", icon: MdWorkOutline, href: "/myworkshops" },
     { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
   ];
 
@@ -93,20 +119,28 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}
     >
-      <Flex h="20" alignItems="center" mx="8" justifyContent="flex-end">
+      <Flex
+        h="20"
+        alignItems="center"
+        justifyContent="space-between"
+        bg="brand.800"
+      >
+        <Logo mx={8} color="white" />
         <CloseButton
           display={{ base: "flex", md: "none" }}
-          color="brand.700"
+          color="white"
           onClick={onClose}
+          mx={8}
           size="lg"
         />
       </Flex>
 
       {LinkItems.map((link) => (
-        <>
+        <Box key={link.name}>
           <NavItem
-            key={link.name}
             icon={link.icon}
+            mx={link.sub ? "6" : "2"}
+            color={link.sub ? "gray.500" : "gray.600"}
             onClick={() => {
               router.push(link.href);
               onClose();
@@ -115,8 +149,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             {link.name}
           </NavItem>
           <Divider />
-        </>
+        </Box>
       ))}
+      <Box h="100%"></Box>
       <Footer />
     </Box>
   );
@@ -135,28 +170,15 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
     >
       <Flex
         align="center"
-        p="4"
+        p="3"
         role="group"
         cursor="pointer"
         _hover={{
-          bg: "brand.800",
-          color: "white",
-          fontWeight: "semibold",
-          fontSize: "lg",
+          color: "gray.800",
         }}
         {...rest}
       >
-        {icon && (
-          <Icon
-            mr="4"
-            fontSize="20"
-            _groupHover={{
-              color: "white",
-            }}
-            color="brand.700"
-            as={icon}
-          />
-        )}
+        {icon && <Icon mr="4" fontSize="20" color="brand.700" as={icon} />}
         {children}
       </Flex>
     </Link>
@@ -191,6 +213,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
           size={"lg"}
           transform={"scale(1.5)"}
           color="white"
+          _hover={{ bg: "brand.800" }}
+          _active={{ bg: "transparent" }}
         />
 
         <IconButton
@@ -211,6 +235,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
           bg="brand.700"
           borderRadius={"full"}
           mr="4"
+          _hover={{ bg: "brand.700" }}
+          _active={{ bg: "transparent" }}
         />
       </Flex>
     </Flex>

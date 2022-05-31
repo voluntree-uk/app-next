@@ -1,5 +1,7 @@
+import { Heading } from "@chakra-ui/react";
 import { User } from "@supabase/supabase-js";
 import React from "react";
+import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
 import { Booking } from "../../shared/schemas";
 import { supabase } from "../../utils/supabaseClient";
@@ -11,7 +13,21 @@ export default function MyBookings({
   bookings: Booking[];
   user: User;
 }) {
-  return <Layout>{"Bookings"}</Layout>;
+  return (
+    <Layout>
+      <HeadingBar>
+        <Heading
+          fontSize={"md"}
+          color={"white"}
+          fontWeight="semibold"
+          pl={8}
+          pb={4}
+        >
+          My Bookings
+        </Heading>
+      </HeadingBar>
+    </Layout>
+  );
 }
 
 export async function getServerSideProps({ req }: any) {

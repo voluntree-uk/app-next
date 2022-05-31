@@ -26,10 +26,10 @@ import { IoMdArrowBack } from "react-icons/io";
 import { User } from "@supabase/supabase-js";
 
 export default function Workshops({
-  data,
+  workshops,
   user,
 }: {
-  data: Workshop[];
+  workshops: Workshop[];
   user: User;
 }) {
   const { register, watch } = useForm();
@@ -128,7 +128,7 @@ export default function Workshops({
               </Text>
             </Box>
             <SimpleGrid columns={[1, 2, 3]} spacing={3}>
-              {data.map((w) => (
+              {workshops.map((w) => (
                 <WorkshopCard key={w.id} workshop={w} />
               ))}
             </SimpleGrid>
@@ -183,12 +183,12 @@ export async function getServerSideProps({ req }: any) {
     return { props: {}, redirect: { destination: "/auth" } };
   }
 
-  const { data } = await supabase
+  const { data: workshops } = await supabase
     .from("workshops")
     .select("*")
     .order("created_at", { ascending: false });
 
   return {
-    props: { user, data },
+    props: { user, workshops },
   };
 }
