@@ -23,7 +23,7 @@ import { ReactText } from "react";
 import { useRouter } from "next/router";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 
-import { MdPersonOutline, MdSearch } from "react-icons/md";
+import { MdAddBox, MdPersonOutline, MdSearch } from "react-icons/md";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
@@ -101,12 +101,25 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
     { name: "Workshops", icon: MdSearch, href: "/workshops" },
     ...categoryLinkItems,
-    { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
+
     {
-      name: "Volunteer Dashboard",
+      name: "Volunteer",
       icon: IoMdHelpBuoy,
       href: "/myworkshops",
     },
+    {
+      name: "Create",
+      icon: MdAddBox,
+      href: "/workshops/create",
+      sub: true,
+    },
+    {
+      name: "Bookings",
+      icon: BiBookAdd,
+      href: "/myworkshops",
+      sub: true,
+    },
+    { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
   ];
 
   return (
