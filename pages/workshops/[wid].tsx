@@ -1,4 +1,4 @@
-import { AddIcon, CheckIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -35,7 +35,7 @@ export default function WorkshopListing({
     return bookings.filter((b) => b.slot_id === slot.id && b.active);
   };
 
-  const selectSlotIsFullyBooked = (): boolean => {
+  const slotIsFullyBooked = (): boolean => {
     return (
       slotSelected.capacity - getActiveBookingsForSlot(slotSelected).length ===
       0
@@ -61,16 +61,23 @@ export default function WorkshopListing({
   const router = useRouter();
 
   const getBookButtonIcon = (): ReactElement => {
-    if (selectSlotIsFullyBooked()) {
+    if (slotIsFullyBooked()) {
       return <FaUsers />;
     }
-    if (!selectSlotIsFullyBooked() && !userHasBookedSlot()) {
+    if (!slotIsFullyBooked() && !userHasBookedSlot() && !userOwnsWorkshop()) {
       return <AddIcon />;
     }
     if (userHasBookedSlot()) {
       return <CheckIcon />;
     }
+    if (userOwnsWorkshop()) {
+      return <EditIcon />;
+    }
     return <AddIcon />;
+  };
+
+  const userCanBook = () => {
+    return !slotIsFullyBooked() && !userHasBookedSlot() && !userOwnsWorkshop();
   };
 
   return (
@@ -214,13 +221,23 @@ export default function WorkshopListing({
               w={"30%"}
               leftIcon={getBookButtonIcon()}
               size="sm"
-              disabled={selectSlotIsFullyBooked()}
-              onClick={userHasBookedSlot() ? () => "" : directToNewBooking}
+              disabled={slotIsFullyBooked()}
+              onClick={() => {
+                {
+                  if (userCanBook()) {
+                    directToNewBooking();
+                  }
+                  if (userOwnsWorkshop()) {
+                    router.push("/dashboard");
+                  }
+                }
+              }}
               _hover={{ bg: userHasBookedSlot() ? "green.300" : "brand.700" }}
             >
-              {selectSlotIsFullyBooked() && "Full"}
-              {!selectSlotIsFullyBooked() && !userHasBookedSlot() && "Book"}
+              {slotIsFullyBooked() && "Full"}
+              {userCanBook() && "Book"}
               {userHasBookedSlot() && "Booked"}
+              {userOwnsWorkshop() && "Manage"}
             </Button>
           </Flex>
         </Box>

@@ -1,5 +1,6 @@
 import { Box, Button, Heading, SimpleGrid, Text } from "@chakra-ui/react";
 import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/router";
 import React from "react";
 import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
@@ -8,12 +9,15 @@ import { supabase } from "../../utils/supabaseClient";
 
 export default function MyBookings({
   bookings,
-  user,
 }: {
   bookings: Booking[];
   user: User;
 }) {
-  console.log(bookings);
+  const router = useRouter();
+
+  const directToCancelBooking = (booking: Booking) => {
+    router.push(`/bookings/cancel?booking_id=${booking.id}`);
+  };
 
   return (
     <Layout>
@@ -34,7 +38,9 @@ export default function MyBookings({
             <Box key={b.id} p={4} borderRadius="lg" bg="gray.50" boxShadow="sm">
               <Text>{b.id}</Text>
               <Text>Workshop ID {b.workshop_id}</Text>
-              <Button mt={4}>Cancel</Button>
+              <Button mt={4} onClick={() => directToCancelBooking(b)}>
+                Cancel
+              </Button>
             </Box>
           ))}
         </SimpleGrid>

@@ -21,14 +21,18 @@ import { OAuthButtonGroup } from "./0AuthButtonGroup";
 import { Logo } from "./Logo";
 import { useRouter } from "next/router";
 
+enum Mode {
+  LOGIN,
+  SIGNUP,
+}
+
 export default function AuthenticationForm() {
   const { register, handleSubmit } = useForm();
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
+  const [mode, setMode] = React.useState<Mode>(Mode.LOGIN);
 
-  const onSubmit = async (data: any) => {
-    setIsLoading(true);
-
+  const logIn = async (data: any) => {
     try {
       const { error } = await supabase.auth.signIn({
         email: data.email,
@@ -42,9 +46,32 @@ export default function AuthenticationForm() {
       router.push("/workshops");
     } catch (error) {
       console.warn(error);
-    } finally {
-      setIsLoading(false);
     }
+  };
+
+  const signUp = async (data: any) => {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      router.push("/workshops");
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
+  const onSubmit = async (data: any) => {
+    setIsLoading(true);
+
+    mode === Mode.LOGIN ? logIn(data) : signUp(data);
+
+    setIsLoading(false);
   };
 
   return (
@@ -59,10 +86,32 @@ export default function AuthenticationForm() {
             <Logo />
             <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
               <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>
-                Log in to your account
+                {mode === Mode.LOGIN
+                  ? "Log in to your account"
+                  : "Create an account "}
+              </Heading>
+              <Heading
+                size={useBreakpointValue({ base: "xs", md: "sm" })}
+                color="gray.600"
+              >
+                OR
               </Heading>
               <HStack spacing="1" justify="center">
-                <Text color="muted">Invites only at the moment :(</Text>
+                <Text
+                  color="muted"
+                  cursor={"pointer"}
+                  textDecoration={"underline"}
+                  onClick={() => {
+                    setMode((oldMode) => {
+                      if (oldMode === Mode.LOGIN) {
+                        return Mode.SIGNUP;
+                      }
+                      return Mode.LOGIN;
+                    });
+                  }}
+                >
+                  {mode === Mode.LOGIN ? "Sign up" : "Login"}
+                </Text>
               </HStack>
             </Stack>
           </Stack>
@@ -112,7 +161,7 @@ export default function AuthenticationForm() {
                   _hover={{ backgroundColor: "#5c56eeF0" }}
                   boxShadow="lg"
                 >
-                  Sign in
+                  {mode === Mode.LOGIN ? "Sign in" : "Sign up"}
                 </Button>
                 <HStack>
                   <Divider />

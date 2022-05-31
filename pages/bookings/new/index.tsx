@@ -7,11 +7,15 @@ import { useSession } from "../../../utils/hooks";
 import { supabase } from "../../../utils/supabaseClient";
 import { useToast } from "@chakra-ui/react";
 
-export default function Index() {
+export default function NewBooking() {
   const router = useRouter();
+
   const { slot_id, workshop_id } = router.query;
+
   const session = useSession();
+
   const toast = useToast();
+
   const [loading, setLoading] = useState(false);
 
   async function confirmBooking(): Promise<void> {
@@ -88,7 +92,7 @@ export default function Index() {
 
   return (
     <Layout>
-      <Box bg="white" m={2}>
+      <Box bg="white" w={{ base: "full", md: "45vw" }} m={"0  auto"}>
         <Text p={4} fontWeight={"semibold"}>
           New booking
         </Text>
@@ -104,7 +108,7 @@ export default function Index() {
         <Divider />
         <Flex p={2} justifyContent={"space-between"}>
           <Button onClick={() => router.back()} variant={"outline"}>
-            Cancel
+            Back
           </Button>
           <Button onClick={confirmBooking} isLoading={loading}>
             Confirm
@@ -113,13 +117,4 @@ export default function Index() {
       </Box>
     </Layout>
   );
-}
-function toast(arg0: {
-  title: string;
-  description: string;
-  status: string;
-  duration: number;
-  isClosable: boolean;
-}) {
-  throw new Error("Function not implemented.");
 }
