@@ -1,5 +1,7 @@
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Divider,
   Flex,
   Heading,
@@ -11,7 +13,7 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { capitalize } from "lodash";
+import { useRouter } from "next/router";
 import React from "react";
 import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
@@ -19,7 +21,8 @@ import WorkshopCard from "../../components/WorkshopCard";
 import { Workshop } from "../../shared/schemas";
 import { supabase } from "../../utils/supabaseClient";
 
-export default function MyWorkshops({ workshops }: { workshops: Workshop[] }) {
+export default function Dashboard({ workshops }: { workshops: Workshop[] }) {
+  const router = useRouter();
   return (
     <Layout>
       <HeadingBar>
@@ -30,7 +33,7 @@ export default function MyWorkshops({ workshops }: { workshops: Workshop[] }) {
           pl={8}
           pb={4}
         >
-          Volunteer Dashboard
+          Dashboard
         </Heading>
       </HeadingBar>
 
@@ -66,6 +69,17 @@ export default function MyWorkshops({ workshops }: { workshops: Workshop[] }) {
           </Stat>
         </StatGroup>
       </Flex>
+
+      <Box mx={2} mb={2}>
+        <Button
+          leftIcon={<AddIcon />}
+          w="100%"
+          variant="solid"
+          onClick={() => router.push("/workshops/new")}
+        >
+          Create
+        </Button>
+      </Box>
 
       <Box p={1}>
         <SimpleGrid columns={[1, 2, 3]} spacing={3}>

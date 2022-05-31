@@ -26,7 +26,7 @@ import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { MdAddBox, MdPersonOutline, MdSearch } from "react-icons/md";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
-import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
+import { AddIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
 import { BiBookAdd } from "react-icons/bi";
 import { useSession } from "../utils/hooks";
 import config from "../app-config";
@@ -95,9 +95,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     {
       name: "Me",
       icon: MdPersonOutline,
-      href: "/myprofile",
+      href: "/me",
     },
-    { name: "Bookings", icon: BiBookAdd, href: "/mybookings", sub: true },
+    { name: "Bookings", icon: BiBookAdd, href: "/me/bookings", sub: true },
 
     { name: "Workshops", icon: MdSearch, href: "/workshops" },
     ...categoryLinkItems,
@@ -105,19 +105,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     {
       name: "Volunteer",
       icon: IoMdHelpBuoy,
-      href: "/myworkshops",
-    },
-    {
-      name: "Create",
-      icon: MdAddBox,
-      href: "/workshops/create",
-      sub: true,
-    },
-    {
-      name: "Bookings",
-      icon: BiBookAdd,
-      href: "/myworkshops",
-      sub: true,
+      href: "/dashboard",
     },
     { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
   ];
@@ -237,14 +225,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         <IconButton
           variant="outline"
           aria-label="open menu"
-          icon={
-            router.pathname === "/users/myprofile" ? (
-              <SettingsIcon />
-            ) : (
-              <AddIcon />
-            )
-          }
-          onClick={() => router.push("/workshops/new")}
+          icon={<BellIcon />}
           border="none"
           size={"xs"}
           transform={"scale(1.5)"}
