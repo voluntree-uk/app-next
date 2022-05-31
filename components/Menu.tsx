@@ -103,7 +103,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       href: "/myprofile",
     },
     { name: "My Bookings", icon: BiBookAdd, href: "/mybookings" },
-    { name: "Browse Workshops", icon: MdCalendarToday, href: "/workshops" },
+    { name: "Workshops", icon: MdCalendarToday, href: "/workshops" },
     ...categoryLinkItems,
     { name: "My Workshops", icon: MdWorkOutline, href: "/myworkshops" },
     { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
@@ -120,12 +120,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       {...rest}
     >
       <Flex
-        h="20"
+        h="16"
         alignItems="center"
         justifyContent="space-between"
         bg="brand.800"
       >
-        <Logo mx={8} color="white" />
         <CloseButton
           display={{ base: "flex", md: "none" }}
           color="white"
@@ -152,7 +151,6 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Box>
       ))}
       <Box h="100%"></Box>
-      <Footer />
     </Box>
   );
 };
@@ -195,12 +193,13 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     <Flex
       ml={{ base: 0, md: 60 }}
       px={{ base: 4, md: 4 }}
-      height="20"
-      bg="brand.800"
+      h="16"
+      bg={{ base: "brand.800", md: "gray.50" }}
+      borderBottomWidth={{ base: "0", md: "1" }}
+      borderBottomColor={{ base: "transparent", md: "1" }}
       justifyContent={"space-around"}
       flexDirection={"column"}
       boxShadow="2xl"
-      display={{ base: "flex", md: "none", lg: "none" }}
       {...rest}
     >
       <Flex justifyContent={{ base: "space-between" }} alignItems="center">
@@ -213,8 +212,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
           size={"lg"}
           transform={"scale(1.5)"}
           color="white"
-          _hover={{ bg: "brand.800" }}
+          _hover={{ bg: "transparent" }}
           _active={{ bg: "transparent" }}
+          display={{ base: "flex", md: "none", lg: "none" }}
         />
 
         <IconButton

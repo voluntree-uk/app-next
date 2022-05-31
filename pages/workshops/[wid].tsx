@@ -75,7 +75,7 @@ export default function WorkshopListing({
 
   return (
     <Layout>
-      <Box>
+      <Box w={{ base: "full", md: "45vw" }} m={"0  auto"}>
         <Img
           alt=""
           src="https://www.namecoinnews.com/wp-content/uploads/2021/03/Basic-Forex-Trading-Styles.jpg"
@@ -85,7 +85,7 @@ export default function WorkshopListing({
           px={4}
           alignItems="center"
           mx={2}
-          my={4}
+          my={2}
           color="gray.600"
           bg="white"
           borderLeftWidth={5}
@@ -154,7 +154,7 @@ export default function WorkshopListing({
             </Text>
           </Box>
 
-          <Box bg="white" mx={2} my={4}>
+          <Box bg="white" mx={2} my={2}>
             {slots.map((slot, i) => (
               <Flex
                 key={i}
@@ -189,12 +189,12 @@ export default function WorkshopListing({
           </Box>
         </Box>
         <Box
-          borderTopColor={"gray.200"}
-          borderTopWidth={"thin"}
+          borderColor={"gray.200"}
+          borderWidth={"thin"}
           p={3}
-          pos="fixed"
           bottom={"0%"}
-          w="100%"
+          pos={{ base: "fixed", md: "inherit" }}
+          w={{ base: "100%", md: "45vw" }}
           bg="white"
         >
           <Flex justifyContent={"space-between"} alignItems="center">

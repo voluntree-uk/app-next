@@ -78,7 +78,7 @@ export default function Workshops({
         <Box p={2}>
           <Flex alignItems={"center"} justifyContent="space-between">
             {isSearching && (
-              <Flex w="10%" justifyContent={"center"} color="brand.700">
+              <Flex justifyContent={"center"} color="brand.700">
                 <IconButton
                   size={"lg"}
                   aria-label="Search database"
