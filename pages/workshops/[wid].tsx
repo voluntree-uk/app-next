@@ -1,4 +1,4 @@
-import { AddIcon, CheckIcon, EditIcon } from "@chakra-ui/icons";
+import { AddIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -58,23 +58,43 @@ export default function WorkshopListing({
       .some((b) => b.slot_id === slotSelected.id && b.user_id === user.id);
   };
 
+  const cancelUserBooking = () => {
+    const booking = bookings.find((b) => b.user_id === user.id)
+    if (booking) {
+      router.push(`/bookings/cancel?booking_id=${booking.id}`);
+    }
+  }
+
   const router = useRouter();
 
   const getBookButtonIcon = (): ReactElement => {
-    if (slotIsFullyBooked()) {
-      return <FaUsers />;
+    if (userOwnsWorkshop()) {
+      return <EditIcon />;
+    }
+    if (userHasBookedSlot()) {
+      return <CloseIcon />;
     }
     if (!slotIsFullyBooked() && !userHasBookedSlot() && !userOwnsWorkshop()) {
       return <AddIcon />;
     }
-    if (userHasBookedSlot()) {
-      return <CheckIcon />;
-    }
-    if (userOwnsWorkshop()) {
-      return <EditIcon />;
+    if (slotIsFullyBooked()) {
+      return <FaUsers />;
     }
     return <AddIcon />;
   };
+
+  const getBookButtonText = (): string => {
+    if (userOwnsWorkshop()) {
+      return "Manage Booking"
+    } else if (userHasBookedSlot()) {
+      return "Cancel Booking"
+    } else if (userCanBook()) {
+      return "Book"
+    } else if (slotIsFullyBooked()) {
+      return "Booking Full"
+    }
+    return ""
+  }
 
   const userCanBook = () => {
     return !slotIsFullyBooked() && !userHasBookedSlot() && !userOwnsWorkshop();
@@ -216,28 +236,26 @@ export default function WorkshopListing({
             <Button
               color={"white"}
               variant="contained"
-              bg={userHasBookedSlot() ? "green.300" : "brand.700"}
+              bg={userHasBookedSlot() ? "red.300" : "brand.700"}
               boxShadow="xl"
               w={"30%"}
               leftIcon={getBookButtonIcon()}
               size="sm"
-              disabled={slotIsFullyBooked()}
+              disabled={slotIsFullyBooked() && !userHasBookedSlot()}
               onClick={() => {
                 {
-                  if (userCanBook()) {
-                    directToNewBooking();
-                  }
                   if (userOwnsWorkshop()) {
                     router.push("/dashboard");
+                  } else if (userHasBookedSlot()) {
+                    cancelUserBooking()
+                  } else if (userCanBook()) {
+                    directToNewBooking();
                   }
                 }
               }}
-              _hover={{ bg: userHasBookedSlot() ? "green.300" : "brand.700" }}
+              _hover={{ bg: userHasBookedSlot() ? "red.300" : "brand.700" }}
             >
-              {slotIsFullyBooked() && "Full"}
-              {userCanBook() && "Book"}
-              {userHasBookedSlot() && "Booked"}
-              {userOwnsWorkshop() && "Manage"}
+              {getBookButtonText()}
             </Button>
           </Flex>
         </Box>
