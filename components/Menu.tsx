@@ -18,6 +18,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
+import { supabase } from "../utils/supabaseClient";
 import { IconType } from "react-icons";
 import { ReactText } from "react";
 import { useRouter } from "next/router";
@@ -28,15 +29,15 @@ import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
 import { AddIcon, BellIcon, SettingsIcon } from "@chakra-ui/icons";
 import { BiBookAdd } from "react-icons/bi";
-import { useSession } from "../utils/hooks";
+import { GoSignOut } from "react-icons/go";
 import config from "../app-config";
 import { capitalize } from "lodash";
 import { IoMdHelpBuoy } from "react-icons/io";
 
 interface LinkItemProps {
   name: string;
-  href: string;
   icon: IconType;
+  onClick: () => any;
   sub?: boolean;
 }
 
@@ -80,13 +81,11 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   const router = useRouter();
 
-  const session = useSession();
-
   const categoryLinkItems = config.categories.map((category) => {
     return {
       name: capitalize(category),
       icon: FiMenu,
-      href: `/workshops/category/${category}`,
+      onClick: () => router.push(`/workshops/category/${category}`),
       sub: true,
     };
   }) as any;
@@ -95,19 +94,38 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     {
       name: "Me",
       icon: MdPersonOutline,
-      href: "/me",
+      onClick: () => router.push("/me")
     },
-    { name: "Bookings", icon: BiBookAdd, href: "/me/bookings", sub: true },
-
-    { name: "Workshops", icon: MdSearch, href: "/workshops" },
+    {
+      name: "Bookings",
+      icon: BiBookAdd,
+      onClick: () => router.push("/me/bookings"),
+      sub: true
+    },
+    {
+      name: "Workshops",
+      icon: MdSearch,
+      onClick: () => router.push("/workshops")
+    },
     ...categoryLinkItems,
-
     {
       name: "Volunteer",
       icon: IoMdHelpBuoy,
-      href: "/dashboard",
+      onClick: () => router.push("/dashboard")
     },
-    { name: "FAQ", icon: AiOutlineQuestionCircle, href: "/faq" },
+    {
+      name: "FAQ",
+      icon: AiOutlineQuestionCircle,
+      onClick: () => router.push("/faq")
+    },
+    {
+      name: "Sign Out",
+      icon: GoSignOut,
+      onClick: async () => {
+        await supabase.auth.signOut();
+        router.push("/auth");
+      }
+    },
   ];
 
   return (
@@ -144,7 +162,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             color={link.sub ? "gray.500" : "gray.600"}
             bg="white"
             onClick={() => {
-              router.push(link.href);
+              link.onClick();
               onClose();
             }}
           >
