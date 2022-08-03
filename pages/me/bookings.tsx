@@ -4,18 +4,19 @@ import { useRouter } from "next/router";
 import React from "react";
 import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
-import { Booking } from "../../shared/schemas";
+import { BookingExt } from "../../shared/schemas";
 import { supabase } from "../../utils/supabaseClient";
+import { dateToReadable, timeToReadable } from "../../utils/dates";
 
 export default function MyBookings({
   bookings,
 }: {
-  bookings: Booking[];
+  bookings: BookingExt[];
   user: User;
 }) {
   const router = useRouter();
 
-  const directToCancelBooking = (booking: Booking) => {
+  const directToCancelBooking = (booking: BookingExt) => {
     router.push(`/bookings/cancel?booking_id=${booking.id}`);
   };
 
@@ -36,8 +37,8 @@ export default function MyBookings({
         <SimpleGrid columns={[1, 2, 3]} spacing={3}>
           {bookings.map((b) => (
             <Box key={b.id} p={4} borderRadius="lg" bg="gray.50" boxShadow="sm">
-              <Text>{b.id}</Text>
-              <Text>Workshop ID {b.workshop_id}</Text>
+              <Text>{b.workshops?.name}</Text>
+              <Text>{dateToReadable(b.slots.date)} {timeToReadable(b.slots?.start_time, b.slots?.end_time)}</Text>
               <Button mt={4} onClick={() => directToCancelBooking(b)}>
                 Cancel
               </Button>
@@ -58,7 +59,11 @@ export async function getServerSideProps({ req }: any) {
 
   const { data: bookings } = await supabase
     .from("bookings")
-    .select("*")
+    .select(`
+      *,
+      workshops:workshop_id(name),
+      slots:slot_id(date, start_time, end_time)
+    `)
     .eq("user_id", user?.id);
 
   return { props: { bookings, user } };

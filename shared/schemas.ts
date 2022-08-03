@@ -7,6 +7,11 @@ export interface Booking {
   active: boolean;
 }
 
+export interface BookingExt extends Booking {
+  workshops: Workshop;
+  slots: Slot;
+}
+
 export interface Workshop {
   id?: string;
   created_at?: number;
