@@ -4,19 +4,19 @@ import { useRouter } from "next/router";
 import React from "react";
 import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
-import { BookingExt } from "../../shared/schemas";
+import { BookingDetails } from "../../shared/schemas";
 import { supabase } from "../../utils/supabaseClient";
 import { dateToReadable, timeToReadable } from "../../utils/dates";
 
 export default function MyBookings({
   bookings,
 }: {
-  bookings: BookingExt[];
+  bookings: BookingDetails[];
   user: User;
 }) {
   const router = useRouter();
 
-  const directToCancelBooking = (booking: BookingExt) => {
+  const directToCancelBooking = (booking: BookingDetails) => {
     router.push(`/bookings/cancel?booking_id=${booking.id}`);
   };
 

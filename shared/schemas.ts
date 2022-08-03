@@ -7,7 +7,7 @@ export interface Booking {
   active: boolean;
 }
 
-export interface BookingExt extends Booking {
+export interface BookingDetails extends Booking {
   workshops: Workshop;
   slots: Slot;
 }
