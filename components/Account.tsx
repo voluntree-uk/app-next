@@ -30,7 +30,7 @@ export default function Account({ user }: { user: User }) {
       let { data, error, status } = await supabase
         .from("profiles")
         .select(`username, avatar_url`)
-        .eq("id", user.id)
+        .eq("user_id", user.id)
         .single();
 
       if (error && status !== 406) {
@@ -42,13 +42,13 @@ export default function Account({ user }: { user: User }) {
         setValue("avatar_url", data.avatar_url);
       }
     } catch (error: any) {
-      alert(error.message);
+      alert(`Error getting profile: ${error.message}`);
     } finally {
       setLoading(false);
     }
   }, [setValue]);
 
-  async function updateProfile({ username, avatar_url }: any) {
+  async function updateProfile({ avatar_url }: any) {
     try {
       setLoading(true);
       const user = supabase.auth.user();
@@ -58,9 +58,8 @@ export default function Account({ user }: { user: User }) {
       }
 
       const updates = {
-        id: user.id,
-        username,
-        avatar_url,
+        user_id: user.id,
+        avatar_url: avatar_url,
         updated_at: new Date(),
       };
 
@@ -72,7 +71,7 @@ export default function Account({ user }: { user: User }) {
         throw error;
       }
     } catch (error: any) {
-      alert(error.message);
+      alert(`Error updating profile: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -89,7 +88,7 @@ export default function Account({ user }: { user: User }) {
           url={avatar_url}
           onUpload={(url: any) => {
             setValue("avatar_url", url);
-            updateProfile({ username, avatar_url: url });
+            updateProfile({ avatar_url: url });
           }}
         />
         <Flex flexDirection={"column"} justifyContent="center" ml={1}>

@@ -26,8 +26,8 @@ export interface Workshop {
 }
 
 export interface Profile {
-  id?: string;
   created_at?: number;
+  user_id: string;
   username: string;
   avatar_url: string;
   updated_at: number;
