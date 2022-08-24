@@ -13,6 +13,7 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
+  useToast
 } from "@chakra-ui/react";
 import * as React from "react";
 import { ReactElement } from "react";
@@ -32,6 +33,7 @@ export default function AuthenticationForm() {
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
   const [mode, setMode] = React.useState<Mode>(Mode.LOGIN);
+  const toast = useToast();
 
   const logIn = async (data: any) => {
     try {
@@ -43,10 +45,10 @@ export default function AuthenticationForm() {
       if (error) {
         throw new Error(error.message);
       }
-
+      showToast("Login Successful");
       router.push("/workshops");
-    } catch (error) {
-      console.warn(error);
+    } catch (error: any) {
+      showToast("Login Unsuccessful", error.message, false);
     }
   };
 
@@ -79,11 +81,22 @@ export default function AuthenticationForm() {
         }
       }
 
+      showToast("Sign Up Successful");
       router.push("/workshops");
-    } catch (error) {
-      console.warn(error);
+    } catch (error: any) {
+      showToast("Sign Up Unsuccessful", error.message, false);
     }
   };
+
+  const showToast = (title: any, description: any = null, success: boolean = true) => {
+    toast({
+      title: title,
+      description: description,
+      status: success ? "success" : "error",
+      duration: 4000,
+      isClosable: true,
+    })
+  }
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
@@ -104,6 +117,7 @@ export default function AuthenticationForm() {
         boxShadow={"sm"}
         borderRadius="xl"
         size="lg"
+        isRequired={true}
         placeholder={placeholder}
       />
     </FormControl>
