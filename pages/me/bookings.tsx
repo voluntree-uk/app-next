@@ -20,7 +20,7 @@ export default function MyBookings({
     router.push(`/bookings/cancel?booking_id=${booking.id}`);
   };
 
-  const directToBooking = (booking: BookingDetails) => {
+  const directToWorkshop = (booking: BookingDetails) => {
     console.log(booking.workshop_id)
     router.push(`/workshops/${booking.workshop_id}`);
   };
@@ -52,7 +52,7 @@ export default function MyBookings({
                 boxShadow="xl"
                 w={"30%"}
                 size="sm"
-                onClick={() => directToBooking(b)}>
+                onClick={() => directToWorkshop(b)}>
                   Details
               </Button>
               <Button
