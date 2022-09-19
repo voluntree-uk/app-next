@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import React from "react";
 import AuthenticationForm from "../../components/AuthenticationForm";
 
-import { supabase } from "../../utils/supabaseClient";
+import { supabase } from "../../supabase/supabaseClient";
 
 export default function Authentication() {
   return (

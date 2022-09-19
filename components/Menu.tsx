@@ -18,7 +18,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "../supabase/supabaseClient";
 import { IconType } from "react-icons";
 import { ReactText } from "react";
 import { useRouter } from "next/router";

@@ -4,7 +4,6 @@ export interface Booking {
   workshop_id: string;
   user_id: string;
   slot_id: string;
-  active: boolean;
 }
 
 export interface BookingDetails extends Booking {
@@ -41,4 +40,10 @@ export interface Slot {
   start_time: string;
   end_time: string;
   capacity: number;
+}
+
+export interface User {
+  id: string
+  email?: string
+  phone?: string
 }

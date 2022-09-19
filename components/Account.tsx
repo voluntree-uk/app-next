@@ -3,7 +3,7 @@ import { Session, User } from "@supabase/supabase-js";
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { MdMailOutline, MdStarOutline, MdWorkOutline } from "react-icons/md";
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "../supabase/supabaseClient";
 import AccountAvatar from "./AccountAvatar";
 
 export default function Account({ user }: { user: User }) {

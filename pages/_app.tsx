@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { AuthChangeEvent, createClient, Session } from "@supabase/supabase-js";
 import { useEffect } from "react";
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "../supabase/supabaseClient";
 import { ChakraProvider } from "@chakra-ui/react";
 // 1. Import the extendTheme function
 import { extendTheme } from "@chakra-ui/react";

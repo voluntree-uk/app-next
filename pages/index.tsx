@@ -1,5 +1,5 @@
 import { Box, Spinner } from "@chakra-ui/react";
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "../supabase/supabaseClient";
 
 export default function Home() {
   return (

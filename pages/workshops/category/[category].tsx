@@ -5,7 +5,8 @@ import HeadingBar from "../../../components/HeadingBar";
 import Layout from "../../../components/Layout";
 import WorkshopCard from "../../../components/WorkshopCard";
 import { Workshop } from "../../../shared/schemas";
-import { supabase } from "../../../utils/supabaseClient";
+import { data } from "../../../shared/data/supabase";
+import { supabase } from "../../../supabase/supabaseClient";
 
 export default function WorkshopCategory({
   workshops,
@@ -47,16 +48,10 @@ export async function getServerSideProps(context: any) {
     return { props: {}, redirect: { destination: "/auth" } };
   }
 
-  const { data: workshopData, error } = await supabase
-    .from("workshops")
-    .select("*")
-    .eq("category", category);
-
-  if (error) {
+  try {
+    const workshops = await data.getWorkshopsByCategory(category)
+    return { props: { workshops, category } };
+  } catch (error) {
     return { props: {}, redirect: { destination: "/workshops" } };
   }
-
-  const workshops = workshopData;
-
-  return { props: { workshops, category } };
 }

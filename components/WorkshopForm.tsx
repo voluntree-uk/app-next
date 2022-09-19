@@ -23,7 +23,7 @@ import { BiTrash } from "react-icons/bi";
 import config from "../app-config";
 import { Slot, Workshop } from "../shared/schemas";
 import { useSession } from "../utils/hooks";
-import { supabase } from "../utils/supabaseClient";
+import { data } from "../shared/data/supabase";
 import Slider from "./Slider";
 import WorkshopSlotForm from "./WorkshopSlotForm";
 
@@ -53,12 +53,12 @@ export default function WorkshopForm(): JSX.Element {
 
     if (createdBy) {
       newWorkshop.user_id = createdBy;
+      
+      const createdWorkshop = await data.createWorkshop(newWorkshop);
+      
+      if (createdWorkshop.id) {
+        const newId = createdWorkshop.id;
 
-      const { data: createWorkshopData, error: createWorkshopError } =
-        await supabase.from("workshops").insert([newWorkshop]);
-
-      if (createWorkshopData) {
-        const newId = createWorkshopData[0].id;
         const newSlots: Slot[] = slots.map((s) => {
           return {
             workshop_id: newId,
@@ -69,11 +69,9 @@ export default function WorkshopForm(): JSX.Element {
           };
         });
 
-        const { error: createSlotsError } = await supabase
-          .from("slots")
-          .insert([...newSlots]);
+        const slotsSuccessfulyCreated = await data.createSlots(newSlots);
 
-        if (createWorkshopError === null && createSlotsError === null) {
+        if (slotsSuccessfulyCreated) {
           router.push(`/workshops/${newId}`);
         }
       }
@@ -135,9 +133,7 @@ export default function WorkshopForm(): JSX.Element {
                 <Switch
                   id="isVirtual"
                   colorScheme={"twitter"}
-                  {...register("virtual", {
-                    required: "This is required",
-                  })}
+                  {...register("virtual")}
                 />
               </Flex>
             </FormControl>

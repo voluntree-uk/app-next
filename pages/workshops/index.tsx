@@ -21,11 +21,13 @@ import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
 import WorkshopCard from "../../components/WorkshopCard";
 import { Workshop } from "../../shared/schemas";
-import { supabase } from "../../utils/supabaseClient";
+import { supabase } from "../../supabase/supabaseClient";
+import { data } from "../../shared/data/supabase";
 import { GoSettings } from "react-icons/go";
 import { useForm } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import Slider from "../../components/Slider";
+import { dateAsISOString } from "../../utils/dates";
 import { IoMdArrowBack } from "react-icons/io";
 import { User } from "@supabase/supabase-js";
 import config from "../../app-config";
@@ -45,10 +47,7 @@ export default function Workshops({
   const router = useRouter();
 
   const searchWorkshops = useCallback(async (str: string) => {
-    let { data: searchData } = await supabase
-      .from("workshops")
-      .select("*")
-      .ilike("name", `%${str}%`);
+    const searchData = await data.searchWorkshops(str);
 
     if (searchData) {
       setSearchWorkshops(searchData);
@@ -149,11 +148,8 @@ export async function getServerSideProps({ req }: any) {
     return { props: {}, redirect: { destination: "/auth" } };
   }
 
-  const { data: workshops } = await supabase
-    .from("workshops")
-    .select("*")
-    .order("created_at", { ascending: false });
-
+  const workshops = await data.getAvailableWorkshops();
+  
   return {
     props: { user, workshops },
   };

@@ -2,10 +2,9 @@ import { Box, Button, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Layout from "../../../components/Layout";
-import { Booking } from "../../../shared/schemas";
 import { useSession } from "../../../utils/hooks";
-import { supabase } from "../../../utils/supabaseClient";
 import { useToast } from "@chakra-ui/react";
+import { data } from "../../../shared/data/supabase";
 
 export default function CancelBooking() {
   const router = useRouter();
@@ -18,17 +17,16 @@ export default function CancelBooking() {
     setLoading(true);
 
     try {
-      const { error } = await supabase
-        .from("bookings")
-        .delete()
-        .match({ id: booking_id });
+      if (booking_id) {
+        const success = await data.removeBooking(booking_id.toString());
 
-      if (error) {
-        throw new Error(error.message);
+        // Redirect if booking cancelled successfully
+        if (success) {
+          router.push("/me/bookings");
+        }
       }
 
-      // Redirect if booking cancelled successfully
-      router.push("/me/bookings");
+      
     } catch (error) {
       const message = (error as any).message;
 

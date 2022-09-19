@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { BiEdit } from "react-icons/bi";
-import { supabase } from "../utils/supabaseClient";
+import { supabase } from "../supabase/supabaseClient";
 
 export default function AccountAvatar({ url, onUpload }: any) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);

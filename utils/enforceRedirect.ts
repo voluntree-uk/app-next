@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { supabase } from "./supabaseClient";
+import { supabase } from "../supabase/supabaseClient";
 
 const enforceRedirect: (inner?: GetServerSideProps) => GetServerSideProps = (
   inner

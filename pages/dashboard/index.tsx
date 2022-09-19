@@ -19,7 +19,8 @@ import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
 import WorkshopCard from "../../components/WorkshopCard";
 import { Workshop } from "../../shared/schemas";
-import { supabase } from "../../utils/supabaseClient";
+import { supabase } from "../../supabase/supabaseClient";
+import { data } from "../../shared/data/supabase";
 
 export default function Dashboard({ workshops }: { workshops: Workshop[] }) {
   const router = useRouter();
@@ -99,16 +100,11 @@ export async function getServerSideProps(context: any) {
     return { props: {}, redirect: { destination: "/auth" } };
   }
 
-  const { data: workshopData, error } = await supabase
-    .from("workshops")
-    .select("*")
-    .eq("user_id", user.id);
-
-  if (error) {
+  try {
+    const workshops = await data.getUserWorkshops(user.id);
+    return { props: { workshops } };
+  } catch (err) {
     return { props: {}, redirect: { destination: "/workshops" } };
   }
 
-  const workshops = workshopData;
-
-  return { props: { workshops } };
 }

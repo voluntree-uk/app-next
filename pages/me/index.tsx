@@ -3,7 +3,7 @@ import { User } from "@supabase/supabase-js";
 import React from "react";
 import Account from "../../components/Account";
 import Layout from "../../components/Layout";
-import { supabase } from "../../utils/supabaseClient";
+import { supabase } from "../../supabase/supabaseClient";
 
 export default function Me({ user }: { user: User }) {
   return (
