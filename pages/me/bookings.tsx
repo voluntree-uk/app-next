@@ -1,4 +1,4 @@
-import { Box, Button, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Button, Heading, SimpleGrid, Text, Flex } from "@chakra-ui/react";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import React from "react";
@@ -20,6 +20,11 @@ export default function MyBookings({
     router.push(`/bookings/cancel?booking_id=${booking.id}`);
   };
 
+  const directToWorkshop = (booking: BookingDetails) => {
+    console.log(booking.workshop_id)
+    router.push(`/workshops/${booking.workshop_id}`);
+  };
+
   return (
     <Layout>
       <HeadingBar>
@@ -36,13 +41,32 @@ export default function MyBookings({
       <Box p={2}>
         <SimpleGrid columns={[1, 2, 3]} spacing={3}>
           {bookings?.map((b) => (
-            <Box key={b.id} p={4} borderRadius="lg" bg="gray.50" boxShadow="sm">
+            <Flex key={b.id} p={4} borderRadius="lg" bg="gray.50" boxShadow="sm" flexDirection="column" justifyContent={"space-evenly"}>
               <Text>{b.workshops?.name}</Text>
               <Text>{dateToReadable(b.slots.date)} {timeToReadable(b.slots?.start_time, b.slots?.end_time)}</Text>
-              <Button mt={4} onClick={() => directToCancelBooking(b)}>
-                Cancel
+              <Flex justifyContent={"space-evenly"} alignItems="baseline">
+              <Button
+                color={"white"}
+                variant="contained"
+                bg={"brand.700"}
+                boxShadow="xl"
+                w={"30%"}
+                size="sm"
+                onClick={() => directToWorkshop(b)}>
+                  Details
               </Button>
-            </Box>
+              <Button
+                color={"white"}
+                variant="contained"
+                bg={"red.300"}
+                boxShadow="xl"
+                w={"30%"}
+                size="sm"
+                onClick={() => directToCancelBooking(b)}>
+                  Cancel
+              </Button>
+              </Flex>
+            </Flex>
           ))}
         </SimpleGrid>
       </Box>
@@ -63,6 +87,7 @@ export async function getServerSideProps({ req }: any) {
       id,
       user_id,
       active,
+      workshop_id,
       workshops:workshop_id(name),
       slots:slot_id(date, start_time, end_time)
     `)
