@@ -15,6 +15,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import * as React from "react";
+import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { supabase } from "../utils/supabaseClient";
 import { OAuthButtonGroup } from "./0AuthButtonGroup";
@@ -51,13 +52,31 @@ export default function AuthenticationForm() {
 
   const signUp = async (data: any) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      const { user, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
       });
 
       if (error) {
         throw new Error(error.message);
+      }
+
+      if (user) {
+        const values = {
+          user_id: user.id,
+          username: data.username,
+          name: data.name,
+          surname: data.surname,
+          dob: data.dob,
+        };
+
+        let { error } = await supabase.from("profiles").insert(values, {
+          returning: "minimal", // Don't return the value after inserting
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
       }
 
       router.push("/workshops");
@@ -72,6 +91,22 @@ export default function AuthenticationForm() {
     mode === Mode.LOGIN ? logIn(data) : signUp(data);
 
     setIsLoading(false);
+  };
+
+  const makeFormField = (id: string, type: string, title: string, placeholder: string): ReactElement => {
+    return <FormControl>
+      <FormLabel htmlFor={id}>{title}</FormLabel>
+      <Input
+        {...register(id)}
+        id={id}
+        type={type}
+        focusBorderColor="brand.700"
+        boxShadow={"sm"}
+        borderRadius="xl"
+        size="lg"
+        placeholder={placeholder}
+      />
+    </FormControl>
   };
 
   return (
@@ -124,32 +159,12 @@ export default function AuthenticationForm() {
           >
             <Stack spacing="6">
               <Stack spacing="3">
-                <FormControl>
-                  <FormLabel htmlFor="email">Email</FormLabel>
-                  <Input
-                    {...register("email")}
-                    id="email"
-                    type="email"
-                    focusBorderColor="brand.700"
-                    boxShadow={"sm"}
-                    borderRadius="xl"
-                    size="lg"
-                    placeholder="robinson@crusoe.com"
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="password">Password</FormLabel>
-                  <Input
-                    {...register("password")}
-                    id="password"
-                    type="password"
-                    focusBorderColor="brand.700"
-                    boxShadow={"sm"}
-                    borderRadius="xl"
-                    size="lg"
-                    placeholder="stuckOnAnIsland1774"
-                  />
-                </FormControl>
+                { mode === Mode.SIGNUP ? makeFormField("name", "text", "Name", "Name") : null }
+                { mode === Mode.SIGNUP ? makeFormField("surname", "text", "Surname", "Surname") : null }
+                { mode === Mode.SIGNUP ? makeFormField("dob", "date", "Date of Birth", "01/01/2000") : null }
+                { mode === Mode.SIGNUP ? makeFormField("username", "text", "Username", "luckyHelper") : null }
+                { makeFormField("email", "email", "Email", "robinson@crusoe.com") }
+                { makeFormField("password", "password", "Password", "stuckOnAnIsland1774") }
               </Stack>
               <Stack spacing="6">
                 <Button

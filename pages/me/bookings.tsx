@@ -35,7 +35,7 @@ export default function MyBookings({
       </HeadingBar>
       <Box p={2}>
         <SimpleGrid columns={[1, 2, 3]} spacing={3}>
-          {bookings.map((b) => (
+          {bookings?.map((b) => (
             <Box key={b.id} p={4} borderRadius="lg" bg="gray.50" boxShadow="sm">
               <Text>{b.workshops?.name}</Text>
               <Text>{dateToReadable(b.slots.date)} {timeToReadable(b.slots?.start_time, b.slots?.end_time)}</Text>

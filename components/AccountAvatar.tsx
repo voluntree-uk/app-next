@@ -15,12 +15,11 @@ export default function AccountAvatar({ url, onUpload }: any) {
     try {
       const { data, error } = await supabase.storage
         .from("avatars")
-        .download(path);
+        .getPublicUrl(path);
       if (error) {
         throw error;
       }
-      const url = URL.createObjectURL(data as any);
-      setAvatarUrl(url);
+      setAvatarUrl(data?.publicURL ? data?.publicURL : null);
     } catch (error: any) {
       console.log("Error downloading image: ", error.message);
     }
@@ -49,6 +48,7 @@ export default function AccountAvatar({ url, onUpload }: any) {
 
       onUpload(filePath);
     } catch (error: any) {
+      console.log(error);
       alert(error.message);
     } finally {
       setUploading(false);
