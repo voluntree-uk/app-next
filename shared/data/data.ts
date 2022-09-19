@@ -1,4 +1,5 @@
 import {
+  Profile,
   Workshop,
   Slot,
   Booking,
@@ -6,6 +7,27 @@ import {
 } from "../schemas";
 
 export interface DataAccessor {
+  /**
+   * Creates given user profile
+   * @param profile A profile to create
+   * @return A created profile
+   */
+  createProfile(profile: Profile): Promise<Profile>
+
+  /**
+   * Updates given user profile
+   * @param profile A profile to be updated
+   * @return An updated profile
+   */
+  updateProfile(profile: Profile): Promise<Profile>
+
+  /**
+   * Returns a profile associated with the given id
+   * @param id A profile/user id
+   * @return A profile associated with the given id
+   */
+  getProfile(id: string): Promise<Profile>
+
   /**
    * Creates given workshop
    * @param workshop A workshop to create
@@ -69,20 +91,6 @@ export interface DataAccessor {
   createSlots(slots: Slot[]): Promise<boolean>
 
   /**
-   * Returns a slot associated with the given id
-   * @param id A slot id
-   * @return A slot associated with the given id
-   */
-  getSlot(id: string): Slot
-
-  /**
-   * Returns all slot bookings associated with the given slot id
-   * @param id A slot id
-   * @return A list of matching bookings
-   */
-  getSlotBookings(id: string): Booking[]
-
-  /**
    * Returns all bookings a user has made
    * @param user_id A user id
    * @return A list of matching bookings
@@ -104,4 +112,19 @@ export interface DataAccessor {
    * @return A boolean representing the success of the method
    */
   removeBooking(id: string): Promise<boolean>
+
+  /**
+   * Returns an avatar public URL given the path
+   * @param path An avatar path
+   * @return The avatar public URL
+   */
+  getAvatarUrl(path: string): Promise<string>
+
+  /**
+   * Uploads an avatar given the path and the file body
+   * @param path An avatar path
+   * @param file A file body
+   * @return A boolean representing the success of the method
+   */
+  uploadAvatar(path: string, file: string): Promise<boolean>
 }

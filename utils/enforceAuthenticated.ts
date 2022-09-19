@@ -1,12 +1,12 @@
 import { GetServerSideProps } from "next";
-import { supabase } from "../supabase/supabaseClient";
+import { auth } from "../shared/auth/supabase";
 
 const enforceAuthenticated: (
   inner?: GetServerSideProps
 ) => GetServerSideProps = (inner) => {
   return async (context) => {
     const { req } = context;
-    const { user } = await supabase.auth.api.getUserByCookie(req);
+    const user = await auth.getUserByCookie(context.req);
 
     if (!user) {
       return { props: {}, redirect: { destination: "/auth" } };

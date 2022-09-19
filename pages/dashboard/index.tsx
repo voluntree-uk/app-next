@@ -19,8 +19,8 @@ import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
 import WorkshopCard from "../../components/WorkshopCard";
 import { Workshop } from "../../shared/schemas";
-import { supabase } from "../../supabase/supabaseClient";
 import { data } from "../../shared/data/supabase";
+import { auth } from "../../shared/auth/supabase";
 
 export default function Dashboard({ workshops }: { workshops: Workshop[] }) {
   const router = useRouter();
@@ -94,7 +94,7 @@ export default function Dashboard({ workshops }: { workshops: Workshop[] }) {
 }
 
 export async function getServerSideProps(context: any) {
-  const { user } = await supabase.auth.api.getUserByCookie(context.req);
+  const user = await auth.getUserByCookie(context.req);
 
   if (!user) {
     return { props: {}, redirect: { destination: "/auth" } };

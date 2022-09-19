@@ -6,7 +6,7 @@ import Layout from "../../../components/Layout";
 import WorkshopCard from "../../../components/WorkshopCard";
 import { Workshop } from "../../../shared/schemas";
 import { data } from "../../../shared/data/supabase";
-import { supabase } from "../../../supabase/supabaseClient";
+import { auth } from "../../../shared/auth/supabase";
 
 export default function WorkshopCategory({
   workshops,
@@ -42,7 +42,7 @@ export default function WorkshopCategory({
 export async function getServerSideProps(context: any) {
   const category = context.query.category;
 
-  const { user } = await supabase.auth.api.getUserByCookie(context.req);
+  const user = await auth.getUserByCookie(context.req);
 
   if (!user) {
     return { props: {}, redirect: { destination: "/auth" } };

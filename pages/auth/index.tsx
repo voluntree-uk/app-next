@@ -1,8 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
 import AuthenticationForm from "../../components/AuthenticationForm";
-
-import { supabase } from "../../supabase/supabaseClient";
+import { auth } from "../../shared/auth/supabase";
 
 export default function Authentication() {
   return (
@@ -13,7 +12,7 @@ export default function Authentication() {
 }
 
 export async function getServerSideProps({ req }: any) {
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const user = await auth.getUserByCookie(req);
 
   if (user) {
     return { props: { user }, redirect: { destination: "/workshops" } };

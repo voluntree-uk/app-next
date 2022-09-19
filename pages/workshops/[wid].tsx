@@ -18,8 +18,8 @@ import { FiMapPin } from "react-icons/fi"
 import Layout from "../../components/Layout";
 import { Booking, Slot, Workshop } from "../../shared/schemas";
 import { dateToReadable, timeToReadable } from "../../utils/dates";
-import { supabase } from "../../supabase/supabaseClient";
 import { data } from "../../shared/data/supabase";
+import { auth } from "../../shared/auth/supabase";
 
 export default function WorkshopListing({
   workshop,
@@ -290,7 +290,7 @@ export default function WorkshopListing({
 export async function getServerSideProps(context: any) {
   const id = context.query.wid;
 
-  const { user } = await supabase.auth.api.getUserByCookie(context.req);
+  const user = await auth.getUserByCookie(context.req);
 
   if (!user) {
     return { props: {}, redirect: { destination: "/auth" } };

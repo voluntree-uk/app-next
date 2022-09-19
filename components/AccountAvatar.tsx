@@ -1,7 +1,6 @@
 import { Avatar, Box, Button, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { BiEdit } from "react-icons/bi";
-import { supabase } from "../supabase/supabaseClient";
+import { data } from "../shared/data/supabase";
 
 export default function AccountAvatar({ url, onUpload }: any) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -13,13 +12,8 @@ export default function AccountAvatar({ url, onUpload }: any) {
 
   async function downloadImage(path: any) {
     try {
-      const { data, error } = await supabase.storage
-        .from("avatars")
-        .getPublicUrl(path);
-      if (error) {
-        throw error;
-      }
-      setAvatarUrl(data?.publicURL ? data?.publicURL : null);
+      const url = await data.getAvatarUrl(path)
+      setAvatarUrl(url ? url : null);
     } catch (error: any) {
       console.log("Error downloading image: ", error.message);
     }
@@ -38,15 +32,8 @@ export default function AccountAvatar({ url, onUpload }: any) {
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      let { error: uploadError } = await supabase.storage
-        .from("avatars")
-        .upload(filePath, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      onUpload(filePath);
+      const success = await data.uploadAvatar(filePath, file);
+      if (success) onUpload(filePath);
     } catch (error: any) {
       console.log(error);
       alert(error.message);

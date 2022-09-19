@@ -18,10 +18,11 @@ import {
 import * as React from "react";
 import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
-import { supabase } from "../supabase/supabaseClient";
 import { OAuthButtonGroup } from "./0AuthButtonGroup";
 import { Logo } from "./Logo";
 import { useRouter } from "next/router";
+import { auth } from "../shared/auth/supabase";
+import { data } from "../shared/data/supabase";
 
 enum Mode {
   LOGIN,
@@ -35,50 +36,33 @@ export default function AuthenticationForm() {
   const [mode, setMode] = React.useState<Mode>(Mode.LOGIN);
   const toast = useToast();
 
-  const logIn = async (data: any) => {
+  const logIn = async (formData: any) => {
     try {
-      const { error } = await supabase.auth.signIn({
-        email: data.email,
-        password: data.password,
-      });
+      const success = await auth.signIn(formData.email, formData.password);
 
-      if (error) {
-        throw new Error(error.message);
+      if (success) {
+        showToast("Login Successful");
+        router.push("/workshops");
       }
-      showToast("Login Successful");
-      router.push("/workshops");
     } catch (error: any) {
       showToast("Login Unsuccessful", error.message, false);
     }
   };
 
-  const signUp = async (data: any) => {
+  const signUp = async (formData: any) => {
     try {
-      const { user, error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
+      const user = await auth.signUp(formData.email, formData.password);
 
       if (user) {
         const values = {
           user_id: user.id,
-          username: data.username,
-          name: data.name,
-          surname: data.surname,
-          dob: data.dob,
+          username: formData.username,
+          name: formData.name,
+          surname: formData.surname,
+          dob: formData.dob,
         };
 
-        let { error } = await supabase.from("profiles").insert(values, {
-          returning: "minimal", // Don't return the value after inserting
-        });
-
-        if (error) {
-          throw new Error(error.message);
-        }
+        await data.createProfile(values)
       }
 
       showToast("Sign Up Successful");
@@ -98,10 +82,10 @@ export default function AuthenticationForm() {
     })
   }
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (formData: any) => {
     setIsLoading(true);
 
-    mode === Mode.LOGIN ? logIn(data) : signUp(data);
+    mode === Mode.LOGIN ? logIn(formData) : signUp(formData);
 
     setIsLoading(false);
   };

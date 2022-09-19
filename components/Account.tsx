@@ -1,9 +1,9 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { Session, User } from "@supabase/supabase-js";
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { MdMailOutline, MdStarOutline, MdWorkOutline } from "react-icons/md";
-import { supabase } from "../supabase/supabaseClient";
+import { auth } from "../shared/auth/supabase";
+import { data } from "../shared/data/supabase";
+import { User } from "../shared/schemas";
 import AccountAvatar from "./AccountAvatar";
 
 export default function Account({ user }: { user: User }) {
@@ -21,25 +21,17 @@ export default function Account({ user }: { user: User }) {
   const getProfile = useCallback(async () => {
     try {
       setLoading(true);
-      const user = supabase.auth.user();
+      const user = await auth.getUser();
 
       if (!user) {
         return;
       }
 
-      let { data, error, status } = await supabase
-        .from("profiles")
-        .select(`username, avatar_url`)
-        .eq("user_id", user.id)
-        .single();
+      const profile = await data.getProfile(user.id)
 
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (data) {
-        setValue("username", data.username);
-        setValue("avatar_url", data.avatar_url);
+      if (profile) {
+        setValue("username", profile.username);
+        setValue("avatar_url", profile.avatar_url);
       }
     } catch (error: any) {
       alert(`Error getting profile: ${error.message}`);
@@ -51,7 +43,7 @@ export default function Account({ user }: { user: User }) {
   async function updateProfile({ avatar_url }: any) {
     try {
       setLoading(true);
-      const user = supabase.auth.user();
+      const user = await auth.getUser();
 
       if (!user) {
         return;
@@ -60,16 +52,9 @@ export default function Account({ user }: { user: User }) {
       const updates = {
         user_id: user.id,
         avatar_url: avatar_url,
-        updated_at: new Date(),
       };
 
-      let { error } = await supabase.from("profiles").upsert(updates, {
-        returning: "minimal", // Don't return the value after inserting
-      });
-
-      if (error) {
-        throw error;
-      }
+      await data.updateProfile(updates)
     } catch (error: any) {
       alert(`Error updating profile: ${error.message}`);
     } finally {

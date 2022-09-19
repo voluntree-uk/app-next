@@ -5,9 +5,9 @@ import React from "react";
 import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
 import { BookingDetails } from "../../shared/schemas";
-import { supabase } from "../../supabase/supabaseClient";
 import { data } from "../../shared/data/supabase";
 import { dateToReadable, timeToReadable } from "../../utils/dates";
+import { auth } from "../../shared/auth/supabase";
 
 export default function MyBookings({
   bookings,
@@ -76,7 +76,7 @@ export default function MyBookings({
 }
 
 export async function getServerSideProps({ req }: any) {
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const user = await auth.getUserByCookie(req);
 
   if (!user) {
     return { props: {}, redirect: { destination: "/auth" } };

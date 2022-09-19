@@ -1,5 +1,5 @@
 import { DataAccessor } from "./data";
-import { Workshop, Slot, Booking, BookingDetails } from "../schemas";
+import { Workshop, Slot, Booking, BookingDetails, Profile } from "../schemas";
 import { dateAsISOString } from "../../utils/dates";
 import { supabase } from "../../supabase/supabaseClient";
 
@@ -7,15 +7,47 @@ import { supabase } from "../../supabase/supabaseClient";
  * A supabase implementation of the DataAccessor interface
  */
 class SupabaseDataAccessor implements DataAccessor {
+  async createProfile(profile: Profile): Promise<Profile> {
+    const { data, error } = await supabase.from("profiles").insert([profile]);
+    if (error) throw error;
+    if (data) {
+      return data[0] as Profile;
+    } else {
+      throw Error(`Failed to create a user profile: ${JSON.stringify(profile)}`)
+    }
+  }
+
+  async updateProfile(profile: Profile): Promise<Profile> {
+    const { data, error } = await supabase.from("profiles").upsert([profile]);
+    if (error) throw error;
+    if (data) {
+      return data[0] as Profile;
+    } else {
+      throw Error(`Failed to update a user profile: ${JSON.stringify(profile)}`);
+    }
+  }
+
+  async getProfile(id: string): Promise<Profile> {
+    let { data, error } = await supabase
+      .from("profiles")
+      .select('*')
+      .eq("user_id", id)
+      .single();
+    if (error) throw error;
+    if (data) {
+      return data;
+    } else {
+      throw Error(`Failed to find a profile with the user_id: ${id}`);
+    }
+  }
+
   async createWorkshop(workshop: Workshop): Promise<Workshop> {
     const { data, error } = await supabase.from("workshops").insert([workshop]);
-    if (error) {
-      throw new Error(error.message);
-    }
+    if (error) throw error;
     if (data) {
       return data[0] as Workshop;
     } else {
-      throw Error(`Failed to create a workshop: ${JSON.stringify(workshop)}`)
+      throw Error(`Failed to create a workshop: ${JSON.stringify(workshop)}`);
     }
   }
 
@@ -109,14 +141,6 @@ class SupabaseDataAccessor implements DataAccessor {
     return true;
   }
 
-  getSlot(id: string): Slot {
-    throw new Error("Method not implemented.");
-  }
-
-  getSlotBookings(id: string): Booking[] {
-    throw new Error("Method not implemented.");
-  }
-
   async getUserBookings(user_id: string): Promise<BookingDetails[]> {
     const { data: bookings, error: error } = await supabase
       .from("bookings")
@@ -141,12 +165,17 @@ class SupabaseDataAccessor implements DataAccessor {
       p_slot_id: slot_id,
       p_user_id: user_id
     })
+    if (error) throw error;
 
-    if (!data.bool || error) {
-      throw Error(data['?column?']);
+    if (data && data[0]) {
+      if (!data[0].success) {
+        throw Error(data[0].message)
+      } else {
+        return true;
+      }
     }
 
-    return true;
+    return false;
   }
 
   async removeBooking(id: string): Promise<boolean> {
@@ -157,6 +186,26 @@ class SupabaseDataAccessor implements DataAccessor {
 
     if (error) throw error;
 
+    return true;
+  }
+
+  async getAvatarUrl(path: string): Promise<string> {
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .getPublicUrl(path);
+    if (error) throw error;
+    if (data) {
+      return data?.publicURL;
+    } else {
+      throw Error(`Failed to find an avatar on the given path: ${path}`)
+    }
+  }
+
+  async uploadAvatar(path: string, file: string): Promise<boolean> {
+    let { error } = await supabase.storage
+      .from("avatars")
+      .upload(path, file);
+    if (error) throw error;
     return true;
   }
 }

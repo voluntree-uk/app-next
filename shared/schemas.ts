@@ -27,9 +27,8 @@ export interface Workshop {
 export interface Profile {
   created_at?: number;
   user_id: string;
-  username: string;
-  avatar_url: string;
-  updated_at: number;
+  username?: string;
+  avatar_url?: string;
 }
 
 export interface Slot {
@@ -46,4 +45,10 @@ export interface User {
   id: string
   email?: string
   phone?: string
+}
+
+export interface Session {
+  provider_token?: string | null
+  access_token: string
+  user: User | null
 }
