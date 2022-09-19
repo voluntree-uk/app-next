@@ -57,14 +57,20 @@ export async function getServerSideProps({ req }: any) {
     return { props: {}, redirect: { destination: "/auth" } };
   }
 
-  const { data: bookings } = await supabase
+  const { data: bookings, error: someError } = await supabase
     .from("bookings")
     .select(`
-      *,
+      id,
+      user_id,
+      active,
       workshops:workshop_id(name),
       slots:slot_id(date, start_time, end_time)
     `)
-    .eq("user_id", user?.id);
+    .eq(`user_id`, user?.id);
+
+  if (someError) {
+    console.error(`Error: ${JSON.stringify(someError)}`)
+  }
 
   return { props: { bookings, user } };
 }
