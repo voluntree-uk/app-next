@@ -13,6 +13,8 @@ import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";
 import { FaUsers } from "react-icons/fa";
+import { BiCategoryAlt } from "react-icons/bi";
+import { FiMapPin } from "react-icons/fi"
 import Layout from "../../components/Layout";
 import { Booking, Slot, Workshop } from "../../shared/schemas";
 import { dateToReadable, timeToReadable } from "../../utils/dates";
@@ -123,6 +125,7 @@ export default function WorkshopListing({
           </Heading>
         </Flex>
         <Box>
+          {/* Organiser */}
           <Box px={4} pt={4} bg="white" mx={2}>
             <Flex alignItems={"center"}>
               <Img
@@ -149,15 +152,11 @@ export default function WorkshopListing({
             <Divider pt={3} />
           </Box>
 
-          <Box px={4} py={4} bg="white" mx={2}>
+          {/* Location */}
+          <Box px={4} pt={4} bg="white" mx={2}>
             <Flex alignItems={"center"}>
-              <Img
-                src={"/map.svg"}
-                h="50"
-                w="50"
-                borderRadius={"100%"}
-                alt=""
-                mr={3}
+              <FiMapPin
+                style={{ height: "50", width: "50", borderRadius: "100%", marginRight: "12" }} 
               />
               <Flex flexDirection={"column"}>
                 <Heading
@@ -175,12 +174,36 @@ export default function WorkshopListing({
             <Divider pt={3} />
           </Box>
 
-          <Box bg="white" mx={2} px={8} pb={4} color="gray.600">
+          {/* Category */}
+          <Box px={4} pt={4} bg="white" mx={2}>
+            <Flex alignItems={"center"}>
+              <BiCategoryAlt
+                style={{ height: "50", width: "50", borderRadius: "100%", marginRight: "12" }} 
+              />
+              <Flex flexDirection={"column"}>
+                <Heading
+                  fontSize={"sm"}
+                  fontWeight={"semibold"}
+                  letterSpacing="wide"
+                >
+                  {"Category"}
+                </Heading>
+                <Text fontSize={"sm"} color={"gray.600"}>
+                  {workshop.category}
+                </Text>
+              </Flex>
+            </Flex>
+            <Divider pt={3} />
+          </Box>
+
+          {/* Description */}
+          <Box bg="white" mx={2} px={8} pt={4} pb={4} color="gray.600">
             <Text fontSize={"sm"} fontWeight={"normal"}>
               {workshop.description}
             </Text>
           </Box>
 
+          {/* Slots */}
           <Box bg="white" mx={2} my={2}>
             {slots.map((slot, i) => (
               <Flex
