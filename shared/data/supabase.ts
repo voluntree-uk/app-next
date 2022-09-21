@@ -178,15 +178,13 @@ class SupabaseDataAccessor implements DataAccessor {
     return false;
   }
 
-  async removeBooking(id: string): Promise<boolean> {
-    const { error } = await supabase
-      .from("bookings")
-      .delete()
-      .match({ id: id });
-
+  async cancelBooking(id: string): Promise<boolean> {
+    const { data, error } = await supabase.rpc('cancel_booking', {
+      p_booking_id: id
+    })
     if (error) throw error;
 
-    return true;
+    return data ? true : false;
   }
 
   async getAvatarUrl(path: string): Promise<string> {

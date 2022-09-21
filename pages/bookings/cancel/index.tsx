@@ -18,7 +18,7 @@ export default function CancelBooking() {
 
     try {
       if (booking_id) {
-        const success = await data.removeBooking(booking_id.toString());
+        const success = await data.cancelBooking(booking_id.toString());
 
         // Redirect if booking cancelled successfully
         if (success) {
