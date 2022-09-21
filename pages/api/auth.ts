@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { supabase } from "../../utils/supabaseClient";
+import { auth } from "../../shared/auth/supabase";
 
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
-  supabase.auth.api.setAuthCookie(req, res);
+  auth.setAuthCookie(req, res);
 };
 
 export default handler;

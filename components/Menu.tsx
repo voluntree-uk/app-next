@@ -18,12 +18,10 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
-import { supabase } from "../utils/supabaseClient";
 import { IconType } from "react-icons";
 import { ReactText } from "react";
 import { useRouter } from "next/router";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
-
 import { MdAddBox, MdPersonOutline, MdSearch } from "react-icons/md";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiMenu } from "react-icons/fi";
@@ -33,6 +31,7 @@ import { GoSignOut } from "react-icons/go";
 import config from "../app-config";
 import { capitalize } from "lodash";
 import { IoMdHelpBuoy } from "react-icons/io";
+import { auth } from "../shared/auth/supabase";
 
 interface LinkItemProps {
   name: string;
@@ -122,7 +121,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       name: "Sign Out",
       icon: GoSignOut,
       onClick: async () => {
-        await supabase.auth.signOut();
+        await auth.signOut();
         router.push("/auth");
       }
     },

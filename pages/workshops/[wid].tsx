@@ -18,7 +18,8 @@ import { FiMapPin } from "react-icons/fi"
 import Layout from "../../components/Layout";
 import { Booking, Slot, Workshop } from "../../shared/schemas";
 import { dateToReadable, timeToReadable } from "../../utils/dates";
-import { supabase } from "../../utils/supabaseClient";
+import { data } from "../../shared/data/supabase";
+import { auth } from "../../shared/auth/supabase";
 
 export default function WorkshopListing({
   workshop,
@@ -34,7 +35,7 @@ export default function WorkshopListing({
   const [slotSelected, setSlotSelected] = useState<Slot>(slots[0]);
 
   const getActiveBookingsForSlot = (slot: Slot): Booking[] => {
-    return bookings.filter((b) => b.slot_id === slot.id && b.active);
+    return bookings.filter((b) => b.slot_id === slot.id);
   };
 
   const slotIsFullyBooked = (): boolean => {
@@ -56,7 +57,6 @@ export default function WorkshopListing({
 
   const userHasBookedSlot = () => {
     return bookings
-      .filter((b) => b.active)
       .some((b) => b.slot_id === slotSelected.id && b.user_id === user.id);
   };
 
@@ -290,38 +290,21 @@ export default function WorkshopListing({
 export async function getServerSideProps(context: any) {
   const id = context.query.wid;
 
-  const { user } = await supabase.auth.api.getUserByCookie(context.req);
+  const user = await auth.getUserByCookie(context.req);
 
   if (!user) {
     return { props: {}, redirect: { destination: "/auth" } };
   }
 
-  const { data: workshopData, error } = await supabase
-    .from("workshops")
-    .select("*")
-    .eq("id", id);
+  try {
+    const workshop = await data.getWorkshop(id);
+    const slots = await data.getWorkshopSlots(id);
+    const bookings = await data.getWorkshopBookings(id);
 
-  if (error) {
+    return { props: { workshop, slots, bookings, user } };
+  } catch (error) {
+    console.log(JSON.stringify(error));
+    
     return { props: {}, redirect: { destination: "/workshops" } };
   }
-
-  if (!workshopData) {
-    return { props: {}, redirect: { destination: "/workshops" } };
-  }
-
-  const { data: slotsData } = await supabase
-    .from("slots")
-    .select("*")
-    .eq("workshop_id", workshopData[0].id);
-
-  const { data: bookingsData } = await supabase
-    .from("bookings")
-    .select("*")
-    .eq("workshop_id", workshopData[0].id);
-
-  const workshop = workshopData[0];
-  const slots = slotsData;
-  const bookings = bookingsData;
-
-  return { props: { workshop, slots, bookings, user } };
 }

@@ -1,5 +1,5 @@
 import { Box, Spinner } from "@chakra-ui/react";
-import { supabase } from "../utils/supabaseClient";
+import { auth } from "../shared/auth/supabase";
 
 export default function Home() {
   return (
@@ -23,7 +23,7 @@ export default function Home() {
 }
 
 export async function getServerSideProps({ req }: any) {
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const user = await auth.getUserByCookie(req);
 
   if (user) {
     return { props: { user }, redirect: { destination: "/workshops" } };

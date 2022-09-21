@@ -2,10 +2,9 @@ import { Box, Button, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Layout from "../../../components/Layout";
-import { Booking } from "../../../shared/schemas";
 import { useSession } from "../../../utils/hooks";
-import { supabase } from "../../../utils/supabaseClient";
 import { useToast } from "@chakra-ui/react";
+import { data } from "../../../shared/data/supabase";
 
 export default function NewBooking() {
   const router = useRouter();
@@ -22,58 +21,12 @@ export default function NewBooking() {
     setLoading(true);
     try {
       if (workshop_id && slot_id && session && session.user) {
-        const newBooking: Booking = {
-          workshop_id: workshop_id as string,
-          slot_id: slot_id as string,
-          user_id: session?.user?.id,
-          active: true,
-        };
-
-        // Get the current active bookings for the slot
-        const { data: bookingsData, error: bookingsError } = await supabase
-          .from("bookings")
-          .select("*")
-          .eq("workshop_id", workshop_id)
-          .eq("slot_id", slot_id);
-
-        if (!bookingsData) {
-          throw new Error(bookingsError.message);
-        }
-
-        const currentActiveBookings: Booking[] = (
-          bookingsData as Booking[]
-        ).filter((b) => b.active);
-
-        // Get the slot being booked
-        const { data: slotData, error: slotError } = await supabase
-          .from("slots")
-          .select("*")
-          .eq("id", slot_id);
-
-        if (!slotData) {
-          throw new Error(slotError.message);
-        }
-
-        // Check the slot has capcity for the new booking
-        const capacityPermitted = slotData[0].capacity;
-        const hasFreeCapacity =
-          capacityPermitted - currentActiveBookings.length;
-
-        if (!hasFreeCapacity) {
-          throw new Error("No free slots on this workshop");
-        }
-
-        // Create the new booking
-        const { error: bookingError } = await supabase
-          .from("bookings")
-          .insert([newBooking]);
-
-        if (bookingError) {
-          throw new Error(bookingError.message);
-        }
+        const success = await data.bookSlot(workshop_id.toString(), slot_id.toString(), session.user.id)
 
         // Redirect if booking created successfully
-        router.push("/me/bookings");
+        if (success) {
+          router.push("/me/bookings");
+        }
       }
     } catch (error) {
       const message = (error as any).message;

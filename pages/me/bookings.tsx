@@ -5,8 +5,9 @@ import React from "react";
 import HeadingBar from "../../components/HeadingBar";
 import Layout from "../../components/Layout";
 import { BookingDetails } from "../../shared/schemas";
-import { supabase } from "../../utils/supabaseClient";
+import { data } from "../../shared/data/supabase";
 import { dateToReadable, timeToReadable } from "../../utils/dates";
+import { auth } from "../../shared/auth/supabase";
 
 export default function MyBookings({
   bookings,
@@ -75,27 +76,17 @@ export default function MyBookings({
 }
 
 export async function getServerSideProps({ req }: any) {
-  const { user } = await supabase.auth.api.getUserByCookie(req);
+  const user = await auth.getUserByCookie(req);
 
   if (!user) {
     return { props: {}, redirect: { destination: "/auth" } };
   }
 
-  const { data: bookings, error: someError } = await supabase
-    .from("bookings")
-    .select(`
-      id,
-      user_id,
-      active,
-      workshop_id,
-      workshops:workshop_id(name),
-      slots:slot_id(date, start_time, end_time)
-    `)
-    .eq(`user_id`, user?.id);
-
-  if (someError) {
-    console.error(`Error: ${JSON.stringify(someError)}`)
+  try {
+    const bookings = await data.getUserBookings(user.id);
+    return { props: { bookings, user } };
+  } catch (error) {
+    console.error(`Error: ${JSON.stringify(error)}`);
+    return { props: { user }}
   }
-
-  return { props: { bookings, user } };
 }
