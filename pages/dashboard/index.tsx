@@ -15,9 +15,8 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
-import HeadingBar from "../../components/HeadingBar";
-import Layout from "../../components/Layout";
-import WorkshopCard from "../../components/WorkshopCard";
+import Layout from "../../components/Layout/Layout";
+import WorkshopCard from "../../components/Workshop/WorkshopListCard";
 import { Workshop } from "../../shared/schemas";
 import { data } from "../../shared/data/supabase";
 import { auth } from "../../shared/auth/supabase";
@@ -26,18 +25,6 @@ export default function Dashboard({ workshops }: { workshops: Workshop[] }) {
   const router = useRouter();
   return (
     <Layout>
-      <HeadingBar>
-        <Heading
-          fontSize={"md"}
-          color={"white"}
-          fontWeight="semibold"
-          pl={8}
-          pb={4}
-        >
-          Dashboard
-        </Heading>
-      </HeadingBar>
-
       <Flex p={3} px={2}>
         <StatGroup
           mr={2}
@@ -106,5 +93,4 @@ export async function getServerSideProps(context: any) {
   } catch (err) {
     return { props: {}, redirect: { destination: "/workshops" } };
   }
-
 }

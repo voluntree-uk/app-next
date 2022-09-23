@@ -14,17 +14,18 @@ import {
   Box,
   InputGroup,
   InputRightElement,
+  Container,
 } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { BiTrash } from "react-icons/bi";
-import config from "../app-config";
-import { Slot, Workshop } from "../shared/schemas";
-import { useSession } from "../utils/hooks";
-import { data } from "../shared/data/supabase";
-import Slider from "./Slider";
+import config from "../../app-config";
+import { Slot, Workshop } from "../../shared/schemas";
+import { useSession } from "../../utils/hooks";
+import { data } from "../../shared/data/supabase";
+import Slider from "../Slider";
 import WorkshopSlotForm from "./WorkshopSlotForm";
 
 export default function WorkshopForm(): JSX.Element {
@@ -35,7 +36,6 @@ export default function WorkshopForm(): JSX.Element {
     handleSubmit,
     register,
     watch,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<Workshop>({
     defaultValues: { virtual: true },
@@ -53,9 +53,9 @@ export default function WorkshopForm(): JSX.Element {
 
     if (createdBy) {
       newWorkshop.user_id = createdBy;
-      
+
       const createdWorkshop = await data.createWorkshop(newWorkshop);
-      
+
       if (createdWorkshop.id) {
         const newId = createdWorkshop.id;
 
@@ -81,7 +81,7 @@ export default function WorkshopForm(): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <>
+    <Container py="20">
       <Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack spacing={3}>
@@ -93,10 +93,6 @@ export default function WorkshopForm(): JSX.Element {
                 })}
                 placeholder="My Workshop"
                 autoFocus={true}
-                focusBorderColor="brand.700"
-                boxShadow={"sm"}
-                borderRadius="xl"
-                size="lg"
               />
               <FormErrorMessage>
                 {errors.name && errors.name.message}
@@ -110,10 +106,6 @@ export default function WorkshopForm(): JSX.Element {
                   required: "This is required",
                 })}
                 placeholder="It's a workshop"
-                focusBorderColor="brand.700"
-                boxShadow={"sm"}
-                borderRadius="xl"
-                size="lg"
               />
               <FormErrorMessage>
                 {errors.description && errors.description.message}
@@ -146,10 +138,6 @@ export default function WorkshopForm(): JSX.Element {
                       required: "This is required",
                     })}
                     placeholder="8 Community House"
-                    focusBorderColor="brand.700"
-                    boxShadow={"sm"}
-                    borderRadius="xl"
-                    size="lg"
                   />
                   <FormErrorMessage>
                     {errors.house && errors.house.message}
@@ -162,10 +150,6 @@ export default function WorkshopForm(): JSX.Element {
                       required: "This is required",
                     })}
                     placeholder="Bristol Road"
-                    focusBorderColor="brand.700"
-                    boxShadow={"sm"}
-                    borderRadius="xl"
-                    size="lg"
                   />
                   <FormErrorMessage>
                     {errors.street && errors.street.message}
@@ -178,10 +162,6 @@ export default function WorkshopForm(): JSX.Element {
                       required: "This is required",
                     })}
                     placeholder="BS1 3SQ"
-                    focusBorderColor="brand.700"
-                    boxShadow={"sm"}
-                    borderRadius="xl"
-                    size="lg"
                   />
                   <FormErrorMessage>
                     {errors.postcode && errors.postcode.message}
@@ -196,10 +176,6 @@ export default function WorkshopForm(): JSX.Element {
                 {...register("category", {
                   required: "This is required",
                 })}
-                focusBorderColor="brand.700"
-                boxShadow={"sm"}
-                borderRadius="xl"
-                size="lg"
               >
                 {config.categories.map((category) => {
                   return (
@@ -246,14 +222,11 @@ export default function WorkshopForm(): JSX.Element {
             </Button>
 
             <Button
-              color={"white"}
-              variant="contained"
-              bg="brand.700"
               type="submit"
               isLoading={isSubmitting}
-              _hover={{ backgroundColor: "#5c56eeF0" }}
               boxShadow="lg"
               disabled={slots.length === 0}
+              colorScheme="green"
             >
               Save
             </Button>
@@ -269,6 +242,6 @@ export default function WorkshopForm(): JSX.Element {
           }}
         />
       </Slider>
-    </>
+    </Container>
   );
 }

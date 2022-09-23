@@ -1,9 +1,8 @@
 import { Box, Heading, SimpleGrid } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import React from "react";
-import HeadingBar from "../../../components/HeadingBar";
-import Layout from "../../../components/Layout";
-import WorkshopCard from "../../../components/WorkshopCard";
+import Layout from "../../../components/Layout/Layout";
+import WorkshopCard from "../../../components/Workshop/WorkshopListCard";
 import { Workshop } from "../../../shared/schemas";
 import { data } from "../../../shared/data/supabase";
 import { auth } from "../../../shared/auth/supabase";
@@ -17,17 +16,6 @@ export default function WorkshopCategory({
 }) {
   return (
     <Layout>
-      <HeadingBar>
-        <Heading
-          fontSize={"md"}
-          color={"white"}
-          fontWeight="semibold"
-          pl={8}
-          pb={4}
-        >
-          {capitalize(category)}
-        </Heading>
-      </HeadingBar>
       <Box p={1}>
         <SimpleGrid columns={[1, 2, 3]} spacing={3}>
           {workshops.map((w) => (
@@ -49,7 +37,7 @@ export async function getServerSideProps(context: any) {
   }
 
   try {
-    const workshops = await data.getWorkshopsByCategory(category)
+    const workshops = await data.getWorkshopsByCategory(category);
     return { props: { workshops, category } };
   } catch (error) {
     return { props: {}, redirect: { destination: "/workshops" } };

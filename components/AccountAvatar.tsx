@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, FormLabel, Input } from "@chakra-ui/react";
+import { Avatar, Box, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { data } from "../shared/data/supabase";
 
@@ -12,7 +12,7 @@ export default function AccountAvatar({ url, onUpload }: any) {
 
   async function downloadImage(path: any) {
     try {
-      const url = await data.getAvatarUrl(path)
+      const url = await data.getAvatarUrl(path);
       setAvatarUrl(url ? url : null);
     } catch (error: any) {
       console.log("Error downloading image: ", error.message);

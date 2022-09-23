@@ -13,13 +13,13 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { OAuthButtonGroup } from "./0AuthButtonGroup";
-import { Logo } from "./Logo";
+import { Logo } from "./Layout/Logo";
 import { useRouter } from "next/router";
 import { auth } from "../shared/auth/supabase";
 import { data } from "../shared/data/supabase";
@@ -62,7 +62,7 @@ export default function AuthenticationForm() {
           dob: formData.dob,
         };
 
-        await data.createProfile(values)
+        await data.createProfile(values);
       }
 
       showToast("Sign Up Successful");
@@ -72,15 +72,19 @@ export default function AuthenticationForm() {
     }
   };
 
-  const showToast = (title: any, description: any = null, success: boolean = true) => {
+  const showToast = (
+    title: any,
+    description: any = null,
+    success: boolean = true
+  ) => {
     toast({
       title: title,
       description: description,
       status: success ? "success" : "error",
       duration: 4000,
       isClosable: true,
-    })
-  }
+    });
+  };
 
   const onSubmit = async (formData: any) => {
     setIsLoading(true);
@@ -90,21 +94,28 @@ export default function AuthenticationForm() {
     setIsLoading(false);
   };
 
-  const makeFormField = (id: string, type: string, title: string, placeholder: string): ReactElement => {
-    return <FormControl>
-      <FormLabel htmlFor={id}>{title}</FormLabel>
-      <Input
-        {...register(id)}
-        id={id}
-        type={type}
-        focusBorderColor="brand.700"
-        boxShadow={"sm"}
-        borderRadius="xl"
-        size="lg"
-        isRequired={true}
-        placeholder={placeholder}
-      />
-    </FormControl>
+  const makeFormField = (
+    id: string,
+    type: string,
+    title: string,
+    placeholder: string
+  ): ReactElement => {
+    return (
+      <FormControl>
+        <FormLabel htmlFor={id}>{title}</FormLabel>
+        <Input
+          {...register(id)}
+          id={id}
+          type={type}
+          focusBorderColor="brand.700"
+          boxShadow={"sm"}
+          borderRadius="xl"
+          size="lg"
+          isRequired={true}
+          placeholder={placeholder}
+        />
+      </FormControl>
+    );
   };
 
   return (
@@ -157,12 +168,30 @@ export default function AuthenticationForm() {
           >
             <Stack spacing="6">
               <Stack spacing="3">
-                { mode === Mode.SIGNUP ? makeFormField("name", "text", "Name", "Name") : null }
-                { mode === Mode.SIGNUP ? makeFormField("surname", "text", "Surname", "Surname") : null }
-                { mode === Mode.SIGNUP ? makeFormField("dob", "date", "Date of Birth", "01/01/2000") : null }
-                { mode === Mode.SIGNUP ? makeFormField("username", "text", "Username", "luckyHelper") : null }
-                { makeFormField("email", "email", "Email", "robinson@crusoe.com") }
-                { makeFormField("password", "password", "Password", "stuckOnAnIsland1774") }
+                {mode === Mode.SIGNUP
+                  ? makeFormField("name", "text", "Name", "Name")
+                  : null}
+                {mode === Mode.SIGNUP
+                  ? makeFormField("surname", "text", "Surname", "Surname")
+                  : null}
+                {mode === Mode.SIGNUP
+                  ? makeFormField("dob", "date", "Date of Birth", "01/01/2000")
+                  : null}
+                {mode === Mode.SIGNUP
+                  ? makeFormField("username", "text", "Username", "luckyHelper")
+                  : null}
+                {makeFormField(
+                  "email",
+                  "email",
+                  "Email",
+                  "robinson@crusoe.com"
+                )}
+                {makeFormField(
+                  "password",
+                  "password",
+                  "Password",
+                  "stuckOnAnIsland1774"
+                )}
               </Stack>
               <Stack spacing="6">
                 <Button

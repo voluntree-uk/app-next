@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import Layout from "../../../components/Layout";
+import Layout from "../../../components/Layout/Layout";
 import { useSession } from "../../../utils/hooks";
 import { useToast } from "@chakra-ui/react";
 import { data } from "../../../shared/data/supabase";
@@ -25,8 +25,6 @@ export default function CancelBooking() {
           router.push("/me/bookings");
         }
       }
-
-      
     } catch (error) {
       const message = (error as any).message;
 
