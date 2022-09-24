@@ -1,6 +1,7 @@
-import { Flex, Button, Text, Box } from "@chakra-ui/react";
+import { Flex, Button, Text, Box, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+import { data } from "../../shared/data/supabase";
 import { BookingDetails } from "../../shared/schemas";
 import { dateToReadable, timeToReadable } from "../../utils/dates";
 
@@ -10,40 +11,71 @@ interface IProps {
 export default function BookingListCard({ booking }: IProps) {
   const router = useRouter();
 
-  const directToCancelBooking = (booking: BookingDetails) => {
-    router.push(`/bookings/cancel?booking_id=${booking.id}`);
-  };
-
   const directToWorkshop = (booking: BookingDetails) => {
     router.push(`/workshops/${booking.workshop_id}`);
   };
+
+  const toast = useToast();
+
+  const [loading, setLoading] = useState(false);
+
+  async function cancelBooking(booking: BookingDetails): Promise<void> {
+    setLoading(true);
+
+    try {
+      if (booking.id) {
+        const success = await data.removeBooking(booking.id.toString());
+
+        // Redirect if booking cancelled successfully
+        if (success) {
+          router.push("/me/bookings");
+
+          toast({
+            title: "Booking cancelled",
+            status: "success",
+            duration: 4000,
+            isClosable: true,
+          });
+        }
+      }
+    } catch (error) {
+      const message = (error as any).message;
+
+      toast({
+        title: "Problem cancelling booking",
+        description: message,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Box>
       <Flex
         px="7"
-        py="5"
+        py="3"
         justifyContent="space-between"
         alignItems={"center"}
         borderBottomWidth="1px"
         borderBottomColor={"gray.300"}
-        borderTopWidth="1px"
-        borderTopColor={"gray.300"}
       >
-        <Box>
-          <Text fontSize={"lg"} fontWeight={"bold"}>
-            {booking.workshops?.name}
-          </Text>
-          <Text fontSize={"lg"}>{dateToReadable(booking.slots.date)}</Text>
-          <Text fontSize={"lg"} color="gray.600">
+        <Box fontSize={"md"}>
+          <Text fontWeight={"bold"}>{booking.workshops?.name}</Text>
+          <Text>{dateToReadable(booking.slots.date)}</Text>
+          <Text color="gray.600">
             {timeToReadable(booking.slots?.start_time, booking.slots?.end_time)}
           </Text>
         </Box>
         <Box>
           <Button onClick={() => directToWorkshop(booking)}>Details</Button>
           <Button
+            isLoading={loading}
             variant="contained"
-            onClick={() => directToCancelBooking(booking)}
+            onClick={() => cancelBooking(booking)}
           >
             Cancel
           </Button>

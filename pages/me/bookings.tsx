@@ -5,8 +5,9 @@ import { BookingDetails } from "../../shared/schemas";
 import { data } from "../../shared/data/supabase";
 import { auth } from "../../shared/auth/supabase";
 import BookingList from "../../components/Booking/BookingList";
+import { Box, Flex } from "@chakra-ui/react";
 
-export default function MyBookings({
+export default function MyBookingsPage({
   bookings,
 }: {
   bookings: BookingDetails[];

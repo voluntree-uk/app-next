@@ -20,10 +20,7 @@ import {
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
-const Links = [
-  { label: "Dashboard", onClick: () => "" },
-  { label: "Find workshops", onClick: () => "" },
-];
+const Links = [{ label: "Find workshops", onClick: () => "" }];
 
 const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -100,10 +97,10 @@ export default function Navbar() {
               </MenuButton>
               <MenuList>
                 <MenuItem onClick={() => router.push("/me")}>
-                  My profile
+                  View profile
                 </MenuItem>
                 <MenuItem onClick={() => router.push("/me/bookings")}>
-                  Bookings
+                  Your bookings
                 </MenuItem>
                 <Divider />
                 <MenuItem>Log out</MenuItem>

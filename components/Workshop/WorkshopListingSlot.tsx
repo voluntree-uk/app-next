@@ -5,9 +5,10 @@ import { dateToReadable, timeToReadable } from "../../utils/dates";
 
 interface IProps {
   slot: Slot;
+  onJoin(): void;
 }
 
-export default function WorkshopListingSlot({ slot }: IProps) {
+export default function WorkshopListingSlot({ slot, onJoin }: IProps) {
   return (
     <Box
       py="5"
@@ -24,7 +25,7 @@ export default function WorkshopListingSlot({ slot }: IProps) {
         </Text>
       </Box>
       <Box>
-        <Button colorScheme="green" variant="outline">
+        <Button colorScheme="green" variant="outline" onClick={() => onJoin()}>
           Join
         </Button>
       </Box>

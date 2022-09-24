@@ -5,7 +5,7 @@ import Account from "../../components/Account";
 import Layout from "../../components/Layout/Layout";
 import { auth } from "../../shared/auth/supabase";
 
-export default function Me({ user }: { user: User }) {
+export default function MePage({ user }: { user: User }) {
   return (
     <Layout>
       <Box>{user ? <Account user={user} /> : null}</Box>

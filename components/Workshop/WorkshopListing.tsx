@@ -15,7 +15,7 @@ export default function WorkshopListing({ workshop, slots }: IProps) {
     <Box>
       <WorkshopListingHeading workshop={workshop} />
       <WorkshopListingBody workshop={workshop} />
-      <WorkshopListingSlotList slots={slots} />
+      <WorkshopListingSlotList workshop={workshop} slots={slots} />
     </Box>
   );
 }
