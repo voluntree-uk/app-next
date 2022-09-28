@@ -1,10 +1,16 @@
-export function dateToReadable(date: string) {
-  const options = {
-    weekday: "long" as any,
-    year: "numeric" as any,
-    month: "long" as any,
-    day: "numeric" as any,
+export function dateToReadable(date: string, include_weekday: boolean = true) {
+  const options: {
+    weekday?: any,
+    year?: any,
+    month?: any,
+    day?: any
+  } = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   };
+
+  if (include_weekday) options.weekday = "long";
 
   const dateObj = new Date(date);
 
