@@ -42,7 +42,7 @@ export async function getServerSideProps({ req }: any) {
   const user = await auth.getUserByCookie(req);
 
   if (!user) {
-    return { props: {}, redirect: { destination: "/auth" } };
+    return { props: {}, redirect: { destination: "/" } };
   }
 
   try {

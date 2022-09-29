@@ -24,12 +24,16 @@ import { useRouter } from "next/router";
 import { auth } from "../shared/auth/supabase";
 import { data } from "../shared/data/supabase";
 
+interface IProps {
+  onSuccess(): void;
+}
+
 enum Mode {
   LOGIN,
   SIGNUP,
 }
 
-export default function AuthenticationForm() {
+export default function AuthenticationForm({ onSuccess }: IProps) {
   const { register, handleSubmit } = useForm();
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
@@ -37,19 +41,25 @@ export default function AuthenticationForm() {
   const toast = useToast();
 
   const logIn = async (formData: any) => {
+    setIsLoading(true);
     try {
       const success = await auth.signIn(formData.email, formData.password);
 
       if (success) {
+        onSuccess();
         showToast("Login Successful");
         router.push("/workshops");
       }
     } catch (error: any) {
       showToast("Login Unsuccessful", error.message, false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signUp = async (formData: any) => {
+    setIsLoading(true);
+
     try {
       const user = await auth.signUp(formData.email, formData.password);
 
@@ -66,9 +76,12 @@ export default function AuthenticationForm() {
       }
 
       showToast("Sign Up Successful");
+      onSuccess();
       router.push("/workshops");
     } catch (error: any) {
       showToast("Sign Up Unsuccessful", error.message, false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -87,11 +100,7 @@ export default function AuthenticationForm() {
   };
 
   const onSubmit = async (formData: any) => {
-    setIsLoading(true);
-
     mode === Mode.LOGIN ? logIn(formData) : signUp(formData);
-
-    setIsLoading(false);
   };
 
   const makeFormField = (
@@ -102,15 +111,13 @@ export default function AuthenticationForm() {
   ): ReactElement => {
     return (
       <FormControl>
-        <FormLabel htmlFor={id}>{title}</FormLabel>
+        <FormLabel fontSize={"sm"} htmlFor={id}>
+          {title}
+        </FormLabel>
         <Input
           {...register(id)}
           id={id}
           type={type}
-          focusBorderColor="brand.700"
-          boxShadow={"sm"}
-          borderRadius="xl"
-          size="lg"
           isRequired={true}
           placeholder={placeholder}
         />
@@ -118,10 +125,14 @@ export default function AuthenticationForm() {
     );
   };
 
+  function renderForm() {
+    return;
+  }
+
   return (
     <Container
       maxW="lg"
-      py={{ base: "12", md: "24" }}
+      py={{ base: "12", md: "8" }}
       px={{ base: "7", sm: "8" }}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -163,7 +174,7 @@ export default function AuthenticationForm() {
             py={{ base: "12", sm: "8" }}
             px={{ base: "8", sm: "10" }}
             bg={useBreakpointValue({ base: "white", sm: "white" })}
-            boxShadow={{ base: "none", sm: useColorModeValue("md", "md-dark") }}
+            boxShadow={{ base: "none" }}
             borderRadius={{ base: "2xl", sm: "xl" }}
           >
             <Stack spacing="6">
@@ -195,12 +206,9 @@ export default function AuthenticationForm() {
               </Stack>
               <Stack spacing="6">
                 <Button
-                  color={"white"}
-                  variant="contained"
-                  bg="brand.700"
+                  colorScheme={"green"}
                   type="submit"
                   isLoading={isLoading}
-                  _hover={{ backgroundColor: "#5c56eeF0" }}
                   boxShadow="lg"
                 >
                   {mode === Mode.LOGIN ? "Sign in" : "Sign up"}

@@ -9,7 +9,7 @@ const enforceAuthenticated: (
     const user = await auth.getUserByCookie(context.req);
 
     if (!user) {
-      return { props: {}, redirect: { destination: "/auth" } };
+      return { props: {}, redirect: { destination: "/" } };
     }
 
     if (inner) {

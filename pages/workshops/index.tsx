@@ -4,12 +4,9 @@ import { data } from "../../shared/data/supabase";
 import { User } from "@supabase/supabase-js";
 import { auth } from "../../shared/auth/supabase";
 import WorkshopList from "../../components/Workshop/WorkshopList";
-import WorkshopListFilter from "../../components/Workshop/WorkshopListFilter";
-import { Heading } from "@chakra-ui/react";
 
 export default function Workshops({
   workshops,
-  user,
 }: {
   workshops: Workshop[];
   user: User;
@@ -23,11 +20,6 @@ export default function Workshops({
 
 export async function getServerSideProps({ req }: any) {
   const user = await auth.getUserByCookie(req);
-
-  if (!user) {
-    return { props: {}, redirect: { destination: "/auth" } };
-  }
-
   const workshops = await data.getAvailableWorkshops();
 
   return {
