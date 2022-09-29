@@ -1,5 +1,7 @@
-import { Container, Stack } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import { data } from "../../shared/data/supabase";
 import { Workshop } from "../../shared/schemas";
 import WorkshopCard from "./WorkshopListCard";
 import WorkshopListFilter from "./WorkshopListFilter";
@@ -9,17 +11,17 @@ interface IProps {
   hideFilter?: boolean;
 }
 
-export default function WorkshopList(props: IProps) {
+export default function WorkshopList({ workshops, hideFilter }: IProps) {
   return (
-    <Container maxW="container.md">
-      {!props.hideFilter ? (
+    <Box>
+      {!hideFilter ? (
         <WorkshopListFilter onFilterChange={(data) => console.log(data)} />
       ) : null}
-      <Stack overflow="scroll">
-        {props.workshops.map((w) => (
+      <Stack overflow="scroll" spacing={0}>
+        {workshops?.map((w) => (
           <WorkshopCard key={w.id} workshop={w} />
         ))}
       </Stack>
-    </Container>
+    </Box>
   );
 }

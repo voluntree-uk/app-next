@@ -120,6 +120,7 @@ export default function AuthenticationForm({ onSuccess }: IProps) {
           type={type}
           isRequired={true}
           placeholder={placeholder}
+          p="4"
         />
       </FormControl>
     );

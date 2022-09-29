@@ -8,8 +8,8 @@ interface IProps {
 
 export default function BookingListHeading({ bookings }: IProps) {
   return (
-    <Box px="7" py="7">
-      <Heading pb="2" size={"md"} color={"gray.700"}>
+    <Box borderLeftWidth={"thick"} borderLeftColor="green.500" px="7" py="7">
+      <Heading pb="1" size={"md"} color={"gray.700"}>
         Upcoming {`(${bookings.length})`}
       </Heading>
       <Text fontSize={"sm"} color="gray.500">

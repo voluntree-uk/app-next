@@ -29,10 +29,6 @@ export async function getServerSideProps(context: any) {
 
   const user = await auth.getUserByCookie(context.req);
 
-  if (!user) {
-    return { props: {}, redirect: { destination: "/" } };
-  }
-
   try {
     const workshop = await data.getWorkshop(id);
     const slots = await data.getWorkshopSlots(id);

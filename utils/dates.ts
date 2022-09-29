@@ -1,3 +1,8 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+
 export function dateToReadable(date: string) {
   const options = {
     weekday: "long" as any,
@@ -16,7 +21,7 @@ export function timeToReadable(start_time: string, end_time: string) {
 }
 
 export function dateAsISOString(date: Date = new Date()) {
-  const offset = date.getTimezoneOffset()
-  date = new Date(date.getTime() - (offset * 60 * 1000))
-  return date.toISOString().split('T')[0]
+  const offset = date.getTimezoneOffset();
+  date = new Date(date.getTime() - offset * 60 * 1000);
+  return date.toISOString().split("T")[0];
 }

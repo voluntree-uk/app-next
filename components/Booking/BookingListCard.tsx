@@ -1,5 +1,6 @@
 import { CalendarIcon, TimeIcon } from "@chakra-ui/icons";
 import { Flex, Text, useToast, Link, Avatar } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { data } from "../../shared/data/supabase";
@@ -63,6 +64,9 @@ export default function BookingListCard({ booking }: IProps) {
       borderBottomWidth="1px"
       borderBottomColor={"gray.300"}
       w={"100%"}
+      _hover={{
+        background: "gray.50",
+      }}
     >
       <Flex w={"100%"}>
         <Avatar
@@ -72,42 +76,45 @@ export default function BookingListCard({ booking }: IProps) {
           cursor={"pointer"}
           onClick={() => directToWorkshop(booking)}
         ></Avatar>
-        <Flex flexDir={"column"} w={"100%"}>
-          <Link
-            fontWeight={"bold"}
-            mb="0.5"
-            onClick={() => directToWorkshop(booking)}
-          >
-            {booking.workshops?.name}
-          </Link>
-          <Text
-            color="gray.500"
-            display={"flex"}
-            alignItems="center"
-            fontSize="small"
-            mb="0.5"
-          >
-            <CalendarIcon mr="2" />
-            {dateToReadable(booking.slots.date)}
-          </Text>
-          <Text
-            color="gray.500"
-            display={"flex"}
-            alignItems="center"
-            fontSize="small"
-          >
-            <TimeIcon mr="2" />{" "}
-            {timeToReadable(booking.slots?.start_time, booking.slots?.end_time)}
-          </Text>
-          <Flex justifyContent={"flex-end"}>
+        <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
+          <Flex flexDir={"column"} w={"100%"}>
             <Link
-              color="red"
-              onClick={() => cancelBooking(booking)}
-              rounded="full"
+              fontWeight={"bold"}
+              mb="0.5"
+              onClick={() => directToWorkshop(booking)}
             >
-              Cancel booking
+              {booking.workshops?.name}
             </Link>
+            <Text
+              color="gray.500"
+              display={"flex"}
+              alignItems="center"
+              fontSize="small"
+              mb="0.5"
+            >
+              <CalendarIcon mr="2" />
+              {dateToReadable(booking.slots.date)}
+            </Text>
+            <Text
+              color="gray.500"
+              display={"flex"}
+              alignItems="center"
+              fontSize="small"
+            >
+              <TimeIcon mr="2" />{" "}
+              {timeToReadable(
+                booking.slots?.start_time,
+                booking.slots?.end_time
+              )}
+            </Text>
           </Flex>
+          <Link
+            color="red"
+            onClick={() => cancelBooking(booking)}
+            rounded="full"
+          >
+            Cancel
+          </Link>
         </Flex>
       </Flex>
     </Flex>

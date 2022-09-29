@@ -1,4 +1,3 @@
-import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Box, Img, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -10,17 +9,20 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
   return (
     <Box
       cursor={"pointer"}
-      borderTop="1px"
-      borderTopColor={"gray.300"}
+      borderBottom="1px"
+      borderBottomColor={"gray.300"}
       bg="white"
       onClick={() => router.push(`/workshops/${workshop.id}`)}
       py={{ base: "2", md: "4" }}
+      _hover={{
+        background: "gray.50",
+      }}
     >
-      <Box display="flex">
+      <Box display="flex" pr="4">
         <Img
-          src="https://secure-content.meetupstatic.com/images/classic-events/506990077/444x250.webp"
+          src="https://thumbs.dreamstime.com/b/software-development-programming-coding-learning-information-technology-courses-courses-all-levels-computing-hi-tech-158671629.jpg"
           rounded={"lg"}
-          mr="4"
+          mx="4"
           height={{ base: "40px", md: "90px" }}
         />
         <Box
@@ -33,15 +35,20 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
             <Text
               fontSize={"14px"}
               fontWeight="bold"
-              color={"green.400"}
-              textTransform="uppercase"
+              bgGradient="linear(to-r, teal.500, green.500)"
+              bgClip="text"
             >
               {workshop.category}
             </Text>
-            <Text fontSize={"16px"} fontWeight="bold" noOfLines={1}>
+            <Text
+              fontSize={"16px"}
+              fontWeight="semibold"
+              noOfLines={1}
+              color="gray.600"
+            >
               {workshop.name}
             </Text>
-            <Text color={"gray.600"} fontSize={"14px"} noOfLines={1}>
+            <Text color={"gray.600"} fontSize={"14px"} noOfLines={2}>
               {workshop.description}
             </Text>
           </Box>
@@ -50,6 +57,7 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
             pr={10}
             color={"gray.500"}
             display={{ base: "none", md: "flex" }}
+            pt="2"
           >
             <Text fontSize={"14px"} fontWeight="medium">
               4 spaces available

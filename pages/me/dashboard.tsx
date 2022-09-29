@@ -18,21 +18,17 @@ export default function MyBookingsPage({
 }) {
   return (
     <Layout>
-      <Flex justifyContent={"space-between"}>
-        <Box w="50vw">
-          <BookingList bookings={bookings} />
+      <Flex flexDir={"column"}>
+        <BookingList bookings={bookings} />
+        <Box px="7" py="7" borderLeftWidth={"thick"} borderLeftColor="blue.500">
+          <Heading pb="1" size={"md"} color={"gray.700"}>
+            My volunteering
+          </Heading>
+          <Text fontSize={"sm"} color="gray.500">
+            Workshops you are hosting
+          </Text>
         </Box>
-        <Box w="50vw">
-          <Box px="7" py="7">
-            <Heading pb="2" size={"md"} color={"gray.700"}>
-              Workshops {`(${workshops.length})`}
-            </Heading>
-            <Text fontSize={"sm"} color="gray.500">
-              Workshops you are hosting
-            </Text>
-          </Box>
-          <WorkshopList workshops={workshops} hideFilter />
-        </Box>
+        <WorkshopList workshops={workshops} hideFilter />
       </Flex>
     </Layout>
   );
