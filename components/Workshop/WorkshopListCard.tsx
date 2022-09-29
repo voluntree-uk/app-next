@@ -38,7 +38,7 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
             >
               {workshop.category}
             </Text>
-            <Text fontSize={"16px"} fontWeight="bold">
+            <Text fontSize={"16px"} fontWeight="bold" noOfLines={1}>
               {workshop.name}
             </Text>
             <Text color={"gray.600"} fontSize={"14px"} noOfLines={1}>

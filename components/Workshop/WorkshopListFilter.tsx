@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  HStack,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Select,
-} from "@chakra-ui/react";
+import { Box, HStack, Input, Select } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import React from "react";
 import config from "../../app-config";
@@ -17,7 +9,7 @@ interface IProps {
 
 export default function WorkshopListFilter(props: IProps) {
   return (
-    <Box mb="6" display={{ base: "none", md: "block" }}>
+    <Box my="6" display={{ base: "none", md: "block" }}>
       <HStack spacing={1}>
         <Input placeholder="Search for keywords" name="search" />
         <Select placeholder="Category" w="container.sm">

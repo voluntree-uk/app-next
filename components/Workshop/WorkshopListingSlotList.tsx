@@ -1,4 +1,4 @@
-import { Box, useToast } from "@chakra-ui/react";
+import { Box, HStack, Stack, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { data } from "../../shared/data/supabase";
@@ -33,7 +33,7 @@ export default function WorkshopListingSlotList({ slots, workshop }: IProps) {
 
         // Redirect if booking created successfully
         if (success) {
-          router.push("/me/bookings");
+          router.push("/me/dashboard");
         }
       }
     } catch (error) {
@@ -52,7 +52,7 @@ export default function WorkshopListingSlotList({ slots, workshop }: IProps) {
   }
 
   return (
-    <Box>
+    <Stack>
       {slots.map((slot) => (
         <WorkshopListingSlot
           key={slot.id}
@@ -60,6 +60,6 @@ export default function WorkshopListingSlotList({ slots, workshop }: IProps) {
           onJoin={() => confirmBooking(slot)}
         />
       ))}
-    </Box>
+    </Stack>
   );
 }

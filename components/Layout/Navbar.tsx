@@ -99,8 +99,8 @@ export default function Navbar() {
                 <MenuItem onClick={() => router.push("/me")}>
                   View profile
                 </MenuItem>
-                <MenuItem onClick={() => router.push("/me/bookings")}>
-                  Your bookings
+                <MenuItem onClick={() => router.push("/me/dashboard")}>
+                  Dashboard
                 </MenuItem>
                 <Divider />
                 <MenuItem>Log out</MenuItem>

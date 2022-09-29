@@ -1,4 +1,5 @@
-import { Flex, Button, Text, Box, useToast } from "@chakra-ui/react";
+import { CalendarIcon, TimeIcon } from "@chakra-ui/icons";
+import { Flex, Text, useToast, Link, Avatar } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { data } from "../../shared/data/supabase";
@@ -28,7 +29,7 @@ export default function BookingListCard({ booking }: IProps) {
 
         // Redirect if booking cancelled successfully
         if (success) {
-          router.push("/me/bookings");
+          router.push("/me/dashboard");
 
           toast({
             title: "Booking cancelled",
@@ -54,33 +55,61 @@ export default function BookingListCard({ booking }: IProps) {
   }
 
   return (
-    <Box>
-      <Flex
-        px="7"
-        py="3"
-        justifyContent="space-between"
-        alignItems={"center"}
-        borderBottomWidth="1px"
-        borderBottomColor={"gray.300"}
-      >
-        <Box fontSize={"md"}>
-          <Text fontWeight={"bold"}>{booking.workshops?.name}</Text>
-          <Text>{dateToReadable(booking.slots.date)}</Text>
-          <Text color="gray.600">
+    <Flex
+      px="7"
+      py="3"
+      justifyContent="space-between"
+      alignItems={"center"}
+      borderBottomWidth="1px"
+      borderBottomColor={"gray.300"}
+      w={"100%"}
+    >
+      <Flex w={"100%"}>
+        <Avatar
+          src="https://static.vecteezy.com/system/resources/previews/003/452/135/original/man-riding-bicycle-sport-illustration-vector.jpg"
+          size={"lg"}
+          mr="3"
+          cursor={"pointer"}
+          onClick={() => directToWorkshop(booking)}
+        ></Avatar>
+        <Flex flexDir={"column"} w={"100%"}>
+          <Link
+            fontWeight={"bold"}
+            mb="0.5"
+            onClick={() => directToWorkshop(booking)}
+          >
+            {booking.workshops?.name}
+          </Link>
+          <Text
+            color="gray.500"
+            display={"flex"}
+            alignItems="center"
+            fontSize="small"
+            mb="0.5"
+          >
+            <CalendarIcon mr="2" />
+            {dateToReadable(booking.slots.date)}
+          </Text>
+          <Text
+            color="gray.500"
+            display={"flex"}
+            alignItems="center"
+            fontSize="small"
+          >
+            <TimeIcon mr="2" />{" "}
             {timeToReadable(booking.slots?.start_time, booking.slots?.end_time)}
           </Text>
-        </Box>
-        <Box>
-          <Button onClick={() => directToWorkshop(booking)}>Details</Button>
-          <Button
-            isLoading={loading}
-            variant="contained"
-            onClick={() => cancelBooking(booking)}
-          >
-            Cancel
-          </Button>
-        </Box>
+          <Flex justifyContent={"flex-end"}>
+            <Link
+              color="red"
+              onClick={() => cancelBooking(booking)}
+              rounded="full"
+            >
+              Cancel booking
+            </Link>
+          </Flex>
+        </Flex>
       </Flex>
-    </Box>
+    </Flex>
   );
 }

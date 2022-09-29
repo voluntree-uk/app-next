@@ -18,14 +18,20 @@ export default function WorkshopListingSlot({ slot, onJoin }: IProps) {
       display="flex"
       justifyContent={"space-between"}
     >
-      <Box>
-        <Text textTransform={"uppercase"}>{dateToReadable(slot.date)}</Text>
+      <Box fontSize={"sm"}>
+        <Text>{dateToReadable(slot.date)}</Text>
         <Text fontWeight={"bold"}>
           {timeToReadable(slot.start_time, slot.end_time)}
         </Text>
       </Box>
       <Box>
-        <Button colorScheme="green" variant="outline" onClick={() => onJoin()}>
+        <Button
+          rounded="full"
+          colorScheme="green"
+          variant={"solid"}
+          onClick={() => onJoin()}
+          size="md"
+        >
           Join
         </Button>
       </Box>
