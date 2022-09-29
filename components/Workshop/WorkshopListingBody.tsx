@@ -1,5 +1,6 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
+import { BsCameraVideo } from "react-icons/bs";
 import { Workshop } from "../../shared/schemas";
 
 interface IProps {
@@ -8,24 +9,42 @@ interface IProps {
 
 export default function WorkshopListingBody({ workshop }: IProps) {
   return (
-    <Box py="6" px={{ base: "2", md: "40" }} color="gray.700">
-      <Box mb="6">
-        <Text fontWeight={"bold"} mb="2" display={"flex"} alignItems="center">
+    <Box>
+      <Box color="gray.700" bg="gray.50" py="6" px={{ base: "2", md: "40" }}>
+        <Box
+          bg="white"
+          maxW={"300px"}
+          p="4"
+          rounded="md"
+          borderWidth={"1px"}
+          borderColor="gray.100"
+        >
+          <Flex alignItems={"center"}>
+            <Box mr="4" color="gray.500" fontSize={"25px"}>
+              <BsCameraVideo />
+            </Box>
+            <Box>
+              <Text
+                display={"flex"}
+                color={"black"}
+                alignItems="center"
+                fontSize={"14px"}
+              >
+                Online event
+              </Text>
+              <Text fontSize={"14px"} color={"gray.600"}>
+                Link visible for attendees
+              </Text>
+            </Box>
+          </Flex>
+        </Box>
+      </Box>
+      <Box px={{ base: "2", md: "40" }} py="6">
+        <Text mb="1" fontWeight={"semibold"}>
           Details
         </Text>
-        <Text fontSize={"sm"} color={"gray.600"}>
+        <Text color={"gray.600"} maxW="60%" fontSize={"14px"} lineHeight="6">
           {workshop.description}
-        </Text>
-      </Box>
-
-      <Box>
-        <Text fontWeight={"bold"} mb="2" display={"flex"} alignItems="center">
-          Location
-        </Text>
-        <Text fontSize={"sm"} color={"gray.600"}>
-          {workshop.virtual
-            ? "Virtual Session"
-            : `${workshop.street}, ${workshop.postcode}`}
         </Text>
       </Box>
     </Box>

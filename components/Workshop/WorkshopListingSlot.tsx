@@ -1,5 +1,6 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 import React from "react";
+import { MdOutlineIosShare } from "react-icons/md";
 import { Slot } from "../../shared/schemas";
 import { dateToReadable, timeToReadable } from "../../utils/dates";
 
@@ -28,11 +29,22 @@ export default function WorkshopListingSlot({ slot, onJoin }: IProps) {
         <Button
           rounded="full"
           colorScheme="green"
+          rightIcon={<MdOutlineIosShare />}
+          variant={"outline"}
+          onClick={() => onJoin()}
+          size="md"
+          mr="3"
+        >
+          Share
+        </Button>
+        <Button
+          rounded="full"
+          colorScheme="green"
           variant={"solid"}
           onClick={() => onJoin()}
           size="md"
         >
-          Join
+          Attend online
         </Button>
       </Box>
     </Box>
