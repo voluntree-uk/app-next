@@ -53,7 +53,7 @@ export default function AccountAvatar({ url, onUpload }: any) {
             borderRadius: "100%",
           }}
         >
-          {avatarUrl ? <Avatar size={"lg"} src={avatarUrl} /> : null}
+          {avatarUrl ? <Avatar size={"xl"} src={avatarUrl} /> : null}
         </FormLabel>
       </Box>
       <Box>
