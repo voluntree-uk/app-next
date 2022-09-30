@@ -107,11 +107,11 @@ export interface DataAccessor {
   bookSlot(workshop_id: string, slot_id: string, user_id: string): Promise<boolean>
 
   /**
-   * Removes a booking with a given id
+   * Cancels a booking with a given id
    * @param id A booking id
    * @return A boolean representing the success of the method
    */
-  removeBooking(id: string): Promise<boolean>
+  cancelBooking(id: string): Promise<boolean>
 
   /**
    * Returns an avatar public URL given the path
