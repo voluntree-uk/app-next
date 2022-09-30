@@ -28,6 +28,9 @@ export interface Profile {
   created_at?: number;
   user_id: string;
   username?: string;
+  name?: string;
+  surname?: string;
+  hosted_workshops?: number;
   avatar_url?: string;
 }
 

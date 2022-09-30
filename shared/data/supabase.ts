@@ -45,6 +45,7 @@ class SupabaseDataAccessor implements DataAccessor {
     const { data, error } = await supabase.from("workshops").insert([workshop]);
     if (error) throw error;
     if (data) {
+      await supabase.rpc('increment_hosted_workshops', { id: workshop.user_id })
       return data[0] as Workshop;
     } else {
       throw Error(`Failed to create a workshop: ${JSON.stringify(workshop)}`);

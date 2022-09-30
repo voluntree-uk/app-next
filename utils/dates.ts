@@ -1,10 +1,21 @@
-export function dateToReadable(date: string) {
-  const options = {
-    weekday: "long" as any,
-    year: "numeric" as any,
-    month: "long" as any,
-    day: "numeric" as any,
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+
+export function dateToReadable(date: string, include_weekday: boolean = true) {
+  const options: {
+    weekday?: any;
+    year?: any;
+    month?: any;
+    day?: any;
+  } = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   };
+
+  if (include_weekday) options.weekday = "long";
 
   const dateObj = new Date(date);
 
@@ -16,7 +27,7 @@ export function timeToReadable(start_time: string, end_time: string) {
 }
 
 export function dateAsISOString(date: Date = new Date()) {
-  const offset = date.getTimezoneOffset()
-  date = new Date(date.getTime() - (offset * 60 * 1000))
-  return date.toISOString().split('T')[0]
+  const offset = date.getTimezoneOffset();
+  date = new Date(date.getTime() - offset * 60 * 1000);
+  return date.toISOString().split("T")[0];
 }
