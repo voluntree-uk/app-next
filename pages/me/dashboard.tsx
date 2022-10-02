@@ -5,8 +5,7 @@ import { BookingDetails, Workshop } from "../../shared/schemas";
 import { data } from "../../shared/data/supabase";
 import { auth } from "../../shared/auth/supabase";
 import BookingList from "../../components/Booking/BookingList";
-import WorkshopList from "../../components/Workshop/WorkshopList";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 export default function MyBookingsPage({
   workshops,
@@ -18,18 +17,9 @@ export default function MyBookingsPage({
 }) {
   return (
     <Layout>
-      <Flex flexDir={"column"}>
+      <Box>
         <BookingList bookings={bookings} />
-        <Box px="7" py="7" borderLeftWidth={"thick"} borderLeftColor="blue.500">
-          <Heading pb="1" size={"md"} color={"gray.700"}>
-            My volunteering
-          </Heading>
-          <Text fontSize={"sm"} color="gray.500">
-            Workshops you are hosting
-          </Text>
-        </Box>
-        <WorkshopList workshops={workshops} hideFilter />
-      </Flex>
+      </Box>
     </Layout>
   );
 }
