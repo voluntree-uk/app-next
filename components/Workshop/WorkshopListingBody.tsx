@@ -11,7 +11,7 @@ export default function WorkshopListingBody({ workshop }: IProps) {
   return (
     <Box>
       <WorkshopListingBodyLocation workshop={workshop} />
-      <Box px={{ base: "2", md: "40" }} py="6">
+      <Box px={{ base: "2", md: "10" }} py="6">
         <Text mb="1" fontWeight={"semibold"}>
           Details
         </Text>
