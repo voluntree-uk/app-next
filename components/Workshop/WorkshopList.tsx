@@ -1,7 +1,5 @@
 import { Box, Stack } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { data } from "../../shared/data/supabase";
 import { Workshop } from "../../shared/schemas";
 import WorkshopCard from "./WorkshopListCard";
 import WorkshopListFilter from "./WorkshopListFilter";
