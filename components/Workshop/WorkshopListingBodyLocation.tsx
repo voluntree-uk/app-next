@@ -2,12 +2,13 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { BsCameraVideo, BsPinMap } from "react-icons/bs";
 import { Workshop } from "../../shared/schemas";
+import { workshopToReadableAddress } from "../../utils/addresses";
 
 interface IProps {
   workshop: Workshop;
 }
 
-export default function WorkshopListingBody({ workshop }: IProps) {
+export default function WorkshopListingBodyLocation({ workshop }: IProps) {
   return (
     <Box color="gray.700" bg="gray.50" py="6" px={{ base: "2", md: "10" }}>
       <Box
@@ -29,7 +30,7 @@ export default function WorkshopListingBody({ workshop }: IProps) {
               alignItems="center"
               fontSize={"14px"}
             >
-              {workshop.virtual ? "Online event" : `${workshop.house} ${workshop.street}, ${workshop.postcode}`}
+              {workshop.virtual ? "Online event" : workshopToReadableAddress(workshop)}
             </Text>
             <Text fontSize={"14px"} color={"gray.600"}>
               {workshop.virtual ? "Link visible for attendees" : workshop.city}
