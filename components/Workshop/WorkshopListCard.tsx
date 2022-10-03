@@ -14,53 +14,38 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
       bg="white"
       onClick={() => router.push(`/workshops/${workshop.id}`)}
       py={{ base: "2", md: "4" }}
-      _hover={{
-        background: "gray.50",
-      }}
+      width={{ base: "full", sm: "600px" }}
     >
-      <Box display="flex" pr="4">
-        <Img
-          src="https://thumbs.dreamstime.com/b/software-development-programming-coding-learning-information-technology-courses-courses-all-levels-computing-hi-tech-158671629.jpg"
-          rounded={"lg"}
-          mx="4"
-          height={{ base: "40px", md: "90px" }}
-        />
+      <Box display="flex" flexDirection={{ base: "row-reverse", sm: "row" }}>
+        <Box width={{ base: "200px" }}>
+          <Img
+            src="https://secure-content.meetupstatic.com/images/classic-events/507108638/444x250.webp"
+            rounded={"lg"}
+          />
+        </Box>
         <Box
           display={"flex"}
           flexDir="column"
           justifyContent={"space-between"}
           width={"100%"}
+          pr={{ base: "5", sm: "0" }}
+          pl={{ base: "0", sm: "5" }}
         >
-          <Box>
+          <Box fontSize={{ base: "xs", sm: "sm" }}>
             <Text
-              fontSize={"14px"}
-              fontWeight="bold"
-              bgGradient="linear(to-r, teal.500, green.500)"
+              bgGradient="linear(to-r, teal.500, teal.100)"
               bgClip="text"
+              pb="0.5"
             >
               {workshop.category}
             </Text>
-            <Text
-              fontSize={"16px"}
-              fontWeight="semibold"
-              noOfLines={1}
-              color="gray.600"
-            >
+            <Text fontWeight="semibold" noOfLines={1} fontSize={"16px"}>
               {workshop.name}
             </Text>
-            <Text color={"gray.600"} fontSize={"14px"} noOfLines={2}>
-              {workshop.description}
-            </Text>
-          </Box>
-          <Box
-            justifyContent="space-between"
-            pr={10}
-            color={"gray.500"}
-            display={{ base: "none", md: "flex" }}
-            pt="2"
-          >
-            <Text fontSize={"14px"} fontWeight="medium">
-              4 spaces available
+            <Text color={"gray.400"} fontSize={"14px"} noOfLines={1} pb="0.5">
+              {workshop.virtual
+                ? "Online session"
+                : `${workshop.house}, ${workshop.street}, ${workshop.postcode}`}
             </Text>
           </Box>
         </Box>
