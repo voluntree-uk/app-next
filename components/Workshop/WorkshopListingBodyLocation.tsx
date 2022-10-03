@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
+import { BsCameraVideo, BsPinMap } from "react-icons/bs";
 import { Workshop } from "../../shared/schemas";
-import { BsPinMap } from "react-icons/bs";
 
 interface IProps {
   workshop: Workshop;
@@ -20,7 +20,7 @@ export default function WorkshopListingBody({ workshop }: IProps) {
         >
           <Flex alignItems={"center"}>
             <Box mr="4" color="gray.500" fontSize={"25px"}>
-            <BsPinMap />
+              {workshop.virtual ? <BsCameraVideo /> : <BsPinMap />}
             </Box>
             <Box>
               <Text
@@ -29,10 +29,10 @@ export default function WorkshopListingBody({ workshop }: IProps) {
                 alignItems="center"
                 fontSize={"14px"}
               >
-                {workshop.house} {workshop.street}, {workshop.postcode}
+                {workshop.virtual ? "Online event" : `${workshop.house} ${workshop.street}, ${workshop.postcode}`}
               </Text>
               <Text fontSize={"14px"} color={"gray.600"}>
-                {workshop.city}
+                {workshop.virtual ? "Link visible for attendees" : workshop.city}
               </Text>
             </Box>
           </Flex>
