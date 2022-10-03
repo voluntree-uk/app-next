@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Checkbox,
   Container,
   Divider,
   FormControl,
@@ -12,14 +11,12 @@ import {
   Stack,
   Text,
   useBreakpointValue,
-  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import { OAuthButtonGroup } from "./0AuthButtonGroup";
-import { Logo } from "./Layout/Logo";
 import { useRouter } from "next/router";
 import { auth } from "../shared/auth/supabase";
 import { data } from "../shared/data/supabase";
@@ -40,6 +37,19 @@ export default function AuthenticationForm({ onSuccess }: IProps) {
   const [mode, setMode] = React.useState<Mode>(Mode.LOGIN);
   const toast = useToast();
 
+  /**
+   * Get the path to be redirected to after successful authentication
+   * Remain on listing route after authentication if user was viewing a listing,
+   * otherwise redirect to workshop list route
+   *
+   * @returns redirect route
+   */
+  const getRedirectPath = () => {
+    return router.pathname === "/workshops/[wid]"
+      ? router.asPath
+      : "/workshops";
+  };
+
   const logIn = async (formData: any) => {
     setIsLoading(true);
     try {
@@ -48,7 +58,8 @@ export default function AuthenticationForm({ onSuccess }: IProps) {
       if (success) {
         onSuccess();
         showToast("Login Successful");
-        router.push("/workshops");
+
+        router.push(getRedirectPath());
       }
     } catch (error: any) {
       showToast("Login Unsuccessful", error.message, false);
@@ -77,7 +88,7 @@ export default function AuthenticationForm({ onSuccess }: IProps) {
 
       showToast("Sign Up Successful");
       onSuccess();
-      router.push("/workshops");
+      router.push(getRedirectPath());
     } catch (error: any) {
       showToast("Sign Up Unsuccessful", error.message, false);
     } finally {
@@ -133,15 +144,17 @@ export default function AuthenticationForm({ onSuccess }: IProps) {
   return (
     <Container
       maxW="lg"
-      py={{ base: "12", md: "8" }}
-      px={{ base: "7", sm: "8" }}
+      py={{ base: "12", sm: "10" }}
+      px={{ base: "0", sm: "8" }}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing="8">
           <Stack spacing="6">
-            <Logo />
             <Stack spacing={{ base: "2", md: "3" }} textAlign="center">
-              <Heading size={useBreakpointValue({ base: "xs", md: "sm" })}>
+              <Heading
+                size={useBreakpointValue({ base: "xs", md: "sm" })}
+                pt="10"
+              >
                 {mode === Mode.LOGIN
                   ? "Log in to your account"
                   : "Create an account "}
@@ -172,8 +185,8 @@ export default function AuthenticationForm({ onSuccess }: IProps) {
             </Stack>
           </Stack>
           <Box
-            py={{ base: "12", sm: "8" }}
-            px={{ base: "8", sm: "10" }}
+            py={{ base: "4", sm: "8" }}
+            px={{ base: "4", sm: "10" }}
             bg={useBreakpointValue({ base: "white", sm: "white" })}
             boxShadow={{ base: "none" }}
             borderRadius={{ base: "2xl", sm: "xl" }}
