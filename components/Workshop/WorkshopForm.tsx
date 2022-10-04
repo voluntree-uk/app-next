@@ -11,8 +11,6 @@ import {
   Switch,
   Flex,
   Box,
-  Container,
-  Divider,
   Heading,
 } from "@chakra-ui/react";
 import { capitalize } from "lodash";
@@ -23,15 +21,17 @@ import config from "../../app-config";
 import { Slot, Workshop } from "../../shared/schemas";
 import { useSession } from "../../utils/hooks";
 import { data } from "../../shared/data/supabase";
-import WorkshopSlotForm from "./WorkshopSlotForm";
+import WorkshopSlotForm, { TmpSlot } from "./WorkshopSlotForm";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 import WorkshopFormSlot from "./WorkshopFormSlot";
 import Show from "../Helpers/Show";
 
+const VIRTUAL_LOCATION_BY_DEFAULT = false;
+
 export default function WorkshopForm(): JSX.Element {
   const session = useSession();
 
-  const [slots, setSlots] = useState<any[]>([]);
+  const [slots, setSlots] = useState<TmpSlot[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,14 +41,14 @@ export default function WorkshopForm(): JSX.Element {
 
     formState: { errors },
   } = useForm<Workshop>({
-    defaultValues: { virtual: true },
+    defaultValues: { virtual: VIRTUAL_LOCATION_BY_DEFAULT },
   });
 
   const router = useRouter();
 
   const formState = watch();
 
-  const { nextStep, prevStep, reset, activeStep } = useSteps({
+  const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
   });
 
@@ -197,7 +197,7 @@ export default function WorkshopForm(): JSX.Element {
           <Text mr={2}>Virtual?</Text>
           <Switch
             id="isVirtual"
-            colorScheme={"twitter"}
+            colorScheme={"green"}
             {...register("virtual")}
           />
         </Flex>
@@ -261,70 +261,87 @@ export default function WorkshopForm(): JSX.Element {
   const dateStage = (
     <Stack spacing={4}>
       <WorkshopSlotForm
+        hasSlots={slots.length !== 0}
         onSubmit={(data) => {
           setSlots((old) => [...old, data]);
         }}
       />
-      <Show showIf={slots.length !== 0}>
-        <Divider />
-      </Show>
-      {slots.map((s, i) => (
-        <WorkshopFormSlot
-          key={s.id}
-          slot={s}
-          onRemoveSlot={(id: string) =>
-            setSlots((prev) => prev.filter((s) => s.id !== id))
-          }
-        />
-      ))}
     </Stack>
   );
 
-  const formSteps = [
+  const FORM_STEPS = [
     { label: "What is it?", content: descriptionStage },
     { label: "Where is it?", content: locationStage },
     { label: "When is it?", content: dateStage },
   ];
 
   // is the form in its final stage?
-  const isFinalStage = activeStep === formSteps.length - 1;
+  const isFinalStage = activeStep === FORM_STEPS.length - 1;
 
   return (
-    <Container>
-      <Heading mb={{ base: "7", sm: "12" }}>Create a workshop</Heading>
-      <Flex flexDir="column" width="100%">
-        <Steps activeStep={activeStep}>
-          {formSteps.map(({ label, content }) => (
-            <Step label={label} key={label}>
-              <Box my={{ base: "4", sm: "12" }}>{content}</Box>
-            </Step>
-          ))}
-        </Steps>
-        <Flex width="100%" justify="flex-end">
-          <Button
-            isDisabled={activeStep === 0}
-            mr={4}
-            onClick={prevStep}
-            variant="ghost"
-          >
-            Prev
-          </Button>
-          <Button
-            isLoading={isLoading}
-            isDisabled={nextStepIsDisabled()}
-            colorScheme={isFinalStage ? "green" : "gray"}
-            onClick={() => {
-              if (isFinalStage) {
-                onSubmit(formState);
-              } else {
-                nextStep();
-              }
-            }}
-          >
-            {isFinalStage ? "Finish" : "Next"}
-          </Button>
+    <Flex flexDir={{ base: "column", sm: "row" }}>
+      <Box minW={{ base: "", sm: "50vw" }}>
+        <Heading mb={{ base: "7", sm: "12" }}>Create</Heading>
+        <Flex flexDir="column" width="100%">
+          <Steps activeStep={activeStep}>
+            {FORM_STEPS.map(({ label, content }) => (
+              <Step label={label} key={label}>
+                <Box my={{ base: "4", sm: "12" }}>{content}</Box>
+              </Step>
+            ))}
+          </Steps>
+          <Flex width="100%" justify="flex-end">
+            <Button
+              isDisabled={activeStep === 0}
+              mr={4}
+              onClick={prevStep}
+              variant="ghost"
+            >
+              Prev
+            </Button>
+            <Button
+              isLoading={isLoading}
+              isDisabled={nextStepIsDisabled()}
+              colorScheme={isFinalStage ? "green" : "gray"}
+              onClick={() => {
+                if (isFinalStage) {
+                  onSubmit(formState);
+                } else {
+                  nextStep();
+                }
+              }}
+            >
+              {isFinalStage ? "Finish" : "Next"}
+            </Button>
+          </Flex>
         </Flex>
-      </Flex>
-    </Container>
+      </Box>
+      <Box pt={{ base: "10", sm: "0" }} pl={{ base: "0", sm: "10" }}>
+        <Show showIf={slots.length !== 0}>
+          <Box
+            borderColor={"gray.100"}
+            rounded="lg"
+            borderWidth={"thin"}
+            px={{ base: "7", sm: "10" }}
+            py={{ base: "10", sm: "14" }}
+            minW={{ base: "", sm: "600px" }}
+            boxShadow="lg"
+            mt="20"
+          >
+            <Stack spacing={2}>
+              {slots.map((slot) => (
+                <WorkshopFormSlot
+                  key={slot.id}
+                  slot={slot}
+                  onRemoveSlot={(id: string) =>
+                    setSlots((prev) => prev.filter((s) => s.id !== id))
+                  }
+                />
+              ))}
+            </Stack>
+          </Box>
+        </Show>
+      </Box>
+    </Flex>
   );
 }
