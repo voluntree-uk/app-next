@@ -270,9 +270,9 @@ export default function WorkshopForm(): JSX.Element {
   );
 
   const FORM_STEPS = [
-    { label: "What is it?", content: descriptionStage },
-    { label: "Where is it?", content: locationStage },
-    { label: "When is it?", content: dateStage },
+    { label: "What?", content: descriptionStage },
+    { label: "Where?", content: locationStage },
+    { label: "When?", content: dateStage },
   ];
 
   // is the form in its final stage?
