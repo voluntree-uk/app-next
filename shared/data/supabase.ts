@@ -1,5 +1,5 @@
 import { DataAccessor } from "./data";
-import { Workshop, Slot, Booking, BookingDetails, Profile } from "../schemas";
+import { Workshop, Slot, Booking, BookingDetails, Profile, FilterProps } from "../schemas";
 import { dateAsISOString } from "../../utils/dates";
 import { supabase } from "../../supabase/supabaseClient";
 
@@ -52,27 +52,27 @@ class SupabaseDataAccessor implements DataAccessor {
     }
   }
 
-  async getAvailableWorkshops(): Promise<Workshop[]> {
-    const { data: workshops } = await supabase
-      .from('workshops')
+  async filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]> {
+    const query = supabase
+      .from("workshops")
       .select('*, slots!inner(date, at_capacity)')
       .eq('slots.at_capacity', false)
       .gt('slots.date', dateAsISOString())
       .order('created_at', { ascending: false });
-    if (workshops) {
-      return workshops
-    } else {
-      return []
-    }
-  }
 
-  async searchWorkshops(str: string): Promise<Workshop[]> {
-    const { data: searchData, error: error } = await supabase
-      .from("workshops")
-      .select("*")
-      .ilike("name", `%${str}%`);
+    if (filters.category !== '') {
+      query.eq("category", filters.category);
+    }
+
+    if (filters.text !== '') {
+      query.ilike("name", `%${filters.text}%`);
+    }
+
+    const { data: filteredData, error: error } = await query;
+
     if (error) throw error;
-    return searchData;
+
+    return filteredData ? filteredData : [];
   }
 
   async getWorkshopsByCategory(category: string): Promise<Workshop[]> {
