@@ -1,7 +1,22 @@
 import { DataAccessor } from "./data";
-import { Workshop, Slot, Booking, BookingDetails, Profile, FilterProps } from "../schemas";
-import { dateAsISOString } from "../../utils/dates";
 import { supabase } from "../../supabase/supabaseClient";
+import {
+  Workshop,
+  Slot,
+  Booking,
+  BookingDetails,
+  Profile,
+  FilterProps,
+  TimeFilter
+} from "../schemas";
+import {
+  dateAsISOString,
+  endOfThisWeekAsISOString,
+  startOfThisWeekendAsISOString,
+  endOfThisWeekendAsISOString,
+  startOfNextWeekAsISOString,
+  endOfNextWeekAsISOString
+} from "../../utils/dates";
 
 /**
  * A supabase implementation of the DataAccessor interface
@@ -57,7 +72,6 @@ class SupabaseDataAccessor implements DataAccessor {
       .from("workshops")
       .select('*, slots!inner(date, at_capacity)')
       .eq('slots.at_capacity', false)
-      .gt('slots.date', dateAsISOString())
       .order('created_at', { ascending: false });
 
     if (filters.category !== '') {
@@ -66,6 +80,24 @@ class SupabaseDataAccessor implements DataAccessor {
 
     if (filters.text !== '') {
       query.ilike("name", `%${filters.text}%`);
+    }
+
+    switch (filters.time) {
+      case TimeFilter.THIS_WEEK:
+        query.gte('slots.date', dateAsISOString())
+        query.lte('slots.date', endOfThisWeekAsISOString())
+        break;
+      case TimeFilter.THIS_WEEKEND:
+        query.gte('slots.date', startOfThisWeekendAsISOString())
+        query.lte('slots.date', endOfThisWeekendAsISOString())
+        break;
+      case TimeFilter.NEXT_WEEK:
+        query.gte('slots.date', startOfNextWeekAsISOString())
+        query.lte('slots.date', endOfNextWeekAsISOString())
+        break;
+      default:
+        query.gte('slots.date', dateAsISOString())
+        break;
     }
 
     const { data: filteredData, error: error } = await query;
