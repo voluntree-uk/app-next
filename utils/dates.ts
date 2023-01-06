@@ -64,8 +64,8 @@ export function dateAsISOString(date: Date = new Date()) {
  * @returns end date of this week
  */
 export function endOfThisWeekAsISOString() {
-  var today = new Date();
-  var endOfThisWeek = endOfWeek(today, { weekStartsOn: 1 });
+  const today = new Date();
+  const endOfThisWeek = endOfWeek(today, { weekStartsOn: 1 });
   return dateAsISOString(endOfThisWeek);
 }
 
@@ -74,9 +74,9 @@ export function endOfThisWeekAsISOString() {
  * @returns start date of next week
  */
 export function startOfNextWeekAsISOString() {
-  var today = new Date();
-  var nextMon = nextMonday(today);
-  var startOfNextWeek = startOfWeek(nextMon, { weekStartsOn: 1 });
+  const today = new Date();
+  const nextMon = nextMonday(today);
+  const startOfNextWeek = startOfWeek(nextMon, { weekStartsOn: 1 });
   return dateAsISOString(startOfNextWeek);
 }
 
@@ -85,9 +85,9 @@ export function startOfNextWeekAsISOString() {
  * @returns end date of next week
  */
 export function endOfNextWeekAsISOString() {
-  var today = new Date();
-  var nextMon = nextMonday(today);
-  var endOfNextWeek = endOfWeek(nextMon, { weekStartsOn: 1 });
+  const today = new Date();
+  const nextMon = nextMonday(today);
+  const endOfNextWeek = endOfWeek(nextMon, { weekStartsOn: 1 });
   return dateAsISOString(endOfNextWeek);
 }
 
@@ -98,7 +98,7 @@ export function endOfNextWeekAsISOString() {
  * @returns start date of this weekend
  */
 export function startOfThisWeekendAsISOString() {
-  var today = new Date();
+  const today = new Date();
   if (isWeekend(today)) {
     return dateAsISOString(today)
   } else {
@@ -112,7 +112,7 @@ export function startOfThisWeekendAsISOString() {
  * @returns end date of this weekend
  */
 export function endOfThisWeekendAsISOString() {
-  var today = new Date();
+  const today = new Date();
   if (isSunday(today)) {
     return dateAsISOString(today)
   } else {

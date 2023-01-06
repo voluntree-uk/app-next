@@ -15,15 +15,15 @@ export default function WorkshopList({ hideFilter }: IProps) {
   const [search, setSearch] = useState<FilterProps>(DefaultFilterProps);
   const [workshops, setWorkshops] = useState<Workshop[]>();
 
-  const filterWorkshops = useCallback(async (searchParams: any) => {
-    console.log(`Filtering workshops on ${JSON.stringify(searchParams)}`)
-    const foundWorkshops = await data.filterAvailableWorkshops(searchParams);
+  const filterWorkshops = useCallback(async (filters: FilterProps) => {
+    console.log(`Filtering workshops on ${JSON.stringify(filters)}`)
+    const foundWorkshops = await data.filterAvailableWorkshops(filters);
     setWorkshops(foundWorkshops);
   }, []);
 
   useEffect(() => {
     filterWorkshops(search);
-  }, [search]);
+  }, [search, filterWorkshops]);
 
   return (
     <Box>

@@ -71,7 +71,7 @@ export enum TimeFilter {
 }
 
 export const DefaultFilterProps: FilterProps = {
-  text: '',
-  category: '',
+  text: "",
+  category: "",
   time: TimeFilter.ANY_TIME
 }
