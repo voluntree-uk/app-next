@@ -1,16 +1,12 @@
-import { Box } from "@chakra-ui/react";
+import Layout from "@/components/Layout/Layout";
+import { Box, Container } from "@chakra-ui/react";
 import { User } from "@supabase/supabase-js";
 import React from "react";
 import Account from "../../components/Account";
-import Layout from "../../components/Layout/Layout";
 import { auth } from "../../shared/auth/supabase";
 
 export default function MePage({ user }: { user: User }) {
-  return (
-    <Layout>
-      <Box>{user ? <Account user={user} /> : null}</Box>
-    </Layout>
-  );
+  return <Layout>{user ? <Account user={user} /> : null}</Layout>;
 }
 
 export async function getServerSideProps({ req }: any) {

@@ -1,44 +1,98 @@
-import { Box, HStack, Input, Select } from "@chakra-ui/react";
+import { Flex, HStack, Input, Link, Select } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
 import config from "../../app-config";
-import { FilterProps, DefaultFilterProps } from "../../shared/schemas";
+import { globalSearchState } from "../../shared/recoil/atoms";
+import {
+  FilterProps,
+  DefaultFilterProps,
+  TimeFilter,
+} from "../../shared/schemas";
 
 interface IProps {
-  onFilterChange(filter: any): void;
+  activeFilter: FilterProps;
+  onFilterChange(filter: FilterProps): void;
 }
 
-export default function WorkshopListFilter({ onFilterChange }: IProps) {
-  const { register, watch } = useForm<FilterProps>({
-    defaultValues: DefaultFilterProps
+export default function WorkshopListFilter({
+  onFilterChange,
+  activeFilter,
+}: IProps) {
+  const [globalSearch, setGlobalSearch] = useRecoilState(globalSearchState);
+
+  const { register, watch, reset } = useForm<FilterProps>({
+    defaultValues: DefaultFilterProps,
   });
 
   React.useEffect(() => {
     const subscription = watch((data) => {
-      console.log("Filter change!")
-      onFilterChange(data)
-    })
+      onFilterChange(data as FilterProps);
+    });
 
     return () => {
-      subscription.unsubscribe()
-    }
+      subscription.unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch]);
 
+  const filterState = watch();
+
+  const filterApplied = () => {
+    return (
+      activeFilter.category ||
+      activeFilter.time !== TimeFilter.ANY_TIME ||
+      activeFilter.text
+    );
+  };
+
+  const restFilters = () => {
+    reset();
+  };
+
   return (
-    <Box pb="7" display={{ base: "none", md: "block" }} w="800px">
-      <HStack spacing={1}>
+    <Flex
+      pb="12"
+      display={{ base: "none", md: "flex" }}
+      alignItems="center"
+      justifyContent={"center"}
+    >
+      <HStack spacing={2}>
         <Input
           rounded={"full"}
-          placeholder="Search for keywords"
-          type={"search"}
+          fontWeight="light"
+          placeholder="Search"
+          bg={"transparent"}
+          color={"black"}
+          h="12"
+          borderWidth={"1px"}
+          borderColor={"black"}
+          boxShadow={"sm"}
+          _hover={{
+            borderWidth: "1px",
+            borderColor: "black",
+            cursor: "pointer",
+          }}
+          focusBorderColor="black"
           {...register("text")}
         />
+
         <Select
           rounded={"full"}
           fontWeight={"semibold"}
           placeholder="All Categories"
-          bg="gray.100"
+          bg={activeFilter.category ? "black" : "transparent"}
+          color={activeFilter.category ? "white" : "black"}
+          h="12"
+          borderWidth={"1px"}
+          borderColor={"black"}
+          boxShadow={"sm"}
+          _hover={{
+            borderWidth: "1px",
+            borderColor: "black",
+            cursor: "pointer",
+          }}
           {...register("category")}
         >
           {config.categories.map((c) => (
@@ -47,10 +101,24 @@ export default function WorkshopListFilter({ onFilterChange }: IProps) {
             </option>
           ))}
         </Select>
+
         <Select
-          fontWeight={"semibold"}
           rounded={"full"}
-          bg="gray.100"
+          fontWeight={"semibold"}
+          placeholder="All Categories"
+          bg={
+            activeFilter.time === TimeFilter.ANY_TIME ? "transparent" : "black"
+          }
+          color={activeFilter.time === TimeFilter.ANY_TIME ? "black" : "white"}
+          h="12"
+          _hover={{
+            borderWidth: "1px",
+            borderColor: "black",
+            cursor: "pointer",
+          }}
+          borderWidth={"1px"}
+          borderColor={"black"}
+          boxShadow={"sm"}
           {...register("time")}
         >
           {config.timeFilters.map((c) => (
@@ -60,6 +128,18 @@ export default function WorkshopListFilter({ onFilterChange }: IProps) {
           ))}
         </Select>
       </HStack>
-    </Box>
+
+      {filterApplied() ? (
+        <Link
+          color="black"
+          ml="3"
+          fontWeight={"semibold"}
+          _hover={{ underline: "none" }}
+          onClick={restFilters}
+        >
+          Reset filters
+        </Link>
+      ) : null}
+    </Flex>
   );
 }

@@ -1,11 +1,10 @@
 import { User } from "@supabase/supabase-js";
 import React from "react";
-import Layout from "../../components/Layout/Layout";
 import { BookingDetails, Workshop } from "../../shared/schemas";
 import { data } from "../../shared/data/supabase";
 import { auth } from "../../shared/auth/supabase";
 import BookingList from "../../components/Booking/BookingList";
-import { Box } from "@chakra-ui/react";
+import Layout from "@/components/Layout/Layout";
 
 export default function MyBookingsPage({
   workshops,
@@ -17,9 +16,7 @@ export default function MyBookingsPage({
 }) {
   return (
     <Layout>
-      <Box>
-        <BookingList bookings={bookings} />
-      </Box>
+      <BookingList bookings={bookings} />
     </Layout>
   );
 }
