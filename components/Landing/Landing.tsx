@@ -16,47 +16,65 @@ import { BsArrowRightCircleFill } from "react-icons/bs";
 export default function Landing() {
   const router = useRouter();
   return (
-    <Box px={{ base: "8", sm: "20" }}>
-      <Center pt="28" pb="16">
-        <Heading textAlign={"center"} fontSize="100px" fontWeight="400">
+    <Box
+      px={{ base: "10", sm: "28" }}
+      color={"white"}
+      pt={{ base: "10", sm: "40" }}
+    >
+      <Center pb={{ base: "14", sm: "16" }}>
+        <Heading
+          textAlign={"center"}
+          fontSize={{ base: "6xl", sm: "100px" }}
+          fontWeight="400"
+        >
           We&apos;re a platform with purpose
         </Heading>
       </Center>
 
-      <Center pb="36">
+      <Center pb={{ base: "24", sm: "36" }}>
         <Button
           color={"white"}
           size="lg"
           onClick={() => router.push("/workshops")}
-          bg="black"
+          bg="transparent"
+          border="1px solid white"
           rounded={"full"}
-          border={"1px solid transparent"}
           px="7"
           py="7"
           fontWeight={"light"}
           _hover={{
-            bg: "transparent",
-            color: "black",
-            border: "1px solid black",
+            bg: "white",
+            color: "#2c45b7",
           }}
         >
           Browse workshops
         </Button>
       </Center>
 
-      <Box w="75%">
-        <Heading size={"4xl"} pb="8" fontWeight="400">
+      <Box w={{ base: "100%", sm: "75%" }}>
+        <Heading size={{ base: "3xl", sm: "4xl" }} pb="8" fontWeight="400">
           Better begins today
         </Heading>
 
-        <Text fontSize={"3xl"} fontWeight="light">
+        <Text fontSize={"2xl"} fontWeight="light">
           Showing up for people and the planet, using the platform to drive
           meaningful change where it matters most.
         </Text>
       </Box>
 
-      <Flex justifyContent={"space-around"} pt="28">
-        <Box border={"1px solid black"} p="10" py="8" rounded={"2xl"} w="350px">
+      <Flex
+        direction={{ base: "column", sm: "row" }}
+        justifyContent={"space-around"}
+        pt={{ base: "10", sm: "28" }}
+      >
+        <Box
+          border={"1px solid white"}
+          p="10"
+          py="8"
+          rounded={"2xl"}
+          w={{ base: "100%", sm: "350px" }}
+          mb={{ base: "4", sm: "0" }}
+        >
           <Heading pb="2" fontWeight={"semibold"} size={"4xl"}>
             145
           </Heading>
@@ -65,7 +83,14 @@ export default function Landing() {
           </Text>
         </Box>
 
-        <Box border={"1px solid black"} p="10" py="8" rounded={"2xl"} w="350px">
+        <Box
+          border={"1px solid white"}
+          p="10"
+          py="8"
+          rounded={"2xl"}
+          w={{ base: "100%", sm: "350px" }}
+          mb={{ base: "4", sm: "0" }}
+        >
           <Heading pb="2" fontWeight={"semibold"} size={"4xl"}>
             452
           </Heading>
@@ -74,9 +99,16 @@ export default function Landing() {
           </Text>
         </Box>
 
-        <Box border={"1px solid black"} p="10" py="8" rounded={"2xl"} w="350px">
+        <Box
+          border={"1px solid white"}
+          p="10"
+          py="8"
+          rounded={"2xl"}
+          w={{ base: "100%", sm: "350px" }}
+          mb={{ base: "4", sm: "0" }}
+        >
           <Heading pb="2" fontWeight={"semibold"} size={"4xl"}>
-            406 K
+            406K
           </Heading>
           <Text pl={"1"} fontWeight="light">
             monthly users
@@ -84,17 +116,22 @@ export default function Landing() {
         </Box>
       </Flex>
 
-      <Center>
+      <Center my={{ base: "14", sm: "32" }}>
         <Img
           rounded={"xl"}
-          src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8Y29tbXVuaXR5fGVufDB8fDB8fA%3D%3D&w=1000&q=80"
-          my="32"
+          w="75%"
+          src="https://images.unsplash.com/photo-1490187763999-9f273a5b7516?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80"
         />
       </Center>
 
       <Box>
         <Center>
-          <Heading size={"4xl"} pb="8" fontWeight="400">
+          <Heading
+            size={{ base: "3xl", sm: "4xl" }}
+            pb="8"
+            fontWeight="400"
+            textAlign={"center"}
+          >
             Directly democratic
           </Heading>
         </Center>
@@ -102,9 +139,9 @@ export default function Landing() {
         <Center>
           <Text
             textAlign={"center"}
-            fontSize={"3xl"}
+            fontSize={{ base: "2xl", sm: "3xl" }}
             fontWeight="light"
-            w="75%"
+            w={{ base: "100%", sm: "75%" }}
           >
             Totally transparent, directly democratic, and free to use, Societree
             will enable you to help your community, build your reputation and
@@ -113,15 +150,23 @@ export default function Landing() {
         </Center>
       </Box>
 
-      <Flex justifyContent={"space-around"} pt="28">
+      <Flex
+        justifyContent={"space-around"}
+        pt={{ base: "20", sm: "28" }}
+        direction={{ base: "column", sm: "row" }}
+      >
         <Link href={"/workshops"}>
           <Box
-            border={"1px solid black"}
+            border={"1px solid white"}
             p="10"
             py="8"
             rounded={"2xl"}
-            w="350px"
-            _hover={{ bg: "black", color: "white", cursor: "pointer" }}
+            w={{ base: "100%", sm: "350px" }}
+            mb={{ base: "4", sm: "0" }}
+            _hover={{
+              bg: "white",
+              color: "#503750",
+            }}
           >
             <Heading pb="2" fontWeight={"semibold"} size={"2xl"}>
               Languages
@@ -137,12 +182,16 @@ export default function Landing() {
 
         <Link href={"/workshops"}>
           <Box
-            border={"1px solid black"}
+            border={"1px solid white"}
             p="10"
             py="8"
             rounded={"2xl"}
-            w="350px"
-            _hover={{ bg: "black", color: "white", cursor: "pointer" }}
+            mb={{ base: "4", sm: "0" }}
+            w={{ base: "100%", sm: "350px" }}
+            _hover={{
+              bg: "white",
+              color: "#503750",
+            }}
           >
             <Heading pb="2" fontWeight={"semibold"} size={"2xl"}>
               Finance
@@ -158,12 +207,16 @@ export default function Landing() {
 
         <Link href={"/workshops"}>
           <Box
-            border={"1px solid black"}
+            border={"1px solid white"}
             p="10"
             py="8"
             rounded={"2xl"}
-            w="350px"
-            _hover={{ bg: "black", color: "white", cursor: "pointer" }}
+            w={{ base: "100%", sm: "350px" }}
+            mb={{ base: "4", sm: "0" }}
+            _hover={{
+              bg: "white",
+              color: "#503750",
+            }}
           >
             <Heading pb="2" fontWeight={"semibold"} size={"2xl"}>
               Arts
@@ -178,24 +231,38 @@ export default function Landing() {
         </Link>
       </Flex>
 
-      <Box w="65%" my="32">
-        <Heading size={"3xl"} pb="8" fontWeight="400">
-          Social exchange
-        </Heading>
+      <Flex my={{ base: "20", sm: "40" }} justifyContent="space-between">
+        <Box w={{ base: "100%", sm: "60%" }}>
+          <Heading size={"3xl"} pb="8" fontWeight="400">
+            Social exchange
+          </Heading>
 
-        <Text fontSize={"2xl"} fontWeight="light" lineHeight={"10"} pb="8">
-          Built on a commitment to the idea that social exchange has real
-          material value, Societree is a social experiment platform that
-          challenges the conventional capitalist business structures.
-        </Text>
-
-        <Flex fontSize={"xl"} alignItems={"center"}>
-          <Text fontWeight="semibold" pr={3}>
-            <Link href={"/workshops"}>Check out workshops</Link>
+          <Text fontSize={"2xl"} fontWeight="light" lineHeight={"10"} pb="8">
+            Built on a commitment to the idea that social exchange has real
+            material value, Societree is a social experiment platform that
+            challenges the conventional capitalist business structures.
           </Text>
-          <BsArrowRightCircleFill />
-        </Flex>
-      </Box>
+
+          <Flex fontSize={"xl"} alignItems={"center"}>
+            <Text
+              fontWeight="semibold"
+              pr={3}
+              _hover={{
+                color: "gray.200",
+              }}
+            >
+              <Link href={"/workshops"}>Check out workshops</Link>
+            </Text>
+            <BsArrowRightCircleFill />
+          </Flex>
+        </Box>
+
+        <Img
+          display={{ base: "none", sm: "block" }}
+          h="400px"
+          src="https://images.unsplash.com/photo-1541976844346-f18aeac57b06?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+        />
+      </Flex>
     </Box>
   );
 }

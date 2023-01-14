@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { ReactNode } from "react";
 import Footer from "../Footer";
@@ -13,9 +13,10 @@ export default function Layout(props: LayoutProps) {
   const router = useRouter();
 
   const bg = {
-    "/": "purple.50",
+    "/": "#2c45b7",
     "/workshops": "gray.50",
-    "/workshops/[wid]": "blue.50",
+    "/workshops/[wid]": "gray.50",
+    "/dashboard": "gray.50",
   };
 
   return (
@@ -25,10 +26,14 @@ export default function Layout(props: LayoutProps) {
       flexDir={"column"}
       justifyContent="space-between"
       bg={(bg as any)[router.route]}
+      {...props}
+      w="full"
     >
-      <Box zIndex={"50000"}>
+      <Box>
         <Navbar />
-        <ResponsiveContainer>{props.children}</ResponsiveContainer>
+        <Container maxW="100vw" p="0">
+          {props.children}
+        </Container>
       </Box>
       <Footer />
     </Box>

@@ -14,7 +14,6 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/navigation";
 import AuthenticationModal from "../AuthenticationModal";
 import { useSession } from "../../utils/hooks";
 import { auth } from "../../shared/auth/supabase";
@@ -23,6 +22,7 @@ import { useRecoilState } from "recoil";
 
 import { GiTreeDoor } from "react-icons/gi";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const Links = [{ label: "Find workshops", href: "/workshops" }];
 
@@ -36,19 +36,21 @@ export default function Navbar() {
     authenticationModalState
   );
 
+  const isLanding = router.route === "/";
+
   return (
     <>
       <Box
         px={"4"}
         py="1"
-        borderBottom="1px"
+        borderBottom={isLanding ? "0px" : "1px"}
         borderBottomColor={true ? "transparent" : "gray.100"}
         pos={"sticky"}
         top="0"
         zIndex={"overlay"}
         borderBottomWidth="0.5px"
         borderColor="black"
-        bg="white"
+        bg={isLanding ? "transparent" : "white"}
       >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
@@ -64,6 +66,7 @@ export default function Navbar() {
               <GiTreeDoor
                 fontSize={"40px"}
                 cursor="pointer"
+                color={isLanding ? "white" : "black"}
                 onClick={() => router.push("/")}
               />
             </Box>
@@ -106,15 +109,16 @@ export default function Navbar() {
                     }
                   />
                 </MenuButton>
-                <MenuList>
-                  <MenuItem onClick={() => router.push("/me")}>
-                    View profile
-                  </MenuItem>
-                  <MenuItem onClick={() => router.push("/me/dashboard")}>
+                <MenuList border={"1px solid black"} bg="white">
+                  <MenuItem
+                    _hover={{ bg: "white" }}
+                    onClick={() => router.push("/dashboard")}
+                  >
                     Dashboard
                   </MenuItem>
                   <Divider />
                   <MenuItem
+                    _hover={{ bg: "white" }}
                     onClick={() => {
                       auth.signOut();
                     }}

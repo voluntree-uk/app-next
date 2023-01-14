@@ -38,7 +38,7 @@ export default function WorkshopListingSlotList({
 
         // Redirect if booking created successfully
         if (success) {
-          router.push("/me/dashboard");
+          router.push("/dashboard");
         }
       }
     } catch (error) {

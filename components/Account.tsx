@@ -68,7 +68,7 @@ export default function Account({ user }: { user: User }) {
   }, [user, getProfile]);
 
   return (
-    <Box>
+    <Box mb="20">
       <Heading size={"2xl"}>
         {full_name} (@{username})
       </Heading>

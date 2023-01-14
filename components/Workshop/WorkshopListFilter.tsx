@@ -1,10 +1,8 @@
-import { Flex, HStack, Input, Link, Select } from "@chakra-ui/react";
+import { Center, Flex, HStack, Input, Select } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilState } from "recoil";
 import config from "../../app-config";
-import { globalSearchState } from "../../shared/recoil/atoms";
 import {
   FilterProps,
   DefaultFilterProps,
@@ -20,9 +18,7 @@ export default function WorkshopListFilter({
   onFilterChange,
   activeFilter,
 }: IProps) {
-  const [globalSearch, setGlobalSearch] = useRecoilState(globalSearchState);
-
-  const { register, watch, reset } = useForm<FilterProps>({
+  const { register, watch } = useForm<FilterProps>({
     defaultValues: DefaultFilterProps,
   });
 
@@ -37,51 +33,35 @@ export default function WorkshopListFilter({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watch]);
 
-  const filterState = watch();
-
-  const filterApplied = () => {
-    return (
-      activeFilter.category ||
-      activeFilter.time !== TimeFilter.ANY_TIME ||
-      activeFilter.text
-    );
-  };
-
-  const restFilters = () => {
-    reset();
-  };
-
   return (
-    <Flex
-      pb="12"
-      display={{ base: "none", md: "flex" }}
-      alignItems="center"
-      justifyContent={"center"}
-    >
-      <HStack spacing={2}>
+    <Flex flexDir={"column"} alignItems="center" justifyContent={"center"}>
+      <Center mb="12" pl="60">
         <Input
-          rounded={"full"}
-          fontWeight="light"
+          border={"none"}
+          bg="transparent"
           placeholder="Search"
-          bg={"transparent"}
           color={"black"}
-          h="12"
+          autoFocus={true}
+          _placeholder={{ color: "black" }}
+          fontWeight="semibold"
+          p="10"
+          fontSize="6xl"
           borderWidth={"1px"}
           borderColor={"black"}
-          boxShadow={"sm"}
           _hover={{
-            borderWidth: "1px",
-            borderColor: "black",
+            borderWidth: "0px",
+            borderColor: "transparent",
             cursor: "pointer",
           }}
-          focusBorderColor="black"
+          focusBorderColor="transparent"
           {...register("text")}
         />
-
+      </Center>
+      <HStack spacing={2}>
         <Select
           rounded={"full"}
-          fontWeight={"semibold"}
           placeholder="All Categories"
+          fontWeight={"semibold"}
           bg={activeFilter.category ? "black" : "transparent"}
           color={activeFilter.category ? "white" : "black"}
           h="12"
@@ -105,7 +85,6 @@ export default function WorkshopListFilter({
         <Select
           rounded={"full"}
           fontWeight={"semibold"}
-          placeholder="All Categories"
           bg={
             activeFilter.time === TimeFilter.ANY_TIME ? "transparent" : "black"
           }
@@ -128,18 +107,6 @@ export default function WorkshopListFilter({
           ))}
         </Select>
       </HStack>
-
-      {filterApplied() ? (
-        <Link
-          color="black"
-          ml="3"
-          fontWeight={"semibold"}
-          _hover={{ underline: "none" }}
-          onClick={restFilters}
-        >
-          Reset filters
-        </Link>
-      ) : null}
     </Flex>
   );
 }

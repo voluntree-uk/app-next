@@ -11,16 +11,9 @@ interface IProps {
 export default function WorkshopListingBodyLocation({ workshop }: IProps) {
   return (
     <Box py="6" px={{ base: "2", md: "10" }}>
-      <Box
-        maxW={"300px"}
-        p="4"
-        rounded="xl"
-        border="1px solid black"
-        bg="black"
-        color="white"
-      >
+      <Box maxW={"300px"} px="5" py="5" rounded="xl" border="1px solid black">
         <Flex alignItems={"center"}>
-          <Box mr="4" fontSize={"25px"}>
+          <Box mr="5" fontSize={"25px"}>
             {workshop.virtual ? <BsCameraVideo /> : <BsPinMap />}
           </Box>
           <Box>

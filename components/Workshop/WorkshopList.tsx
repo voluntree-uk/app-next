@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Center,
   Container,
   Flex,
@@ -14,19 +15,20 @@ import WorkshopCard from "./WorkshopListCard";
 import WorkshopListFilter from "./WorkshopListFilter";
 import { data } from "../../shared/data/supabase";
 import { useEffect, useState } from "react";
-import { FilterProps, DefaultFilterProps } from "../../shared/schemas";
-import { useRecoilState } from "recoil";
-import { globalSearchState } from "../../shared/recoil/atoms";
+import {
+  FilterProps,
+  DefaultFilterProps,
+  TimeFilter,
+} from "../../shared/schemas";
 import { useAsync } from "@react-hookz/web";
-import Link from "next/link";
+import { IoMdCloseCircle, IoMdCloseCircleOutline } from "react-icons/io";
+import router from "next/router";
 
 interface IProps {
   hideFilter?: boolean;
 }
 
 export default function WorkshopList({ hideFilter }: IProps) {
-  const [globalSearch] = useRecoilState(globalSearchState);
-
   const [filter, setFilter] = useState<FilterProps>(DefaultFilterProps);
 
   const [workshops, workshopsActions] = useAsync(() =>
@@ -35,35 +37,99 @@ export default function WorkshopList({ hideFilter }: IProps) {
 
   useEffect(() => {
     workshopsActions.execute();
-  }, [filter, globalSearch, workshopsActions]);
+  }, [filter, workshopsActions]);
 
   function scroll() {
-    window.scrollTo({ top: 300, left: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }
+
+  const filterActive = () => {
+    return Boolean(
+      filter.category || filter.time !== TimeFilter.ANY_TIME || filter.text
+    );
+  };
   return (
     <Box>
-      <Box my="20">
-        <Center pb="8">
-          <Heading size={"3xl"} fontWeight="400" letterSpacing={"wide"}>
-            Recent workshops
-          </Heading>
-        </Center>
-
-        <Center>
-          <Text textAlign={"center"} fontSize={"xl"} fontWeight="light" w="50%">
-            Browse the workshops recently added by volunteers in your community.
-            Use the filters to find a category you are looking for.
-          </Text>
-        </Center>
-      </Box>
-
-      <Container maxW={"container.md"}>
+      <Container maxW={"container.md"} mt="20">
         {!hideFilter ? (
           <WorkshopListFilter
             activeFilter={filter}
             onFilterChange={setFilter}
           />
         ) : null}
+
+        <Center my="12">
+          <Text
+            fontWeight={"normal"}
+            fontSize={"2xl"}
+            display="flex"
+            alignItems={"center"}
+          >
+            <strong style={{ paddingRight: "5px" }}>
+              {workshops.result?.length}
+            </strong>
+            workshops in
+            <strong style={{ paddingLeft: "5px", paddingRight: "5px" }}>
+              {filter.category || "all categories"}
+            </strong>
+            {filter.category !== "" && (
+              <IoMdCloseCircle
+                fontSize={"30px"}
+                style={{
+                  display: "inline",
+                  paddingRight: "5px",
+                  cursor: "pointer",
+                }}
+                onClick={() =>
+                  setFilter((prev) => {
+                    return {
+                      ...prev,
+                      category: "",
+                    };
+                  })
+                }
+              />
+            )}
+            at
+            <strong style={{ paddingLeft: "5px", paddingRight: "5px" }}>
+              {filter.time.toLowerCase()}
+            </strong>
+            {filter.time !== TimeFilter.ANY_TIME && (
+              <IoMdCloseCircle
+                fontSize={"30px"}
+                style={{
+                  display: "inline",
+                  paddingRight: "5px",
+                  cursor: "pointer",
+                }}
+                onClick={() =>
+                  setFilter((prev) => {
+                    return {
+                      ...prev,
+                      time: TimeFilter.ANY_TIME,
+                    };
+                  })
+                }
+              />
+            )}
+            {filterActive() && (
+              <Flex alignItems={"center"} color="gray.500">
+                <Text style={{ paddingLeft: "10px", paddingRight: "5px" }}>
+                  Clear all filters
+                </Text>
+                <IoMdCloseCircleOutline
+                  fontSize={"30px"}
+                  style={{
+                    display: "inline",
+                    paddingRight: "5px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setFilter(DefaultFilterProps)}
+                />
+              </Flex>
+            )}
+          </Text>
+        </Center>
 
         <Stack overflow="scroll" spacing={2} w="fit-content">
           {workshops.result?.slice(0, 3).map((w) => (
@@ -80,6 +146,7 @@ export default function WorkshopList({ hideFilter }: IProps) {
                 color="blue.600"
                 p="10"
                 py="8"
+                w="100%"
                 rounded={"2xl"}
                 _hover={{ bg: "blue.600", color: "white", cursor: "pointer" }}
                 onClick={() => {
@@ -100,6 +167,7 @@ export default function WorkshopList({ hideFilter }: IProps) {
                 borderColor="pink.600"
                 color="pink.600"
                 p="10"
+                w="100%"
                 py="8"
                 mx="8"
                 rounded={"2xl"}
@@ -126,6 +194,7 @@ export default function WorkshopList({ hideFilter }: IProps) {
                 borderColor="cyan.600"
                 color="cyan.600"
                 p="10"
+                w="100%"
                 py="8"
                 rounded={"2xl"}
                 _hover={{ bg: "cyan.600", color: "white", cursor: "pointer" }}
@@ -164,13 +233,46 @@ export default function WorkshopList({ hideFilter }: IProps) {
         </Flex>
       ) : null}
 
+      <Box my="10">
+        <Center mb="8" color="gray.500" fontWeight={"semibold"}>
+          <Text>Showing 10 out of 86</Text>
+        </Center>
+
+        <Center pb={{ base: "24", sm: "36" }}>
+          <Button
+            color={"white"}
+            size="lg"
+            bg="black"
+            border="1px solid white"
+            rounded={"full"}
+            px="7"
+            py="7"
+            fontWeight={"light"}
+            _hover={{
+              bg: "transparent",
+              color: "black",
+              border: "1px solid black",
+            }}
+          >
+            Load more
+          </Button>
+        </Center>
+      </Box>
+
       {!workshops.result?.length && workshops.status === "success" ? (
-        <Flex direction={"column"} alignItems="center" py="28">
-          <Heading size={"sm"} pb="2">
-            Sorry, there are no events results that match these filters
+        <Center py="28">
+          <Heading
+            size="lg"
+            fontWeight={"light"}
+            textAlign={"center"}
+            w="60%"
+            pb="2"
+          >
+            Wow, this is awkward... We don’t have any workshops that match your
+            search right now. Why not change things up a bit and try removing
+            some filters?
           </Heading>
-          <Text>Try resetting the filters</Text>
-        </Flex>
+        </Center>
       ) : null}
     </Box>
   );
