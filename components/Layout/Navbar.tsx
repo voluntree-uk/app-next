@@ -43,13 +43,9 @@ export default function Navbar() {
       <Box
         px={"4"}
         py="1"
-        borderBottom={isLanding ? "0px" : "1px"}
-        borderBottomColor={true ? "transparent" : "gray.100"}
-        pos={"sticky"}
+        pos={isLanding ? "sticky" : "inherit"}
         top="0"
         zIndex={"overlay"}
-        borderBottomWidth="0.5px"
-        borderColor="black"
         bg={isLanding ? "transparent" : "white"}
       >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>

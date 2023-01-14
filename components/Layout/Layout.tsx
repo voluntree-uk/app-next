@@ -28,6 +28,7 @@ export default function Layout(props: LayoutProps) {
       bg={(bg as any)[router.route]}
       {...props}
       w="full"
+      transition="background-color 3s ease"
     >
       <Box>
         <Navbar />

@@ -22,7 +22,13 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
       onClick={() => router.push(`/workshops/${workshop.id}`)}
       cursor="pointer"
       border="1px solid lightgray"
-      _hover={{ border: "1px solid black" }}
+      maxW="200px"
+      _hover={{
+        border: "1px solid black",
+        transform: "translate(10px, 0px)",
+        transition: "transform .3s ease-out",
+        boxShadow: "lg",
+      }}
       rounded={"2xl"}
       minW="container.md"
       bg="white"
@@ -30,7 +36,7 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
       px="4"
     >
       <CardBody>
-        <Heading size={"lg"} pb="4" letterSpacing={"wide"}>
+        <Heading size={"md"} pb="4" letterSpacing={"wide"}>
           {workshop.name}
         </Heading>
         <Text w="85%">{workshop.description}</Text>

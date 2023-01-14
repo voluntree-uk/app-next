@@ -13,7 +13,7 @@ interface IProps {
 
 export default function WorkshopListing({ workshop, slots, bookings }: IProps) {
   return (
-    <Container maxW={"container.lg"}>
+    <Container maxW={"container.lg"} py="20">
       <WorkshopListingHeading workshop={workshop} />
       <WorkshopListingBody workshop={workshop} />
       <WorkshopListingSlotList

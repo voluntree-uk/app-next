@@ -41,6 +41,7 @@ export default function Landing() {
           rounded={"full"}
           px="7"
           py="7"
+          transition={"all .3s ease-out"}
           fontWeight={"light"}
           _hover={{
             bg: "white",
@@ -167,6 +168,7 @@ export default function Landing() {
               bg: "white",
               color: "#503750",
             }}
+            transition={"all .3s ease-out"}
           >
             <Heading pb="2" fontWeight={"semibold"} size={"2xl"}>
               Languages
@@ -192,6 +194,7 @@ export default function Landing() {
               bg: "white",
               color: "#503750",
             }}
+            transition={"all .3s ease-out"}
           >
             <Heading pb="2" fontWeight={"semibold"} size={"2xl"}>
               Finance
@@ -217,6 +220,7 @@ export default function Landing() {
               bg: "white",
               color: "#503750",
             }}
+            transition={"all .3s ease-out"}
           >
             <Heading pb="2" fontWeight={"semibold"} size={"2xl"}>
               Arts

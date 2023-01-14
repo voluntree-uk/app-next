@@ -22,22 +22,22 @@ import {
 } from "../../shared/schemas";
 import { useAsync } from "@react-hookz/web";
 import { IoMdCloseCircle, IoMdCloseCircleOutline } from "react-icons/io";
-import router from "next/router";
 
 interface IProps {
   hideFilter?: boolean;
 }
 
 export default function WorkshopList({ hideFilter }: IProps) {
+  const [page, setPage] = React.useState(1);
   const [filter, setFilter] = useState<FilterProps>(DefaultFilterProps);
 
   const [workshops, workshopsActions] = useAsync(() =>
-    data.filterAvailableWorkshops(filter)
+    data.filterAvailableWorkshops(filter, page)
   );
 
   useEffect(() => {
     workshopsActions.execute();
-  }, [filter, workshopsActions]);
+  }, [filter, workshopsActions, page]);
 
   function scroll() {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -48,9 +48,16 @@ export default function WorkshopList({ hideFilter }: IProps) {
       filter.category || filter.time !== TimeFilter.ANY_TIME || filter.text
     );
   };
+
+  const showLoadMore = () => {
+    return (
+      workshops.status !== "loading" &&
+      workshops.result?.count !== workshops.result?.workshops.length
+    );
+  };
   return (
     <Box>
-      <Container maxW={"container.md"} mt="20">
+      <Container maxW={"container.md"} my="20">
         {!hideFilter ? (
           <WorkshopListFilter
             activeFilter={filter}
@@ -66,7 +73,7 @@ export default function WorkshopList({ hideFilter }: IProps) {
             alignItems={"center"}
           >
             <strong style={{ paddingRight: "5px" }}>
-              {workshops.result?.length}
+              {workshops.result?.workshops.length}
             </strong>
             workshops in
             <strong style={{ paddingLeft: "5px", paddingRight: "5px" }}>
@@ -131,91 +138,8 @@ export default function WorkshopList({ hideFilter }: IProps) {
           </Text>
         </Center>
 
-        <Stack overflow="scroll" spacing={2} w="fit-content">
-          {workshops.result?.slice(0, 3).map((w) => (
-            <WorkshopCard key={w.id} workshop={w} />
-          ))}
-        </Stack>
-
-        {workshops.result?.length && !filter.category ? (
-          <Flex justifyContent={"space-around"} mb="2" mt="2">
-            <Center mb="7" mt="4">
-              <Box
-                borderWidth={"1px"}
-                borderColor="blue.600"
-                color="blue.600"
-                p="10"
-                py="8"
-                w="100%"
-                rounded={"2xl"}
-                _hover={{ bg: "blue.600", color: "white", cursor: "pointer" }}
-                onClick={() => {
-                  setFilter((prev) => {
-                    return { ...prev, category: "technology" };
-                  });
-
-                  scroll();
-                }}
-              >
-                <Heading fontWeight={"semibold"} size={"md"}>
-                  Technology
-                </Heading>
-              </Box>
-
-              <Box
-                borderWidth={"1px"}
-                borderColor="pink.600"
-                color="pink.600"
-                p="10"
-                w="100%"
-                py="8"
-                mx="8"
-                rounded={"2xl"}
-                _hover={{
-                  bg: "pink.600",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setFilter((prev) => {
-                    return { ...prev, category: "finance" };
-                  });
-
-                  scroll();
-                }}
-              >
-                <Heading fontWeight={"semibold"} size={"md"}>
-                  Finance
-                </Heading>
-              </Box>
-
-              <Box
-                borderWidth={"1px"}
-                borderColor="cyan.600"
-                color="cyan.600"
-                p="10"
-                w="100%"
-                py="8"
-                rounded={"2xl"}
-                _hover={{ bg: "cyan.600", color: "white", cursor: "pointer" }}
-                onClick={() => {
-                  setFilter((prev) => {
-                    return { ...prev, category: "languages" };
-                  });
-
-                  scroll();
-                }}
-              >
-                <Heading fontWeight={"semibold"} size={"md"}>
-                  Languages
-                </Heading>
-              </Box>
-            </Center>
-          </Flex>
-        ) : null}
-
-        <Stack overflow="scroll" spacing={2} w="fit-content">
-          {workshops.result?.slice(3).map((w) => (
+        <Stack spacing={2}>
+          {workshops.result?.workshops.map((w) => (
             <WorkshopCard key={w.id} workshop={w} />
           ))}
         </Stack>
@@ -233,33 +157,40 @@ export default function WorkshopList({ hideFilter }: IProps) {
         </Flex>
       ) : null}
 
-      <Box my="10">
-        <Center mb="8" color="gray.500" fontWeight={"semibold"}>
-          <Text>Showing 10 out of 86</Text>
-        </Center>
+      {showLoadMore() && (
+        <Box mb="36">
+          <Center mb="7" color="gray.500" fontWeight={"semibold"}>
+            <Text>
+              Showing {workshops.result?.workshops.length} out of{" "}
+              {workshops.result?.count}
+            </Text>
+          </Center>
 
-        <Center pb={{ base: "24", sm: "36" }}>
-          <Button
-            color={"white"}
-            size="lg"
-            bg="black"
-            border="1px solid white"
-            rounded={"full"}
-            px="7"
-            py="7"
-            fontWeight={"light"}
-            _hover={{
-              bg: "transparent",
-              color: "black",
-              border: "1px solid black",
-            }}
-          >
-            Load more
-          </Button>
-        </Center>
-      </Box>
+          <Center>
+            <Button
+              color={"white"}
+              size="lg"
+              bg="black"
+              border="1px solid white"
+              rounded={"full"}
+              transition={"all .3s ease-out"}
+              px="7"
+              py="7"
+              fontWeight={"light"}
+              _hover={{
+                bg: "transparent",
+                color: "black",
+                border: "1px solid black",
+              }}
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              Load more
+            </Button>
+          </Center>
+        </Box>
+      )}
 
-      {!workshops.result?.length && workshops.status === "success" ? (
+      {!workshops.result?.workshops.length && workshops.status === "success" ? (
         <Center py="28">
           <Heading
             size="lg"
@@ -274,6 +205,64 @@ export default function WorkshopList({ hideFilter }: IProps) {
           </Heading>
         </Center>
       ) : null}
+
+      <Box bg="blue.800" color={"white"} py="20">
+        <Center mb="10">
+          <Img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNjAgMTBhMjguNjUgMjguNjUgMCAwMC0yOC43IDI4LjY0djUwLjQyaDU3LjI5VjM4LjY0QTI4LjY0IDI4LjY0IDAgMDA2MCAxMHoiIGZpbGw9IiNGRjQ2MzIiLz48cGF0aCBkPSJNNDAuMjggODlWMzguNjRhMTkuNjcgMTkuNjcgMCAwMTM5LjM0IDBWODlINDAuMjh6IiBmaWxsPSIjMkQ0NkI5Ii8+PHBhdGggZD0iTTkyIDg5LjA2SDI3Ljg5djEyLjY5SDkyVjg5LjA2eiIgZmlsbD0iI2ZmZiIvPjxwYXRoIGQ9Ik05My44MiA5Ny45OUgyNi4wN1YxMTBoNjcuNzVWOTcuOTl6IiBmaWxsPSIjMkQ0NkI5Ii8+PHBhdGggZD0iTTQwLjI4IDM3LjU3djE2LjY3Yy42Ni4xMTQgMS4zMy4xNzQgMiAuMThhMTMuMTYgMTMuMTYgMCAwMDEzLjE5LTEzLjE2IDEyLjkgMTIuOSAwIDAwLTEyLjE2LTEzLjExIDE3LjggMTcuOCAwIDAwLTMuMDMgOS40MnpNODIuMyA3OC4xM2M0LjE3LjMyIDcuNjYtMS4yNyAxMi0yIDQtLjcyIDguMTUgMCAxMi4yMy0uMTNhNi44IDYuOCAwIDAwMy4yNS0uNjIgMS45MzUgMS45MzUgMCAwMDEtMS4zMyAyLjE0OCAyLjE0OCAwIDAwLTEuNTktMi4wNmMtLjg4LS4zMS0xLjg0LS4zMS0yLjc1LS41Ni00LjQ3LTEuMjItMy4zOS02LTQuMTgtOS4zOWE3Ljc4MyA3Ljc4MyAwIDAwLTYuODctNS42MiAxMC42MSAxMC42MSAwIDAwLTguMzkgMy41Yy0xIDEuMDktMS44MSAyLjM0LTIuODYgMy4zOWE2LjcxIDYuNzEgMCAwMS00LjE4IDIuMDZjLTEuOCAwLTMuMzQtMS4yOC01LjIyLS44OC0yLjE0LjQ1LTMuNTEgMi4yMi01IDMuNjNBOS4zMzggOS4zMzggMCAwMTY3IDY5Ljg5Yy0xIC40My0yLjQxLjc1LTMuMDggMS42N0ExLjgyIDEuODIgMCAwMDY0IDc0Yy43NC41NyAyLjM0LjU5IDMuMjUuNThhMjkuMDA2IDI5LjAwNiAwIDAxNC4zNy4wN2MzIC40MyA1LjM0IDIuMzcgOC4yNyAzLjExLjc5MS4xOTIgMS41OTcuMzE2IDIuNDEuMzd6TTk4LjA2IDI4LjI0YTM2Ljg4IDM2Ljg4IDAgMDEtMy42NiA4LjE5IDQwLjI1NiA0MC4yNTYgMCAwMS01LjQgNy4xNCAzMy4xNiAzMy4xNiAwIDAxLTcgNS42MSAyMy42MiAyMy42MiAwIDAxLTguNDIgMy4wOC4xNS4xNSAwIDAxLS4xNy0uMTMuMTUuMTUgMCAwMS4xMi0uMTcgMjUuNCAyNS40IDAgMDA4LjEzLTMuMzRBMzUuMTU2IDM1LjE1NiAwIDAwODguMzggNDNhNDIuNTggNDIuNTggMCAwMDUuNDEtNyA0NC42NzIgNDQuNjcyIDAgMDA0LTcuOS4xNS4xNSAwIDAxLjE5LS4wOS4xNC4xNCAwIDAxLjA4LjIzek04My42OCA1Mi43NmEyMC44NjQgMjAuODY0IDAgMDA0LjA3LS45MiAyOC43NjMgMjguNzYzIDAgMDAzLjg2LTEuNTljMS4yNi0uNjEgMi40Ni0xLjMzIDMuNjgtMkw5OC45MSA0NmEuMTYuMTYgMCAwMS4yMSAwIC4xNi4xNiAwIDAxMCAuMmMtMS4xMS44OC0yLjI2IDEuNzEtMy40NCAyLjVBMzMuOTAzIDMzLjkwMyAwIDAxOTIgNTFjLTEuMjgxLjY1LTIuNjIgMS4xOC00IDEuNTgtMS4zOS4zODEtMi44MjkuNTYtNC4yNy41M2EuMTQuMTQgMCAwMS0uMTQtLjE2LjE1LjE1IDAgMDEuMDktLjE5eiIgZmlsbD0iI2ZmZiIvPjwvc3ZnPg==" />
+        </Center>
+
+        <Center my="6">
+          <Heading size={"2xl"} fontWeight={"semibold"}>
+            Got a question?
+          </Heading>
+        </Center>
+        <Center>
+          <Heading size={"lg"} fontWeight="thin" textAlign={"center"} w="50%">
+            Head over to the FAQ or the Contact Us.
+          </Heading>
+        </Center>
+
+        <Center mt="12">
+          <Button
+            color={"white"}
+            size="lg"
+            border="2px solid white"
+            rounded={"full"}
+            px="7"
+            bg="transparent"
+            py="7"
+            fontWeight={"light"}
+            mr="4"
+            transition={"all .3s ease-out"}
+            _hover={{
+              bg: "white",
+              color: "blue.800",
+              border: "2px solid white",
+            }}
+          >
+            Email us
+          </Button>
+
+          <Button
+            color={"white"}
+            size="lg"
+            bg="transparent"
+            border="2px solid white"
+            rounded={"full"}
+            px="7"
+            transition={"all .3s ease-out"}
+            py="7"
+            fontWeight={"light"}
+            _hover={{
+              bg: "white",
+              color: "blue.800",
+              border: "2px solid white",
+            }}
+          >
+            Read our FAQ
+          </Button>
+        </Center>
+      </Box>
     </Box>
   );
 }
