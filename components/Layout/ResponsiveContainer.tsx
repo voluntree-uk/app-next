@@ -7,10 +7,7 @@ interface IProps {
 
 export default function ResponsiveContainer({ children }: IProps) {
   return (
-    <Container
-      maxW={{ base: "100vw", sm: "94vw" }}
-      py={{ base: "7", sm: "14" }}
-    >
+    <Container maxW={{ base: "100vw" }} py={{ base: "7", sm: "14" }}>
       {children}
     </Container>
   );

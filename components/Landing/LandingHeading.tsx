@@ -3,11 +3,11 @@ import { Flex, Box, Heading, Img, Text } from "@chakra-ui/react";
 export default function LandingHeading() {
   return (
     <Flex
-      flexDir={{ base: "column", sm: "row" }}
+      flexDir={{ base: "column", md: "row" }}
       justifyContent={"space-around"}
       alignItems="center"
     >
-      <Box w={{ base: "100%", sm: "550px" }}>
+      <Box w={{ base: "100%", lg: "550px" }}>
         <Heading
           fontWeight={"extrabold"}
           fontSize={{ base: "2xl", sm: "5xl" }}
@@ -21,8 +21,8 @@ export default function LandingHeading() {
           <b> free</b> to use, Societree will enable you to help your community,
           build your reputation and learn some brand new skills! Built on a
           commitment to the idea that social exchange has real material value,
-          Societree is a social experiment platform that challenges the conventional
-          capitalist business structures.
+          Societree is a social experiment platform that challenges the
+          conventional capitalist business structures.
         </Text>
       </Box>
       <Img
