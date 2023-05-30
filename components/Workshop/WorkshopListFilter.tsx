@@ -3,20 +3,27 @@ import { capitalize } from "lodash";
 import React from "react";
 import { useForm } from "react-hook-form";
 import config from "../../app-config";
+import { FilterProps, TimeFilter, DefaultFilterProps } from "../../shared/schemas";
 
 interface IProps {
   onFilterChange(filter: any): void;
 }
 
 export default function WorkshopListFilter({ onFilterChange }: IProps) {
-  const { register, watch } = useForm();
-
-  const filterState = watch();
+  const { register, watch } = useForm<FilterProps>({
+    defaultValues: DefaultFilterProps
+  });
 
   React.useEffect(() => {
-    onFilterChange(filterState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterState]);
+    const subscription = watch((data) => {
+      console.log("Filter change!")
+      onFilterChange(data)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [watch]);
 
   return (
     <Box pb="7" display={{ base: "none", md: "block" }} w="800px">
@@ -25,18 +32,18 @@ export default function WorkshopListFilter({ onFilterChange }: IProps) {
           rounded={"full"}
           placeholder="Search for keywords"
           type={"search"}
-          {...register("search")}
+          {...register("text")}
         />
         <Select
           rounded={"full"}
           fontWeight={"semibold"}
-          placeholder="Category"
+          placeholder="All Categories"
           bg="gray.100"
           {...register("category")}
         >
-          {config.categories.map((c) => (
-            <option key={c} value={c}>
-              {capitalize(c)}
+          {config.categories.map((category) => (
+            <option key={category} value={category}>
+              {capitalize(category)}
             </option>
           ))}
         </Select>
@@ -46,10 +53,11 @@ export default function WorkshopListFilter({ onFilterChange }: IProps) {
           bg="gray.100"
           {...register("time")}
         >
-          <option>Any day</option>
-          <option>Tomorrow</option>
-          <option>This weekend</option>
-          <option>Next week</option>
+          {Object.values(TimeFilter).map((filter) => (
+            <option key={filter} value={filter}>
+              {filter}
+            </option>
+          ))}
         </Select>
       </HStack>
     </Box>
