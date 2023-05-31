@@ -125,18 +125,6 @@ export default function Navbar() {
                 </Button>
               ) : null}
               {session?.user ? (
-                <Button
-                  variant={"text"}
-                  size={"sm"}
-                  mr={4}
-                  onClick={() => router.push("/workshops/new")}
-                  color="green.500"
-                  display={{ base: "none", md: "block" }}
-                >
-                  Create a workshop
-                </Button>
-              ) : null}
-              {session?.user ? (
                 <Menu>
                   <MenuButton
                     as={Button}
