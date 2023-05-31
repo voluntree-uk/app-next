@@ -1,4 +1,4 @@
-import { Box, HStack, Input, Select } from "@chakra-ui/react";
+import { Box, HStack, Input, Select, Flex } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -26,8 +26,22 @@ export default function WorkshopListFilter({ onFilterChange }: IProps) {
   }, [watch]);
 
   return (
-    <Box pb="7" display={{ base: "none", md: "block" }} w="800px">
-      <HStack spacing={1}>
+    <Box
+      pb="7"
+      display={{ base: "flex", md: "block" }}
+      w={{
+        base: "100%",
+        md: "750px",
+      }}
+    >
+      <Flex
+        flexDir={{
+          base: "column",
+          md: "row",
+        }}
+        width="100%"
+        gap={5}
+      >
         <Input
           rounded={"full"}
           placeholder="Search for keywords"
@@ -59,7 +73,7 @@ export default function WorkshopListFilter({ onFilterChange }: IProps) {
             </option>
           ))}
         </Select>
-      </HStack>
+      </Flex>
     </Box>
   );
 }
