@@ -102,7 +102,7 @@ export default function Navbar() {
                     display={{
                       base: "block",
                       md:
-                        link.label === "Create workshop" && session?.user
+                        link.label === "Create workshop" && !session?.user
                           ? "none"
                           : "block",
                     }}
@@ -179,11 +179,11 @@ export default function Navbar() {
                 {Links.map((link) => (
                   <NavLink
                     display={{
-                      base: "block",
-                      md:
-                        link.label === "Create workshop" && session?.user
+                      base:
+                        link.label === "Create workshop" && !session?.user
                           ? "none"
                           : "block",
+                      md: "block",
                     }}
                     key={link?.label}
                     href={link?.href}
