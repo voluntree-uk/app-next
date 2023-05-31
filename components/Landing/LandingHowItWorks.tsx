@@ -30,7 +30,7 @@ export default function LandingHowItWorks() {
     <Flex flexDir={"column"} alignItems="center" gap={25}>
       <Flex alignItems={"center"} flexDir={"column"}>
         <Heading fontWeight={"bold"} size="lg" pb="3">
-          How Societree works
+          How Share works
         </Heading>
         <Text w={{ base: "100%" }} textAlign="center" fontSize={"md"}>
           Join, host or sponsor community workshops. It’s totally free to create

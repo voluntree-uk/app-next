@@ -14,14 +14,14 @@ export default function LandingHeading() {
           lineHeight={{ base: "35px", sm: "50px" }}
           pb={{ base: "5", sm: "5" }}
         >
-          Societree is a knowledge-sharing platform with a difference.
+          Share is a knowledge-sharing platform with a difference.
         </Heading>
         <Text fontSize={"md"} pb={{ base: "5", sm: "0" }}>
           Totally <b>transparent</b>, directly <b>democratic</b>, and
-          <b> free</b> to use, Societree will enable you to help your community,
+          <b> free</b> to use, Share will enable you to help your community,
           build your reputation and learn some brand new skills! Built on a
           commitment to the idea that social exchange has real material value,
-          Societree is a social experiment platform that challenges the
+          Share is a social experiment platform that challenges the
           conventional capitalist business structures.
         </Text>
       </Box>
