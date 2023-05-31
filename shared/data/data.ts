@@ -3,7 +3,8 @@ import {
   Workshop,
   Slot,
   Booking,
-  BookingDetails
+  BookingDetails,
+  FilterProps
 } from "../schemas";
 
 export interface DataAccessor {
@@ -36,17 +37,12 @@ export interface DataAccessor {
   createWorkshop(workshop: Workshop): Promise<Workshop>
 
   /**
-   * Returns all workshops that have available slots at any point in the future
+   * Returns all workshops that have available slots at any point in the future,
+   * optionally filtered
+   * @param filters A set of additional filters([FilterProps]) to be applied 
    * @return A list of matching workshops
    */
-  getAvailableWorkshops(): Promise<Workshop[]>
-
-  /**
-   * Returns all workshops that have a matching string in their title
-   * @param str A string to search for in workshop titles
-   * @return A list of matching workshops
-   */
-  searchWorkshops(str: string): Promise<Workshop[]>
+  filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]>
 
   /**
    * Returns a list of workshops associated with the given category
