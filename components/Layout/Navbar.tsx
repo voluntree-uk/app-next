@@ -18,6 +18,7 @@ import {
   Divider,
   Container,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import AuthenticationModal from "../AuthenticationModal";
@@ -26,22 +27,41 @@ import { auth } from "../../shared/auth/supabase";
 import { authenticationModalState } from "../../shared/recoil/atoms";
 import { useRecoilState } from "recoil";
 
-const Links = [{ label: "Find workshops", onClick: () => "" }];
+const Links = [
+  { label: "Find workshops", href: "/workshops" },
+  { label: "Create workshop", href: "/workshops/new" },
+];
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-    href={"/workshops"}
-  >
-    {children}
-  </Link>
-);
+const NavLink = ({
+  children,
+  display,
+  href,
+}: {
+  children: ReactNode;
+  href: string;
+  display: {
+    base: string;
+    md: string;
+  };
+}) => {
+  return (
+    <NextLink passHref href={href}>
+      <Link
+        px={2}
+        py={1}
+        rounded={"md"}
+        _hover={{
+          textDecoration: "none",
+          bg: useColorModeValue("gray.200", "gray.700"),
+        }}
+        display={display}
+        href={href}
+      >
+        {children}
+      </Link>
+    </NextLink>
+  );
+};
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -78,7 +98,19 @@ export default function Navbar() {
                 display={{ base: "none", md: "flex" }}
               >
                 {Links.map((link) => (
-                  <NavLink key={link.label}>{link.label}</NavLink>
+                  <NavLink
+                    display={{
+                      base: "block",
+                      md:
+                        link.label === "Create workshop" && session?.user
+                          ? "none"
+                          : "block",
+                    }}
+                    key={link?.label}
+                    href={link?.href}
+                  >
+                    {link.label}
+                  </NavLink>
                 ))}
               </HStack>
             </HStack>
@@ -99,6 +131,7 @@ export default function Navbar() {
                   mr={4}
                   onClick={() => router.push("/workshops/new")}
                   color="green.500"
+                  display={{ base: "none", md: "block" }}
                 >
                   Create a workshop
                 </Button>
@@ -144,7 +177,19 @@ export default function Navbar() {
             <Box pb={4} display={{ md: "none" }}>
               <Stack as={"nav"} spacing={4}>
                 {Links.map((link) => (
-                  <NavLink key={link.label}>{link.label}</NavLink>
+                  <NavLink
+                    display={{
+                      base: "block",
+                      md:
+                        link.label === "Create workshop" && session?.user
+                          ? "none"
+                          : "block",
+                    }}
+                    key={link?.label}
+                    href={link?.href}
+                  >
+                    {link.label}
+                  </NavLink>
                 ))}
               </Stack>
             </Box>

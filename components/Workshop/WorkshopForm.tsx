@@ -194,7 +194,13 @@ export default function WorkshopForm(): JSX.Element {
         >
           Location
         </FormLabel>
-        <Flex alignItems={"center"}>
+        <Flex
+          alignItems={"center"}
+          marginRight={{
+            base: "5px",
+            md: "0",
+          }}
+        >
           <Text mr={2}>Virtual?</Text>
           <Switch
             id="isVirtual"
