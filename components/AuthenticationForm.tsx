@@ -137,10 +137,6 @@ export default function AuthenticationForm({ onSuccess }: IProps) {
     );
   };
 
-  function renderForm() {
-    return;
-  }
-
   return (
     <Container
       maxW="lg"
