@@ -102,7 +102,7 @@ export default function Navbar() {
                     display={{
                       base: "block",
                       md:
-                        link.label === "Create workshop" && session?.user
+                        link.label === "Create workshop" && !session?.user
                           ? "none"
                           : "block",
                     }}
@@ -125,18 +125,6 @@ export default function Navbar() {
                 </Button>
               ) : null}
               {session?.user ? (
-                <Button
-                  variant={"text"}
-                  size={"sm"}
-                  mr={4}
-                  onClick={() => router.push("/workshops/new")}
-                  color="green.500"
-                  display={{ base: "none", md: "block" }}
-                >
-                  Create a workshop
-                </Button>
-              ) : null}
-              {session?.user ? (
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -148,7 +136,7 @@ export default function Navbar() {
                     <Avatar
                       size={"sm"}
                       src={
-                        "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                        "https://efhzkzupjdpnsounrzhp.supabase.co/storage/v1/object/public/avatars/default_avatar.png"
                       }
                     />
                   </MenuButton>
@@ -179,11 +167,11 @@ export default function Navbar() {
                 {Links.map((link) => (
                   <NavLink
                     display={{
-                      base: "block",
-                      md:
-                        link.label === "Create workshop" && session?.user
+                      base:
+                        link.label === "Create workshop" && !session?.user
                           ? "none"
                           : "block",
+                      md: "block",
                     }}
                     key={link?.label}
                     href={link?.href}
