@@ -184,12 +184,10 @@ export default function Navbar() {
           ) : null}
         </Box>
 
-        {
-          <AuthenticationModal
-            isOpen={authModalIsOpen}
-            onClose={() => setAuthModalModalIsOpen(false)}
-          />
-        }
+        <AuthenticationModal
+          isOpen={authModalIsOpen}
+          onClose={() => setAuthModalModalIsOpen(false)}
+        />
       </Container>
     </Box>
   );
