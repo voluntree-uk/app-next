@@ -196,22 +196,22 @@ export default function AuthenticationForm({ onSuccess }: IProps) {
                   ? makeFormField("surname", "text", "Surname", "Surname")
                   : null}
                 {mode === Mode.SIGNUP
-                  ? makeFormField("dob", "date", "Date of Birth", "01/01/2000")
+                  ? makeFormField("dob", "date", "Date of Birth", "")
                   : null}
                 {mode === Mode.SIGNUP
-                  ? makeFormField("username", "text", "Username", "luckyHelper")
+                  ? makeFormField("username", "text", "Username", "username")
                   : null}
                 {makeFormField(
                   "email",
                   "email",
                   "Email",
-                  "robinson@crusoe.com"
+                  "email"
                 )}
                 {makeFormField(
                   "password",
                   "password",
                   "Password",
-                  "stuckOnAnIsland1774"
+                  "password"
                 )}
               </Stack>
               <Stack spacing="6">
