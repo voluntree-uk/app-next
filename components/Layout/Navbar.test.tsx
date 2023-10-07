@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { RecoilRoot } from "recoil";
-import { NextRouter } from "next/router";
 import "@testing-library/jest-dom";
 import { RouterContext } from "next/dist/shared/lib/router-context";
 import Navbar from "./Navbar";
@@ -10,6 +9,17 @@ jest.mock("next/router");
 
 jest.mock("../../utils/hooks", () => ({
   useSession: jest.fn(() => ({ user: null })),
+}));
+
+jest.mock("../../shared/auth/supabase", () => ({
+  auth: {
+    signOut: jest.fn(),
+  },
+}));
+
+jest.mock("../AuthenticationModal", () => ({
+  __esModule: true,
+  default: () => <div>AuthenticationModal</div>,
 }));
 
 const MockNavbar = () => (

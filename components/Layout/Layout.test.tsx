@@ -2,30 +2,29 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { RecoilRoot } from "recoil";
 import Layout from "./Layout";
-import Footer from "../Footer";
-import Navbar from "./Navbar";
+
+jest.mock("./Navbar", () => () => <div data-testid="navbar" />);
+jest.mock("../Footer", () => () => <div data-testid="footer" />);
+
+const children = <p>TestChildren</p>;
 
 describe("Layout", () => {
   it("renders a navbar", () => {
     render(
       <RecoilRoot>
-        <Layout>
-          <Navbar />
-        </Layout>
+        <Layout>{children}</Layout>
       </RecoilRoot>
     );
 
-    const navbar = screen.getAllByRole("navigation");
+    const navbar = screen.getByTestId("navbar");
 
-    expect(navbar[0]).toBeInTheDocument();
+    expect(navbar).toBeInTheDocument();
   });
 
   it("renders a footer", () => {
     const { container } = render(
       <RecoilRoot>
-        <Layout>
-          <Footer />
-        </Layout>
+        <Layout>{children}</Layout>
       </RecoilRoot>
     );
 
@@ -35,14 +34,10 @@ describe("Layout", () => {
   it("renders children", () => {
     render(
       <RecoilRoot>
-        <Layout>
-          <p>Test</p>
-        </Layout>
+        <Layout>{children}</Layout>
       </RecoilRoot>
     );
 
-    const paragraph = screen.getByText(/All rights reserved/i);
-
-    expect(paragraph).toBeInTheDocument();
+    expect(screen.getByText("TestChildren")).toBeInTheDocument();
   });
 });
