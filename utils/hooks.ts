@@ -1,4 +1,4 @@
-import { auth } from "../shared/auth/supabase";
+import { auth } from "@auth/supabase";
 
 export function useSession() {
   return auth.useSession();

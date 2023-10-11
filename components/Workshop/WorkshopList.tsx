@@ -1,11 +1,10 @@
+import { useCallback, useEffect, useState } from "react";
 import { Box, Stack } from "@chakra-ui/react";
 import React from "react";
-import { Workshop } from "../../shared/schemas";
-import WorkshopCard from "./WorkshopListCard";
-import WorkshopListFilter from "./WorkshopListFilter";
-import { data } from "../../shared/data/supabase";
-import { useCallback, useEffect, useState } from "react";
-import { FilterProps, DefaultFilterProps } from "../../shared/schemas";
+import { Workshop, FilterProps, DefaultFilterProps } from "@schemas";
+import WorkshopCard from "@components/Workshop/WorkshopListCard";
+import WorkshopListFilter from "@components/Workshop/WorkshopListFilter";
+import { data } from "@data/supabase";
 
 interface IProps {
   hideFilter?: boolean;

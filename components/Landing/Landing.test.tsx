@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import Landing from "./Landing";
-import LandingHeading from "./LandingHeading";
-import LandingHowItWorks from "./LandingHowItWorks";
+import LandingHeading from "@components/Landing/LandingHeading";
+import LandingHowItWorks from "@components/Landing/LandingHowItWorks";
 import "@testing-library/jest-dom";
 
 describe("Landing", () => {

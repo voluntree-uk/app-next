@@ -1,11 +1,10 @@
 import { CalendarIcon, TimeIcon } from "@chakra-ui/icons";
 import { Flex, Text, useToast, Link, Avatar } from "@chakra-ui/react";
-import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { data } from "../../shared/data/supabase";
-import { BookingDetails } from "../../shared/schemas";
-import { dateToReadable, timeToReadable } from "../../utils/dates";
+import { data } from "@data/supabase";
+import { BookingDetails } from "@schemas";
+import { dateToReadable, timeToReadable } from "@util/dates";
 
 interface IProps {
   booking: BookingDetails;

@@ -1,3 +1,6 @@
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/router";
 import {
   Stack,
   Input,
@@ -15,17 +18,14 @@ import {
   Container,
 } from "@chakra-ui/react";
 import { capitalize } from "lodash";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import config from "../../app-config";
-import { Slot, Workshop } from "../../shared/schemas";
-import { useSession } from "../../utils/hooks";
-import { data } from "../../shared/data/supabase";
+import config from "@config";
+import { Slot, Workshop } from "@schemas";
+import { useSession } from "@util/hooks";
+import { data } from "@data/supabase";
 import WorkshopSlotForm, { TmpSlot } from "./WorkshopSlotForm";
 import { Step, Steps, useSteps } from "chakra-ui-steps";
-import WorkshopFormSlot from "./WorkshopFormSlot";
-import Show from "../Helpers/Show";
+import WorkshopFormSlot from "@components/Workshop/WorkshopFormSlot";
+import Show from "@components/Helpers/Show";
 
 const VIRTUAL_LOCATION_BY_DEFAULT = false;
 

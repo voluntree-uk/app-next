@@ -1,11 +1,11 @@
-import { User } from "@supabase/supabase-js";
 import React from "react";
-import Layout from "../../components/Layout/Layout";
-import { BookingDetails, Workshop } from "../../shared/schemas";
-import { data } from "../../shared/data/supabase";
-import { auth } from "../../shared/auth/supabase";
-import BookingList from "../../components/Booking/BookingList";
 import { Box } from "@chakra-ui/react";
+import { data } from "@data/supabase";
+import { auth } from "@auth/supabase";
+import { User } from "@supabase/supabase-js";
+import { BookingDetails, Workshop } from "@schemas";
+import Layout from "@components/Layout/Layout";
+import BookingList from "@components/Booking/BookingList";
 
 export default function MyBookingsPage({
   workshops,

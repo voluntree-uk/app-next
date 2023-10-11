@@ -1,10 +1,10 @@
-import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { RecoilRoot } from "recoil";
-import Layout from "./Layout";
+import { render, screen } from "@testing-library/react";
+import Layout from "@components/Layout/Layout";
 
-jest.mock("./Navbar", () => () => <div data-testid="navbar" />);
-jest.mock("../Footer", () => () => <div data-testid="footer" />);
+jest.mock("@components/Layout/Navbar", () => () => <div data-testid="navbar" />);
+jest.mock("@components/Footer", () => () => <div data-testid="footer" />);
 
 const children = <p>TestChildren</p>;
 

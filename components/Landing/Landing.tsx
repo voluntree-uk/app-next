@@ -1,6 +1,6 @@
 import { Box, Container } from "@chakra-ui/react";
-import LandingHeading from "./LandingHeading";
-import LandingHowItWorks from "./LandingHowItWorks";
+import LandingHeading from "@components/Landing/LandingHeading";
+import LandingHowItWorks from "@components/Landing/LandingHowItWorks";
 
 export default function Landing() {
   return (

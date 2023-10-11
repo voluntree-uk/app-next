@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
-import { Booking, Slot, Workshop } from "../../shared/schemas";
-import WorkshopListingBody from "./WorkshopListingBody";
-import WorkshopListingHeading from "./WorkshopListingHeading";
-import WorkshopListingSlotList from "./WorkshopListingSlotList";
+import { Booking, Slot, Workshop } from "@schemas";
+import WorkshopListingBody from "@components/Workshop/WorkshopListingBody";
+import WorkshopListingHeading from "@components/Workshop/WorkshopListingHeading";
+import WorkshopListingSlotList from "@components/Workshop/WorkshopListingSlotList";
 
 interface IProps {
   workshop: Workshop;
