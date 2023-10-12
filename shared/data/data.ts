@@ -5,7 +5,7 @@ import {
   Booking,
   BookingDetails,
   FilterProps
-} from "../schemas";
+} from "@schemas";
 
 export interface DataAccessor {
   /**

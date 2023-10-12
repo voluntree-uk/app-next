@@ -1,17 +1,17 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { RecoilRoot } from "recoil";
 import "@testing-library/jest-dom";
+import { RecoilRoot } from "recoil";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { RouterContext } from "next/dist/shared/lib/router-context";
-import Navbar from "./Navbar";
-import { createMockRouter } from "../../utils/test-utils/createMockRouter";
+import Navbar from "@components/Layout/Navbar";
+import { createMockRouter } from "@test-util/createMockRouter";
 
 jest.mock("next/router");
 
-jest.mock("../../utils/hooks", () => ({
+jest.mock("@util/hooks", () => ({
   useSession: jest.fn(() => ({ user: null })),
 }));
 
-jest.mock("../../shared/auth/supabase", () => ({
+jest.mock("@auth/supabase", () => ({
   auth: {
     signOut: jest.fn(),
   },
@@ -63,7 +63,7 @@ describe("Navbar", () => {
 
   test("renders create workshop button when user is authenticated", () => {
     // Mocking authenticated user
-    jest.mock("../../utils/hooks", () => ({
+    jest.mock("@util/hooks", () => ({
       useSession: jest.fn(() => ({ user: { name: "John Doe" } })),
     }));
 

@@ -13,7 +13,20 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@auth/*": [ "shared/auth/*" ],
+      "@data/*": [ "shared/data/*" ],
+      "@components/*": [ "components/*" ],
+      "@test-util/*": [ "utils/test-utils/*" ],
+      "@util/*": [ "utils/*" ],
+      "@styles/*": [ "styles/*" ],
+      "@config": [ "app-config" ],
+      "@atoms" : [ "shared/recoil/atoms" ],
+      "@schemas": [ "shared/schemas" ],
+      "@supabaseClient": [ "supabase/supabaseClient" ]
+    },
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

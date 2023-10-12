@@ -1,12 +1,12 @@
-import { Box, Container, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { auth } from "../shared/auth/supabase";
-import { data } from "../shared/data/supabase";
-import { User } from "../shared/schemas";
-import AccountAvatar from "./AccountAvatar";
+import { Box, Container, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { HiOutlineMail, HiUserGroup } from "react-icons/hi";
-import { dateToReadable } from "../utils/dates";
+import { auth } from "@auth/supabase";
+import { data } from "@data/supabase";
+import { User } from "@schemas";
+import AccountAvatar from "@components/AccountAvatar";
+import { dateToReadable } from "@util/dates";
 
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(true);

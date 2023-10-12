@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Text, Box } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import LandingHowItWorksCard from "./LandingHowItWorksCard";
+import LandingHowItWorksCard from "@components/Landing/LandingHowItWorksCard";
 
 const howItWorksCardContent = [
   {

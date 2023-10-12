@@ -1,3 +1,5 @@
+import React from "react";
+import { useForm } from "react-hook-form";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -8,11 +10,8 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import React from "react";
-import { useForm } from "react-hook-form";
-
 import { v4 as uuidv4 } from "uuid";
-import { endOfNextWeekAsISOString } from "../../utils/dates";
+import { endOfNextWeekAsISOString } from "@util/dates";
 
 export interface TmpSlot {
   id: string;

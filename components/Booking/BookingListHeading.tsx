@@ -1,6 +1,6 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
 import React from "react";
-import { BookingDetails } from "../../shared/schemas";
+import { Box, Heading, Text } from "@chakra-ui/react";
+import { BookingDetails } from "@schemas";
 
 interface IProps {
   bookings: BookingDetails[];

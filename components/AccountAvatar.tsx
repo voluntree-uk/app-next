@@ -1,6 +1,6 @@
-import { Avatar, Box, FormLabel, Input } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { data } from "../shared/data/supabase";
+import { Avatar, Box, FormLabel, Input } from "@chakra-ui/react";
+import { data } from "@data/supabase";
 
 export default function AccountAvatar({ url, onUpload }: any) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);

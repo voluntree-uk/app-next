@@ -1,3 +1,6 @@
+import * as React from "react";
+import { ReactElement } from "react";
+import { useForm } from "react-hook-form";
 import {
   Box,
   Button,
@@ -13,13 +16,10 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
-import * as React from "react";
-import { ReactElement } from "react";
-import { useForm } from "react-hook-form";
-import { OAuthButtonGroup } from "./0AuthButtonGroup";
+import { OAuthButtonGroup } from "@components/0AuthButtonGroup";
 import { useRouter } from "next/router";
-import { auth } from "../shared/auth/supabase";
-import { data } from "../shared/data/supabase";
+import { auth } from "@auth/supabase";
+import { data } from "@data/supabase";
 
 interface IProps {
   onSuccess(): void;
