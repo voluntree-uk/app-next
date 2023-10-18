@@ -1,5 +1,5 @@
-import { DataAccessor } from "./data";
-import { supabase } from "../../supabase/supabaseClient";
+import { DataAccessor } from "@data/data";
+import { supabase } from "@supabaseClient";
 import {
   Workshop,
   Slot,
@@ -8,7 +8,7 @@ import {
   Profile,
   FilterProps,
   TimeFilter
-} from "../schemas";
+} from "@schemas";
 import {
   dateAsISOString,
   endOfThisWeekAsISOString,
@@ -16,7 +16,7 @@ import {
   endOfThisWeekendAsISOString,
   startOfNextWeekAsISOString,
   endOfNextWeekAsISOString
-} from "../../utils/dates";
+} from "@util/dates";
 
 /**
  * A supabase implementation of the DataAccessor interface

@@ -1,8 +1,8 @@
-import { Box } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
-import Footer from "../Footer";
-import Navbar from "./Navbar";
-import ResponsiveContainer from "./ResponsiveContainer";
+import { Box } from "@chakra-ui/react";
+import Footer from "@components/Footer";
+import Navbar from "@components/Layout/Navbar";
+import ResponsiveContainer from "@components/Layout/ResponsiveContainer";
 
 type LayoutProps = {
   children: ReactNode;

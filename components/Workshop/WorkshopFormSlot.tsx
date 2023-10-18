@@ -1,8 +1,8 @@
 import { CalendarIcon } from "@chakra-ui/icons";
 import { Button, Text, Flex, Box, Icon, Tooltip } from "@chakra-ui/react";
 import { FaClock, FaUser } from "react-icons/fa";
-import { dateToReadable, timeToReadable } from "../../utils/dates";
-import { TmpSlot } from "./WorkshopSlotForm";
+import { dateToReadable, timeToReadable } from "@util/dates";
+import { TmpSlot } from "@components/Workshop/WorkshopSlotForm";
 
 interface IProps {
   slot: TmpSlot;

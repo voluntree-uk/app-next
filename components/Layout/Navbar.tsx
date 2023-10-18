@@ -1,4 +1,7 @@
 import { ReactNode } from "react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
 import {
   Box,
   Flex,
@@ -18,14 +21,11 @@ import {
   Divider,
   Container,
 } from "@chakra-ui/react";
-import NextLink from "next/link";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/router";
-import AuthenticationModal from "../AuthenticationModal";
-import { useSession } from "../../utils/hooks";
-import { auth } from "../../shared/auth/supabase";
-import { authenticationModalState } from "../../shared/recoil/atoms";
-import { useRecoilState } from "recoil";
+import AuthenticationModal from "@components/AuthenticationModal";
+import { useSession } from "@util/hooks";
+import { auth } from "@auth/supabase";
+import { authenticationModalState } from "@atoms";
 
 const Links = [
   { label: "Find workshops", href: "/workshops" },
@@ -184,12 +184,10 @@ export default function Navbar() {
           ) : null}
         </Box>
 
-        {
-          <AuthenticationModal
-            isOpen={authModalIsOpen}
-            onClose={() => setAuthModalModalIsOpen(false)}
-          />
-        }
+        <AuthenticationModal
+          isOpen={authModalIsOpen}
+          onClose={() => setAuthModalModalIsOpen(false)}
+        />
       </Container>
     </Box>
   );

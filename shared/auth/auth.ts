@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { User, Session } from "../schemas";
+import { User, Session } from "@schemas";
 
 export interface Auth {
   /**

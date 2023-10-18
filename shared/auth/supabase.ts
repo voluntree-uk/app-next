@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../../supabase/supabaseClient";
-import { User, Session } from "../schemas";
+import { supabase } from "@supabaseClient";
+import { User, Session } from "@schemas";
 import { Auth } from "./auth";
 
 class SupabaseAuth implements Auth {

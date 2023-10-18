@@ -1,3 +1,6 @@
+
+import { useRouter } from "next/router";
+import React from "react";
 import {
   Modal,
   ModalBody,
@@ -5,9 +8,7 @@ import {
   ModalContent,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import React from "react";
-import AuthenticationForm from "./AuthenticationForm";
+import AuthenticationForm from "@components/AuthenticationForm";
 
 interface IProps {
   isOpen: boolean;

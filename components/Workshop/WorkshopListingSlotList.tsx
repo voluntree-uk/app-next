@@ -1,10 +1,10 @@
-import { Box, HStack, Stack, useToast } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { data } from "../../shared/data/supabase";
-import { Booking, Slot, Workshop } from "../../shared/schemas";
-import { useSession } from "../../utils/hooks";
-import WorkshopListingSlot from "./WorkshopListingSlot";
+import { useRouter } from "next/router";
+import { Box, HStack, Stack, useToast } from "@chakra-ui/react";
+import { data } from "@data/supabase";
+import { Booking, Slot, Workshop } from "@schemas";
+import { useSession } from "@util/hooks";
+import WorkshopListingSlot from "@components/Workshop/WorkshopListingSlot";
 
 interface IProps {
   workshop: Workshop;

@@ -1,9 +1,9 @@
-import { Box, HStack, Input, Select, Flex } from "@chakra-ui/react";
-import { capitalize } from "lodash";
 import React from "react";
 import { useForm } from "react-hook-form";
-import config from "../../app-config";
-import { FilterProps, TimeFilter, DefaultFilterProps } from "../../shared/schemas";
+import { Box, HStack, Input, Select, Flex } from "@chakra-ui/react";
+import { capitalize } from "lodash";
+import config from "@config";
+import { FilterProps, TimeFilter, DefaultFilterProps } from "@schemas";
 
 interface IProps {
   onFilterChange(filter: any): void;

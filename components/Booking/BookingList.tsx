@@ -1,16 +1,8 @@
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  Img,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
 import React from "react";
-import { BookingDetails } from "../../shared/schemas";
-import BookingListCard from "./BookingListCard";
-import BookingListHeading from "./BookingListHeading";
+import { Box, Stack } from "@chakra-ui/react";
+import { BookingDetails } from "@schemas";
+import BookingListCard from "@components/Booking/BookingListCard";
+import BookingListHeading from "@components/Booking/BookingListHeading";
 
 interface IProps {
   bookings: BookingDetails[];
