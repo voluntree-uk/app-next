@@ -16,9 +16,9 @@ const howItWorksCardContent = [
     img: "https://secure.meetupstatic.com/next/images/shared/handsUp.svg?w=384",
   },
   {
-    title: "Host",
+    title: "Support",
     description:
-      "Volunteers are an integral part of the platform: they're the ones that volunteer their skills and time to the community.",
+      "Become a sponsor today by donating as little as £1 and help this project grow and improve.",
     img: "https://secure.meetupstatic.com/next/images/shared/handsUp.svg?w=384",
   },
 ];
@@ -30,7 +30,7 @@ export default function LandingHowItWorks() {
     <Flex flexDir={"column"} alignItems="center" gap={25}>
       <Flex alignItems={"center"} flexDir={"column"}>
         <Heading fontWeight={"bold"} size="lg" pb="3">
-          How Share works
+          How Voluntree works
         </Heading>
         <Text w={{ base: "100%" }} textAlign="center" fontSize={"md"}>
           Join, host or sponsor community workshops. It’s totally free to create
