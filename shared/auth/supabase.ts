@@ -42,6 +42,29 @@ class SupabaseAuth implements Auth {
     return true;
   }
 
+  async resetPassword(email: string, redirectTo: string): Promise<Boolean> {
+    const { data, error } = await supabase.auth.api.resetPasswordForEmail(
+      email,
+      { redirectTo: redirectTo }
+    )
+    if (error) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  async updatePassword(password: string): Promise<Boolean> {
+    const { user, error } = await supabase.auth.update({
+      password: password,
+    })
+    if (error) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   setAuthCookie(req: any, res: any): void {
     supabase.auth.api.setAuthCookie(req, res);
   }
