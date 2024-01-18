@@ -17,6 +17,7 @@ import { ArrowBackIcon } from '@chakra-ui/icons'
 import { OAuthButtonGroup } from "@components/Auth/0AuthButtonGroup";
 import { useRouter } from "next/router";
 import { auth } from "@auth/supabase";
+import { data } from "@data/supabase";
 
 interface IProps {
   onSuccess(): void;
@@ -50,13 +51,19 @@ export default function AuthenticationLogin({ onSuccess }: IProps) {
   const logIn = async (formData: any) => {
     setIsLoading(true);
     try {
-      const success = await auth.signIn(formData.email, formData.password);
+      const user = await auth.signIn(formData.email, formData.password);
 
-      if (success) {
+      if (user) {
         onSuccess();
         showToast("Login Successful");
 
-        router.push(getRedirectPath());
+        const hasProfile = await data.hasProfile(user.id)
+
+        if (hasProfile) {
+          router.push(getRedirectPath());
+        } else {
+          router.push("/auth/setup-profile");
+        }
       }
     } catch (error: any) {
       showToast("Login Unsuccessful", error.message, false);

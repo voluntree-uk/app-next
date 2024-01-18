@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ReactElement } from "react";
+import { User } from "@supabase/supabase-js";
 import { useForm } from "react-hook-form";
 import {
   Box,
@@ -12,54 +13,35 @@ import {
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
-import { OAuthButtonGroup } from "@components/Auth/0AuthButtonGroup";
 import { useRouter } from "next/router";
 import { auth } from "@auth/supabase";
+import { data } from "@data/supabase";
 
-interface IProps {
-  onSuccess(): void;
-}
-
-export default function AuthenticationSignUp({ onSuccess }: IProps) {
+export default function SetupProfile({ user }: { user: User }) {
   const { register, handleSubmit } = useForm();
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
   const toast = useToast();
 
-  /**
-   * Get the path to be redirected to after successful authentication
-   * Remain on listing route after authentication if user was viewing a listing,
-   * otherwise redirect to workshop list route
-   *
-   * @returns redirect route
-   */
-  const getRedirectPath = () => {
-    return router.pathname === "/workshops/[wid]"
-      ? router.asPath
-      : "/me";
-  };
-
-  const signUp = async (formData: any) => {
+  const setupProfile = async (formData: any) => {
     setIsLoading(true);
     try {
-      const password = formData.password;
-      const confirmedPassword = formData.confirmedPassword;
+      // Form validation should go here. Users must be over 18 years old, etc.
+      const values = {
+        user_id: user.id,
+        username: formData.username,
+        name: formData.name,
+        surname: formData.surname,
+        dob: formData.dob,
+      };
 
-      if (password === confirmedPassword) {
-        const success = await auth.signUp(formData.email, password);
+      const profile = await data.createProfile(values);
 
-        if (success) {
-          showToast("Success", "Verify your email to continue");
-          onSuccess();
-          router.push(getRedirectPath());
-        } else {
-          showToast("Sign Up Unsuccessful");
-        }
-      } else {
-        showToast("Passwords must match", null, false);
-      }
+      showToast("Successfully updated profile");
+      router.push("/");
+
     } catch (error: any) {
-      showToast("Sign Up Unsuccessful", error.message, false);
+      showToast("Failed to setup profile", error.message, false);
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +85,7 @@ export default function AuthenticationSignUp({ onSuccess }: IProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(signUp)}>
+    <form onSubmit={handleSubmit(setupProfile)}>
       <Stack spacing="8">
         <Box
           py={{ base: "4", sm: "8" }}
@@ -114,14 +96,15 @@ export default function AuthenticationSignUp({ onSuccess }: IProps) {
         >
           <Stack textAlign="center" padding="5">
             <Heading size={useBreakpointValue({ base: "sm", md: "md" })}>
-              Create an account
+              Let's finish setting up your profile
             </Heading>
           </Stack>
           <Stack spacing="6">
             <Stack spacing="3">
-              {makeFormField("email", "email", "Email", "email")}
-              {makeFormField("password", "password", "Password", "password")}
-              {makeFormField("confirmedPassword", "password", "Confirm Password", "password")}
+              {makeFormField("name", "text", "Name", "Name")}
+              {makeFormField("surname", "text", "Surname", "Surname")}
+              {makeFormField("dob", "date", "Date of Birth", "")}
+              {makeFormField("username", "text", "Username", "username")}
             </Stack>
             <Stack spacing="6">
               <Stack>
@@ -131,14 +114,31 @@ export default function AuthenticationSignUp({ onSuccess }: IProps) {
                   isLoading={isLoading}
                   boxShadow="lg"
                 >
-                  Sign up
+                  Submit
                 </Button>
               </Stack>
-              <OAuthButtonGroup />
             </Stack>
           </Stack>
         </Box>
       </Stack>
     </form>
   );
+}
+
+export async function getServerSideProps({ req }: any) {
+  const user = await auth.getUserByCookie(req);
+
+  if (!user) {
+    return { props: {}, redirect: { destination: "/" } };
+  }
+
+  const hasProfile = await data.hasProfile(user.id)
+
+  if (hasProfile) {
+    return { props: {}, redirect: { destination: "/" } };
+  }
+
+  return {
+    props: { user },
+  };
 }

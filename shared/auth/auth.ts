@@ -18,17 +18,17 @@ export interface Auth {
    * Signs in the user given an email address and a password 
    * @param email User account email address
    * @param password User account password
-   * @return A boolean representing the success of the method
+   * @return A user object representing the newly created user
    */
-  signIn(email: string, password: string): Promise<boolean>
+  signIn(email: string, password: string): Promise<User|null>
 
   /**
    * Signs up the user given an email address and a password 
    * @param email User account email address
    * @param password User account password
-   * @return A user object representing the newly created user
+   * @return A boolean representing the success of the method
    */
-  signUp(email: string, password: string): Promise<User|null>
+  signUp(email: string, password: string): Promise<Boolean>
 
   /**
    * Signs out the currently logged in user

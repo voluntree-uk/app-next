@@ -23,6 +23,13 @@ export interface DataAccessor {
   updateProfile(profile: Profile): Promise<Profile>
 
   /**
+   * Checks whether the user with the given id has a profile
+   * @param id A user id
+   * @return A boolean representing whether the user has a profile
+   */
+  hasProfile(id: string): Promise<Boolean>
+
+  /**
    * Returns a profile associated with the given id
    * @param id A profile/user id
    * @return A profile associated with the given id
