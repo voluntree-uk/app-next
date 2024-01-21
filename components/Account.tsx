@@ -1,12 +1,12 @@
-import { Box, Container, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { auth } from "../shared/auth/supabase";
-import { data } from "../shared/data/supabase";
-import { User } from "../shared/schemas";
-import AccountAvatar from "./AccountAvatar";
-import { HiOutlineMail, HiUserGroup } from "react-icons/hi"
-import { dateToReadable } from "../utils/dates";
+import { Box, Container, Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import { HiOutlineMail, HiUserGroup } from "react-icons/hi";
+import { auth } from "@auth/supabase";
+import { data } from "@data/supabase";
+import { User } from "@schemas";
+import AccountAvatar from "@components/AccountAvatar";
+import { dateToReadable } from "@util/dates";
 
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(true);
@@ -18,13 +18,8 @@ export default function Account({ user }: { user: User }) {
     formState: { errors },
   } = useForm();
 
-  const {
-    username,
-    avatar_url,
-    full_name,
-    member_since,
-    hosted_workshops
-  } = watch();
+  const { username, avatar_url, full_name, member_since, hosted_workshops } =
+    watch();
 
   const getProfile = useCallback(async () => {
     try {
@@ -35,7 +30,7 @@ export default function Account({ user }: { user: User }) {
         return;
       }
 
-      const profile = await data.getProfile(user.id)
+      const profile = await data.getProfile(user.id);
 
       if (profile) {
         setValue("username", profile.username);
@@ -65,7 +60,7 @@ export default function Account({ user }: { user: User }) {
         avatar_url: avatar_url,
       };
 
-      await data.updateProfile(updates)
+      await data.updateProfile(updates);
     } catch (error: any) {
       alert(`Error updating profile: ${error.message}`);
     } finally {
@@ -80,7 +75,17 @@ export default function Account({ user }: { user: User }) {
   return (
     <Container maxW="container.sm">
       <Box>
-        <Flex px={5} pt={5} pb={3} bg="white">
+        <Flex
+          px={5}
+          pt={5}
+          pb={3}
+          bg="white"
+          flexDir={{
+            base: "column",
+            md: "row",
+          }}
+          gap={10}
+        >
           <AccountAvatar
             url={avatar_url}
             onUpload={(url: any) => {
@@ -89,16 +94,25 @@ export default function Account({ user }: { user: User }) {
             }}
           />
           <Flex flexDirection={"column"} justifyContent="center" ml={1}>
-            <Heading size={"md"}>{full_name} (@{username})</Heading>
+            <Heading size={"md"}>
+              {full_name} (@{username})
+            </Heading>
             {/* <Heading size={"md"}>@{username}</Heading> */}
-            <Text size={"md"}>Member since {dateToReadable(member_since, false)}</Text>
+            <Text size={"md"}>
+              Member since {dateToReadable(member_since, false)}
+            </Text>
             <HStack spacing={2}>
               <HiOutlineMail />
-              <Text size={"sm"} color={"gray.600"}>{user?.email}</Text>
+              <Text size={"sm"} color={"gray.600"}>
+                {user?.email}
+              </Text>
             </HStack>
             <HStack spacing={2}>
               <HiUserGroup />
-              <Text size={"sm"} color={"gray.600"}>Hosted {hosted_workshops} {hosted_workshops == 1 ? "Workshop" : "Workshops"}</Text>
+              <Text size={"sm"} color={"gray.600"}>
+                Hosted {hosted_workshops}{" "}
+                {hosted_workshops == 1 ? "Workshop" : "Workshops"}
+              </Text>
             </HStack>
           </Flex>
         </Flex>

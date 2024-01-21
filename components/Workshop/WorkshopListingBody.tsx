@@ -1,7 +1,7 @@
-import { Box, Text } from "@chakra-ui/react";
 import React from "react";
-import { Workshop } from "../../shared/schemas";
-import WorkshopListingBodyLocation from "./WorkshopListingBodyLocation";
+import { Box, Text } from "@chakra-ui/react";
+import { Workshop } from "@schemas";
+import WorkshopListingBodyLocation from "@components/Workshop/WorkshopListingBodyLocation";
 
 interface IProps {
   workshop: Workshop;

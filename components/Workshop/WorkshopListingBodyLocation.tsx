@@ -1,8 +1,8 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { BsCameraVideo, BsPinMap } from "react-icons/bs";
-import { Workshop } from "../../shared/schemas";
-import { workshopToReadableAddress } from "../../utils/addresses";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { Workshop } from "@schemas";
+import { workshopToReadableAddress } from "@util/addresses";
 
 interface IProps {
   workshop: Workshop;

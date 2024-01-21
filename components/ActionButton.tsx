@@ -1,5 +1,5 @@
-import { Button } from "@chakra-ui/react";
 import React, { CSSProperties, ReactElement } from "react";
+import { Button } from "@chakra-ui/react";
 
 type ActionButtonProps = {
   text: string;

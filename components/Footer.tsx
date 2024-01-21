@@ -52,9 +52,10 @@ const SocialButton = ({
   );
 };
 
-export default function LargeWithAppLinksAndSocial() {
+export default function Footer() {
   return (
     <Box
+      data-testid="footer"
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
     >
@@ -101,7 +102,7 @@ export default function LargeWithAppLinksAndSocial() {
           justify={{ md: "space-between" }}
           align={{ md: "center" }}
         >
-          <Text>© 2022 Societree Platform. All rights reserved</Text>
+          <Text>© 2022 Voluntree. All rights reserved</Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton label={"Twitter"} href={"#"}>
               <FaTwitter />

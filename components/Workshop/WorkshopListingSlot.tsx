@@ -1,12 +1,11 @@
-import { Box, Button, Text, Badge } from "@chakra-ui/react";
 import React from "react";
+import { Box, Button, Text, Badge } from "@chakra-ui/react";
 import { MdOutlineIosShare } from "react-icons/md";
-import { authenticationModalState } from "../../shared/recoil/atoms";
-import { Booking, Slot } from "../../shared/schemas";
-import { dateToReadable, timeToReadable } from "../../utils/dates";
-import { useSession } from "../../utils/hooks";
+import { authenticationModalState } from "@atoms";
+import { Booking, Slot } from "@schemas";
+import { dateToReadable, timeToReadable } from "@util/dates";
+import { useSession } from "@util/hooks";
 import { useRecoilState } from "recoil";
-import { data } from "../../shared/data/supabase"
 
 interface IProps {
   slot: Slot;

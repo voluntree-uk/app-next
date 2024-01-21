@@ -1,4 +1,4 @@
-import { Workshop } from "../shared/schemas";
+import { Workshop } from "@schemas";
 
 /**
  * Returns a readable address given the workshop

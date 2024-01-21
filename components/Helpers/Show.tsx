@@ -1,10 +1,8 @@
-import { ReactNode } from "react";
-
+import { ReactNode, PropsWithChildren } from "react";
 interface IProps {
   showIf: boolean;
-  children: ReactNode;
 }
 
-export default function Show({ showIf, children }: IProps) {
+export default function Show({ showIf, children }: PropsWithChildren<IProps>) {
   return <>{showIf ? children : null}</>;
 }

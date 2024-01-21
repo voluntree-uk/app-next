@@ -1,10 +1,10 @@
-import { User } from "@supabase/supabase-js";
 import React from "react";
-import Layout from "../../components/Layout/Layout";
-import { Booking, Slot, Workshop } from "../../shared/schemas";
-import { data } from "../../shared/data/supabase";
-import { auth } from "../../shared/auth/supabase";
-import WorkshopListing from "../../components/Workshop/WorkshopListing";
+import { Booking, Slot, Workshop } from "@schemas";
+import { User } from "@supabase/supabase-js";
+import { data } from "@data/supabase";
+import { auth } from "@auth/supabase";
+import Layout from "@components/Layout/Layout";
+import WorkshopListing from "@components/Workshop/WorkshopListing";
 
 export default function Wid({
   workshop,

@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { auth } from "../shared/auth/supabase";
+import { auth } from "@auth/supabase";
 
 const enforceAuthenticated: (
   inner?: GetServerSideProps

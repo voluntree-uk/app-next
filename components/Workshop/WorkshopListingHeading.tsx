@@ -1,8 +1,8 @@
-import { Box, Text, Link, Flex, Avatar } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { data } from "../../shared/data/supabase";
-import { Workshop } from "../../shared/schemas";
+import { useQuery } from "@tanstack/react-query";
+import { Box, Text, Link, Flex, Avatar } from "@chakra-ui/react";
+import { data } from "@data/supabase";
+import { Workshop } from "@schemas";
 
 interface IProps {
   workshop: Workshop;

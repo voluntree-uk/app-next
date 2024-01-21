@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 import {
   Slide,
   Box,
@@ -6,7 +7,6 @@ import {
   CloseButton,
   useOutsideClick,
 } from "@chakra-ui/react";
-import React, { ReactNode } from "react";
 
 type CustomSlideProps = {
   title: string;

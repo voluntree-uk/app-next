@@ -3,8 +3,9 @@ import {
   Workshop,
   Slot,
   Booking,
-  BookingDetails
-} from "../schemas";
+  BookingDetails,
+  FilterProps
+} from "@schemas";
 
 export interface DataAccessor {
   /**
@@ -22,6 +23,13 @@ export interface DataAccessor {
   updateProfile(profile: Profile): Promise<Profile>
 
   /**
+   * Checks whether the user with the given id has a profile
+   * @param id A user id
+   * @return A boolean representing whether the user has a profile
+   */
+  hasProfile(id: string): Promise<Boolean>
+
+  /**
    * Returns a profile associated with the given id
    * @param id A profile/user id
    * @return A profile associated with the given id
@@ -36,17 +44,12 @@ export interface DataAccessor {
   createWorkshop(workshop: Workshop): Promise<Workshop>
 
   /**
-   * Returns all workshops that have available slots at any point in the future
+   * Returns all workshops that have available slots at any point in the future,
+   * optionally filtered
+   * @param filters A set of additional filters([FilterProps]) to be applied 
    * @return A list of matching workshops
    */
-  getAvailableWorkshops(): Promise<Workshop[]>
-
-  /**
-   * Returns all workshops that have a matching string in their title
-   * @param str A string to search for in workshop titles
-   * @return A list of matching workshops
-   */
-  searchWorkshops(str: string): Promise<Workshop[]>
+  filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]>
 
   /**
    * Returns a list of workshops associated with the given category

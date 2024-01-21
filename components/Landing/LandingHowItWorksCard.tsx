@@ -31,7 +31,8 @@ export default function LandingHowItWorksCard({
       <Text
         fontSize={"md"}
         textAlign={"center"}
-        w={{ base: "full", sm: "380px" }}
+        w={{ base: "full" }}
+        maxWidth={{ lg: "380px" }}
       >
         {description}
       </Text>
