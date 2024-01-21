@@ -42,6 +42,15 @@ class SupabaseDataAccessor implements DataAccessor {
     }
   }
 
+  async hasProfile(id: string): Promise<Boolean> {
+    const { data, error } = await supabase.rpc('has_user_profile', {
+      p_user_id: id
+    })
+    if (error) throw error;
+
+    return data ? true : false;
+  }
+
   async getProfile(id: string): Promise<Profile> {
     let { data, error } = await supabase
       .from("profiles")

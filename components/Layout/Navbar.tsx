@@ -22,7 +22,7 @@ import {
   Container,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import AuthenticationModal from "@components/AuthenticationModal";
+import AuthenticationModal from "@components/Auth/AuthenticationModal";
 import { useSession } from "@util/hooks";
 import { auth } from "@auth/supabase";
 import { authenticationModalState } from "@atoms";
@@ -151,6 +151,7 @@ export default function Navbar() {
                     <MenuItem
                       onClick={() => {
                         auth.signOut();
+                        router.push("/")
                       }}
                     >
                       Log out
