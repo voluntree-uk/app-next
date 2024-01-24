@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { FieldError, FieldErrorsImpl, Merge, useForm } from "react-hook-form";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -69,9 +69,7 @@ export default function WorkshopSlotForm({
               minLength: { value: 4, message: "Minimum length should be 4" },
             })}
           />
-          <FormErrorMessage>
-            {errors.date && errors.date.message}
-          </FormErrorMessage>
+          <FormErrorMessage>This is required</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.capacity}>
           <FormLabel htmlFor="capacity" fontSize={{ base: "xs", sm: "sm" }}>
@@ -86,9 +84,7 @@ export default function WorkshopSlotForm({
               required: "This is required",
             })}
           />
-          <FormErrorMessage>
-            {errors.capacity && errors.capacity.message}
-          </FormErrorMessage>
+          <FormErrorMessage>This is required</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.startTime} mr={1}>
           <FormLabel htmlFor="startTime" fontSize={{ base: "xs", sm: "sm" }}>
@@ -104,9 +100,7 @@ export default function WorkshopSlotForm({
               minLength: { value: 4, message: "Minimum length should be 4" },
             })}
           />
-          <FormErrorMessage>
-            {errors.startTime && errors.startTime.message}
-          </FormErrorMessage>
+          <FormErrorMessage>This is required</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.endTime}>
           <FormLabel htmlFor="endTime" fontSize={{ base: "xs", sm: "sm" }}>
@@ -122,9 +116,7 @@ export default function WorkshopSlotForm({
               minLength: { value: 4, message: "Minimum length should be 4" },
             })}
           />
-          <FormErrorMessage>
-            {errors.endTime && errors.endTime.message}
-          </FormErrorMessage>
+          <FormErrorMessage>This is required</FormErrorMessage>
         </FormControl>
 
         <Flex justifyContent={"right"}>
