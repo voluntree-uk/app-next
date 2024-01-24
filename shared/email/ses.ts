@@ -1,81 +1,108 @@
-import { EmailSender } from "./email";
+import { ActionTrigger, EmailSender } from "./email";
 import { data } from "../data/supabase";
-import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
-import { Profile } from "../schemas";
+import { Profile, Slot } from "../schemas";
+import axios, { AxiosResponse } from "axios";
+import { dateToReadable } from "@util/dates";
 
 /**
  * An AWS Simple Emailing Service (SES) implementation of the EmailSender interface
  */
-class SESEmailSender implements EmailSender {
+class SESViaAPIGatewaySender implements EmailSender {
 
-  client = new SESv2Client({
-    region: process.env.NEXT_PUBLIC_AWS_REGION || '',
-    credentials: {
-      accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID || '',
-      secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY || ''
+  private workshopCreationConfirmationEndpoint: string;
+  private bookingConfirmationEndpoint: string;
+  private bookingCancellationEndpoint: string;
+  
+  constructor(apiGatewayBaseUrl: string) {
+    if (apiGatewayBaseUrl === "") {
+      throw Error("Failed to initialise SESViaAPIGatewaySender, apiGatewayBaseUrl cannot be empty")
+    }
+    this.workshopCreationConfirmationEndpoint = `${apiGatewayBaseUrl}/workshopCreationConfirmation`
+    this.bookingConfirmationEndpoint = `${apiGatewayBaseUrl}/bookingConfirmation`
+    this.bookingCancellationEndpoint = `${apiGatewayBaseUrl}/bookingCancellation`
+  }
+
+  private axios_instance = axios.create({
+    headers: {
+      'X-Voluntree-Auth': '*'
     }
   });
 
-  emails = {
-    from: "no-reply@societree.co.uk",
-    bounce: "bounce@societree.co.uk",
-    templates: {
-      confirm_attendee: "confirm-booking-for-attendee",
-      confirm_host: "confirm-booking-for-host",
-      cancel_attendee: "cancel-booking-for-attendee",
-      cancel_host: "cancel-booking-for-host"
-    }
-  }
-  
-  async sendBookingConfirmationEmails(host_user_id: string, attendee_user_id: string): Promise<boolean> {
-    const host = await data.getProfile(host_user_id)
-    const host_email = this.makeSendEmailCommand(host, this.emails.templates.confirm_host, { name: host.name });
-
-    const attendee = await data.getProfile(attendee_user_id)
-    const attendee_email = this.makeSendEmailCommand(attendee, this.emails.templates.confirm_attendee, { name: attendee.name });
-    
-    try {
-      await this.client.send(host_email);
-      await this.client.send(attendee_email);
-      return true
-    } catch (error: any) {
-      console.error(error.message)
-      return false
-    }
-  }
-
-  async sendBookingCancellationEmails(host_user_id: string, attendee_user_id: string): Promise<boolean> {
-    const host = await data.getProfile(host_user_id)
-    const host_email = this.makeSendEmailCommand(host, this.emails.templates.cancel_host, { name: host.name });
-
-    const attendee = await data.getProfile(attendee_user_id)
-    const attendee_email = this.makeSendEmailCommand(attendee, this.emails.templates.cancel_attendee, { name: attendee.name });
-
-    try {
-      await this.client.send(host_email);
-      await this.client.send(attendee_email);
-      return true
-    } catch (error: any) {
-      console.error(error.message)
-      return false
-    }
-  }
-
-  private makeSendEmailCommand(recipient: Profile, template_name: string, template_data: object): SendEmailCommand {
-    return new SendEmailCommand({
-      FromEmailAddress: this.emails.from,
-      Destination: {
-        ToAddresses: [ recipient.email ],
-      },
-      FeedbackForwardingEmailAddress: this.emails.bounce,
-      Content: {
-        Template: {
-          TemplateName: template_name,
-          TemplateData: JSON.stringify(template_data),
+  async sendWorkshopCreationConfirmation(host_user_id: string, workshop_name: string): Promise<void> {
+    const host: Profile = await data.getProfile(host_user_id)
+    if (host) {
+      const data = {
+        host: {
+          name: host.name,
+          email: host.email
         },
-      },
-    });
+        event: {
+          name: workshop_name
+        }
+      }
+      console.log(JSON.stringify(data))
+      this.axios_instance.post(this.workshopCreationConfirmationEndpoint, JSON.stringify(data)).catch((err) => {
+        console.log("Failed to send workshop creation confirmation email")
+      })
+    }
+    return
+  }
+
+  async sendBookingConfirmations(host_user_id: string, attendee_user_id: string, slot: Slot, join_link: string): Promise<void> {
+    const host: Profile = await data.getProfile(host_user_id)
+    const attendee: Profile = await data.getProfile(attendee_user_id)
+    if (host && attendee) {
+      const data = {
+        host: {
+          name: host.name,
+          email: host.email
+        },
+        user: {
+          name: attendee.name,
+          email: attendee.email
+        },
+        event: {
+          date: dateToReadable(slot.date),
+          time: slot.start_time,
+          join_link: join_link
+        }
+      }
+      console.log(JSON.stringify(data))
+      this.axios_instance.post(this.bookingConfirmationEndpoint, JSON.stringify(data)).catch((err) => {
+        console.log("Failed to send booking confirmation emails")
+      })
+    }
+    return
+  }
+
+  async sendBookingCancellations(host_user_id: string, attendee_user_id: string, slot: Slot, triggered_by: ActionTrigger): Promise<void> {
+    const host: Profile = await data.getProfile(host_user_id)
+    const attendee: Profile = await data.getProfile(attendee_user_id)
+    if (host && attendee) {
+      const data = {
+        host: {
+          name: host.name,
+          email: host.email,
+          didCancel: triggered_by === ActionTrigger.Host
+        },
+        user: {
+          name: attendee.name,
+          email: attendee.email,
+          didCancel: triggered_by === ActionTrigger.Attendee
+        },
+        event: {
+          date: dateToReadable(slot.date),
+          time: slot.start_time
+        }
+      }
+      console.log(JSON.stringify(data))
+      this.axios_instance.post(this.bookingCancellationEndpoint, JSON.stringify(data)).catch((err) => {
+        console.log("Failed to send booking cancellation emails")
+      })
+    }
+    return
   }
 }
 
-export const email = new SESEmailSender();
+const apiGatewayBaseUrl: string = process.env.NEXT_PUBLIC_AWS_GATEWAY_BASE_URL || "";
+export const email = new SESViaAPIGatewaySender(apiGatewayBaseUrl);

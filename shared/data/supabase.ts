@@ -17,6 +17,8 @@ import {
   startOfNextWeekAsISOString,
   endOfNextWeekAsISOString
 } from "@util/dates";
+import { email } from "shared/email/ses";
+import { ActionTrigger } from "shared/email/email";
 
 /**
  * A supabase implementation of the DataAccessor interface
@@ -69,7 +71,8 @@ class SupabaseDataAccessor implements DataAccessor {
     const { data, error } = await supabase.from("workshops").insert([workshop]);
     if (error) throw error;
     if (data) {
-      await supabase.rpc('increment_hosted_workshops', { id: workshop.user_id })
+      await supabase.rpc('increment_hosted_workshops', { id: workshop.user_id });
+      await email.sendWorkshopCreationConfirmation(workshop.user_id, workshop.name);
       return data[0] as Workshop;
     } else {
       throw Error(`Failed to create a workshop: ${JSON.stringify(workshop)}`);
@@ -190,7 +193,7 @@ class SupabaseDataAccessor implements DataAccessor {
       id,
       user_id,
       workshop_id,
-      workshops:workshop_id(name),
+      workshops:workshop_id(name,user_id),
       slots:slot_id(date, start_time, end_time)
     `).eq(`user_id`, user_id);
 
@@ -201,18 +204,29 @@ class SupabaseDataAccessor implements DataAccessor {
     return bookings;
   }
 
-  async bookSlot(workshop_id: string, slot_id: string, user_id: string): Promise<boolean> {
+  async bookSlot(workshop: Workshop, slot: Slot, user_id: string): Promise<boolean> {
+    // Generate booking link first
     const { data, error } = await supabase.rpc('book_slot', {
-      p_workshop_id: workshop_id,
-      p_slot_id: slot_id,
+      p_workshop_id: workshop.id?.toString(),
+      p_slot_id: slot.id?.toString(),
       p_user_id: user_id
     })
-    if (error) throw error;
+    if (error) {
+      // Invalidate booking link
+      throw error;
+    }
 
     if (data && data[0]) {
       if (!data[0].success) {
+        // Invalidate booking link
         throw Error(data[0].message)
       } else {
+        await email.sendBookingConfirmations(
+          workshop.user_id.toString(),
+          user_id,
+          slot,
+          "https://dummy.online.meeting/"
+        )
         return true;
       }
     }
@@ -220,13 +234,18 @@ class SupabaseDataAccessor implements DataAccessor {
     return false;
   }
 
-  async cancelBooking(id: string): Promise<boolean> {
+  async cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string): Promise<boolean> {
     const { data, error } = await supabase.rpc('cancel_booking', {
-      p_booking_id: id
+      p_booking_id: booking_id
     })
     if (error) throw error;
 
-    return data ? true : false;
+    if (data) {
+      email.sendBookingCancellations(host_id, user_id, slot, ActionTrigger.Attendee)
+      return true
+    } else {
+      return false
+    }
   }
 
   async getAvatarUrl(path: string): Promise<string> {

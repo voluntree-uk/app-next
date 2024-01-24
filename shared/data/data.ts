@@ -102,19 +102,22 @@ export interface DataAccessor {
 
   /**
    * Books a workshop slot for the user
-   * @param workshop_id A workshop id
-   * @param slot_id A slot id
+   * @param workshop A booked workshop
+   * @param slot A booked slot
    * @param user_id A user id
    * @return A boolean representing the success of the method
    */
-  bookSlot(workshop_id: string, slot_id: string, user_id: string): Promise<boolean>
+  bookSlot(workshop: Workshop, slot: Slot, user_id: string): Promise<boolean>
 
   /**
    * Cancels a booking with a given id
-   * @param id A booking id
+   * @param booking_id A booking id
+   * @param slot A slot for which the booking is cancelled
+   * @param user_id An attendee user id
+   * @param host_id A host user id
    * @return A boolean representing the success of the method
    */
-  cancelBooking(id: string): Promise<boolean>
+  cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string): Promise<boolean>
 
   /**
    * Returns an avatar public URL given the path
