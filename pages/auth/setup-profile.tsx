@@ -30,6 +30,7 @@ export default function SetupProfile({ user }: { user: User }) {
       const values = {
         user_id: user.id,
         username: formData.username,
+        email: user.email,
         name: formData.name,
         surname: formData.surname,
         dob: formData.dob,
