@@ -19,7 +19,7 @@ dayjs.extend(relativeTime);
  * weekdays in the output string
  * @returns given date as a readable string
  */
-export function dateToReadable(date: string, include_weekday: boolean = true) {
+export function dateToReadable(date: string, include_weekday: boolean = true): string {
   const options: {
     weekday?: any;
     year?: any;
@@ -44,7 +44,7 @@ export function dateToReadable(date: string, include_weekday: boolean = true) {
  * @param end_time the interval end time
  * @returns given time interval as a readable string
  */
-export function timeToReadable(start_time: string, end_time: string) {
+export function timeToReadable(start_time: string, end_time: string): string {
   return `${start_time.slice(0, 5)} - ${end_time.slice(0, 5)}`;
 }
 
@@ -53,7 +53,7 @@ export function timeToReadable(start_time: string, end_time: string) {
  * @param date a date to convert to an ISO string, today by default.
  * @returns given date in an ISO compliant format
  */
-export function dateAsISOString(date: Date = new Date()) {
+export function dateAsISOString(date: Date = new Date()): string {
   const offset = date.getTimezoneOffset();
   date = new Date(date.getTime() - offset * 60 * 1000);
   return date.toISOString().split("T")[0];
@@ -63,7 +63,7 @@ export function dateAsISOString(date: Date = new Date()) {
  * Returns the end date of this week.
  * @returns end date of this week
  */
-export function endOfThisWeekAsISOString() {
+export function endOfThisWeekAsISOString(): string {
   const today = new Date();
   const endOfThisWeek = endOfWeek(today, { weekStartsOn: 1 });
   return dateAsISOString(endOfThisWeek);
@@ -73,7 +73,7 @@ export function endOfThisWeekAsISOString() {
  * Returns the start date of next week.
  * @returns start date of next week
  */
-export function startOfNextWeekAsISOString() {
+export function startOfNextWeekAsISOString(): string {
   const today = new Date();
   const nextMon = nextMonday(today);
   const startOfNextWeek = startOfWeek(nextMon, { weekStartsOn: 1 });
@@ -84,7 +84,7 @@ export function startOfNextWeekAsISOString() {
  * Returns the end date of next week.
  * @returns end date of next week
  */
-export function endOfNextWeekAsISOString() {
+export function endOfNextWeekAsISOString(): string {
   const today = new Date();
   const nextMon = nextMonday(today);
   const endOfNextWeek = endOfWeek(nextMon, { weekStartsOn: 1 });
@@ -97,7 +97,7 @@ export function endOfNextWeekAsISOString() {
  * today's date regardless of whether it is Saturday or Sunday.
  * @returns start date of this weekend
  */
-export function startOfThisWeekendAsISOString() {
+export function startOfThisWeekendAsISOString(): string {
   const today = new Date();
   if (isWeekend(today)) {
     return dateAsISOString(today)
@@ -111,7 +111,7 @@ export function startOfThisWeekendAsISOString() {
  * today and otherwise it returns the following Sunday.
  * @returns end date of this weekend
  */
-export function endOfThisWeekendAsISOString() {
+export function endOfThisWeekendAsISOString(): string {
   const today = new Date();
   if (isSunday(today)) {
     return dateAsISOString(today)

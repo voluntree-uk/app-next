@@ -25,7 +25,7 @@ export default function BookingListCard({ booking }: IProps) {
 
     try {
       if (booking.id) {
-        const success = await data.cancelBooking(booking.id.toString());
+        const success = await data.cancelBooking(booking.id.toString(), booking.slots, booking.user_id, booking.workshops.user_id);
 
         // Redirect if booking cancelled successfully
         if (success) {

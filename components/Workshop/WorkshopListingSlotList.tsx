@@ -27,8 +27,8 @@ export default function WorkshopListingSlotList({ slots, workshop, bookings }: I
     try {
       if (workshop.id && slot.id && session && session.user) {
         const success = await data.bookSlot(
-          workshop.id.toString(),
-          slot.id.toString(),
+          workshop,
+          slot,
           session.user.id
         );
 
