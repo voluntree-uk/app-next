@@ -44,6 +44,7 @@ export interface Slot {
   start_time: string;
   end_time: string;
   capacity: number;
+  post_process_id?: string;
 }
 
 export interface User {
