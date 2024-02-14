@@ -1,25 +1,27 @@
-import { ActionTrigger, EmailSender } from "./email";
+import { ActionTrigger, InfrastructureAPI } from "./api";
 import { data } from "../data/supabase";
 import { Profile, Slot } from "../schemas";
 import axios, { AxiosResponse } from "axios";
 import { dateToReadable } from "@util/dates";
 
 /**
- * An AWS Simple Emailing Service (SES) implementation of the EmailSender interface
+ * An AWS API gateway implementation of the InfrastructureAPI
  */
-class SESViaAPIGatewaySender implements EmailSender {
+class AWSInfrastructureAPI implements InfrastructureAPI {
 
   private workshopCreationConfirmationEndpoint: string;
   private bookingConfirmationEndpoint: string;
   private bookingCancellationEndpoint: string;
+  private scheduleSlotPostProcessingEndpoint: string;
   
   constructor(apiGatewayBaseUrl: string) {
     if (apiGatewayBaseUrl === "") {
-      throw Error("Failed to initialise SESViaAPIGatewaySender, apiGatewayBaseUrl cannot be empty")
+      throw Error("Failed to initialise AWSAPIGateway, apiGatewayBaseUrl cannot be empty")
     }
     this.workshopCreationConfirmationEndpoint = `${apiGatewayBaseUrl}/workshopCreationConfirmation`
     this.bookingConfirmationEndpoint = `${apiGatewayBaseUrl}/bookingConfirmation`
     this.bookingCancellationEndpoint = `${apiGatewayBaseUrl}/bookingCancellation`
+    this.scheduleSlotPostProcessingEndpoint = `${apiGatewayBaseUrl}/scheduleSlotPostProcessing`
   }
 
   private axios_instance = axios.create({
@@ -102,7 +104,25 @@ class SESViaAPIGatewaySender implements EmailSender {
     }
     return
   }
+
+  async scheduleSlotPostProcessing(slot_id: string, slot_end_timestamp: string): Promise<string|null> {
+    const data = {
+      slot_id: slot_id,
+      slot_end_timestamp: slot_end_timestamp
+    }
+    console.log(JSON.stringify(data))
+    // const response: AxiosResponse = await this.axios_instance.post(this.scheduleSlotPostProcessingEndpoint, JSON.stringify(data))
+    // console.log(`Response ${JSON.stringify(response)}`)
+    // return (response.statusText == "OK") ? response.data : null
+    return this.axios_instance.post(this.scheduleSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
+      console.log(`Response ${response.status}: ${response.data}`)
+      return (response.status == 200) ? response.data : null
+    }).catch((err) => {
+      console.log("Failed to execute schedule slot post processing request")
+      return null
+    })
+  }
 }
 
 const apiGatewayBaseUrl: string = process.env.NEXT_PUBLIC_AWS_GATEWAY_BASE_URL || "";
-export const email = new SESViaAPIGatewaySender(apiGatewayBaseUrl);
+export const api = new AWSInfrastructureAPI(apiGatewayBaseUrl);

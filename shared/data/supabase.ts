@@ -17,8 +17,8 @@ import {
   startOfNextWeekAsISOString,
   endOfNextWeekAsISOString
 } from "@util/dates";
-import { email } from "shared/email/ses";
-import { ActionTrigger } from "shared/email/email";
+import { api } from "@infra/aws";
+import { ActionTrigger } from "@infra/api";
 
 /**
  * A supabase implementation of the DataAccessor interface
@@ -72,7 +72,7 @@ class SupabaseDataAccessor implements DataAccessor {
     if (error) throw error;
     if (data) {
       await supabase.rpc('increment_hosted_workshops', { id: workshop.user_id });
-      await email.sendWorkshopCreationConfirmation(workshop.user_id, workshop.name);
+      await api.sendWorkshopCreationConfirmation(workshop.user_id, workshop.name);
       return data[0] as Workshop;
     } else {
       throw Error(`Failed to create a workshop: ${JSON.stringify(workshop)}`);
@@ -175,12 +175,38 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async createSlots(slots: Slot[]): Promise<boolean> {
-    const { error: error } = await supabase
+    const { data: data, error: error } = await supabase
       .from("slots")
-      .insert([...slots]);
+      .insert([...slots])
+      .select();
     
     if (error) {
-      throw new Error(error.message);
+      console.log(`Failed to create slots: ${JSON.stringify(error)}`)
+      return false
+    }
+
+    if (data) {
+      for (let i = 0; i < data.length; i++) {
+        const slot: Slot = data[i]
+        console.log(`Dealing with slot ${JSON.stringify(slot)}`)
+        const scheduler_arn = await api.scheduleSlotPostProcessing(slot.id!!, `${slot.date}T${slot.end_time}`)
+        if (scheduler_arn) {
+          slot.post_process_id = scheduler_arn
+          console.log(`Upserting slot: ${JSON.stringify(slot)}`)
+          const { error: error } = await supabase
+            .from('slots')
+            .upsert(slot)
+          if (error) {
+            console.log(`Failed to upsert slot: ${JSON.stringify(error)}`)
+            return false
+          }
+        } else {
+          console.log(`Failed to schedule a post process for slot ${JSON.stringify(slot)}`)
+        }
+      }
+    } else {
+      console.log(`Created zero slots`)
+      return false
     }
 
     return true;
@@ -221,7 +247,7 @@ class SupabaseDataAccessor implements DataAccessor {
         // Invalidate booking link
         throw Error(data[0].message)
       } else {
-        await email.sendBookingConfirmations(
+        await api.sendBookingConfirmations(
           workshop.user_id.toString(),
           user_id,
           slot,
@@ -241,7 +267,7 @@ class SupabaseDataAccessor implements DataAccessor {
     if (error) throw error;
 
     if (data) {
-      email.sendBookingCancellations(host_id, user_id, slot, ActionTrigger.Attendee)
+      api.sendBookingCancellations(host_id, user_id, slot, ActionTrigger.Attendee)
       return true
     } else {
       return false

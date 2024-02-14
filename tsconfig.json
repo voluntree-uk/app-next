@@ -18,6 +18,7 @@
     "paths": {
       "@auth/*": [ "shared/auth/*" ],
       "@data/*": [ "shared/data/*" ],
+      "@infra/*": [ "shared/infra/*" ],
       "@components/*": [ "components/*" ],
       "@test-util/*": [ "utils/test-utils/*" ],
       "@util/*": [ "utils/*" ],
