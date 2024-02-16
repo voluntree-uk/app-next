@@ -143,6 +143,34 @@ class SupabaseDataAccessor implements DataAccessor {
     }
   }
 
+  async cancelWorkshop(workshop_id: string): Promise<boolean> {
+    const workshop = await this.getWorkshop(workshop_id)
+
+    this.getWorkshopSlots(workshop_id).then((slots) => {
+      slots.forEach(slot => {
+        api.cancelSlotPostProcessing(slot.id!)
+      })
+    })
+
+    this.getWorkshopBookings(workshop_id).then((bookings) => {
+      bookings.forEach(booking => {
+        api.sendBookingCancellations(workshop.user_id, booking.user_id, booking.slots, ActionTrigger.Host)
+      })
+    })
+
+    const { error } = await supabase
+      .from("workshops")
+      .delete()
+      .eq("id", workshop_id)
+
+    if (error) {
+      console.log(`Error deleting workshop: ${error}`)
+      return false
+    }
+
+    return true
+  }
+
   async getWorkshopSlots(id: string): Promise<Slot[]> {
     const { data: slots, error: error } = await supabase
       .from("slots")
@@ -152,10 +180,10 @@ class SupabaseDataAccessor implements DataAccessor {
     return slots;
   }
 
-  async getWorkshopBookings(id: string): Promise<Booking[]> {
+  async getWorkshopBookings(id: string): Promise<BookingDetails[]> {
     const { data: bookings, error: error } = await supabase
       .from("bookings")
-      .select("*")
+      .select("*,slots:slot_id(*)")
       .eq("workshop_id", id);
     if (error) throw error;
     return bookings;
@@ -188,20 +216,10 @@ class SupabaseDataAccessor implements DataAccessor {
     if (data) {
       for (let i = 0; i < data.length; i++) {
         const slot: Slot = data[i]
-        console.log(`Dealing with slot ${JSON.stringify(slot)}`)
-        const scheduler_arn = await api.scheduleSlotPostProcessing(slot.id!!, `${slot.date}T${slot.end_time}`)
-        if (scheduler_arn) {
-          slot.post_process_id = scheduler_arn
-          console.log(`Upserting slot: ${JSON.stringify(slot)}`)
-          const { error: error } = await supabase
-            .from('slots')
-            .upsert(slot)
-          if (error) {
-            console.log(`Failed to upsert slot: ${JSON.stringify(error)}`)
-            return false
-          }
-        } else {
-          console.log(`Failed to schedule a post process for slot ${JSON.stringify(slot)}`)
+        console.log(`Scheduling event post processing for: ${JSON.stringify(slot)}`)
+        const success = await api.scheduleSlotPostProcessing(data[i].id!, `${slot.date}T${slot.end_time}`)
+        if (!success) {
+          return false
         }
       }
     } else {
