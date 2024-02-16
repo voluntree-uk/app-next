@@ -16,6 +16,7 @@ import {
   Box,
   Heading,
   Container,
+  useToast,
 } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import config from "@config";
@@ -35,6 +36,8 @@ export default function WorkshopForm(): JSX.Element {
   const [slots, setSlots] = useState<TmpSlot[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const toast = useToast();
 
   const {
     register,
@@ -87,6 +90,15 @@ export default function WorkshopForm(): JSX.Element {
 
         if (slotsSuccessfullyCreated) {
           router.push(`/workshops/${newId}`);
+        } else {
+          await data.cancelWorkshop(createdWorkshop.id);
+          toast({
+            title: "Failed to schedule workshop slots",
+            description: "Please try again",
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          });
         }
       }
     }

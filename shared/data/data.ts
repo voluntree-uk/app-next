@@ -44,6 +44,13 @@ export interface DataAccessor {
   createWorkshop(workshop: Workshop): Promise<Workshop>
 
   /**
+   * Cancels a workshop with a given id
+   * @param workshop_id An id of the workshop to cancel
+   * @return A boolean representing the success of the method
+   */
+  cancelWorkshop(workshop_id: string): Promise<boolean>
+
+  /**
    * Returns all workshops that have available slots at any point in the future,
    * optionally filtered
    * @param filters A set of additional filters([FilterProps]) to be applied 

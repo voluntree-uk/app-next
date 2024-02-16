@@ -17,8 +17,8 @@ import {
   startOfNextWeekAsISOString,
   endOfNextWeekAsISOString
 } from "@util/dates";
-import { email } from "shared/email/ses";
-import { ActionTrigger } from "shared/email/email";
+import { api } from "@infra/aws";
+import { ActionTrigger } from "@infra/api";
 
 /**
  * A supabase implementation of the DataAccessor interface
@@ -72,7 +72,7 @@ class SupabaseDataAccessor implements DataAccessor {
     if (error) throw error;
     if (data) {
       await supabase.rpc('increment_hosted_workshops', { id: workshop.user_id });
-      await email.sendWorkshopCreationConfirmation(workshop.user_id, workshop.name);
+      await api.sendWorkshopCreationConfirmation(workshop.user_id, workshop.name);
       return data[0] as Workshop;
     } else {
       throw Error(`Failed to create a workshop: ${JSON.stringify(workshop)}`);
@@ -143,6 +143,34 @@ class SupabaseDataAccessor implements DataAccessor {
     }
   }
 
+  async cancelWorkshop(workshop_id: string): Promise<boolean> {
+    const workshop = await this.getWorkshop(workshop_id)
+
+    this.getWorkshopSlots(workshop_id).then((slots) => {
+      slots.forEach(slot => {
+        api.cancelSlotPostProcessing(slot.id!)
+      })
+    })
+
+    this.getWorkshopBookings(workshop_id).then((bookings) => {
+      bookings.forEach(booking => {
+        api.sendBookingCancellations(workshop.user_id, booking.user_id, booking.slots, ActionTrigger.Host)
+      })
+    })
+
+    const { error } = await supabase
+      .from("workshops")
+      .delete()
+      .eq("id", workshop_id)
+
+    if (error) {
+      console.log(`Error deleting workshop: ${error}`)
+      return false
+    }
+
+    return true
+  }
+
   async getWorkshopSlots(id: string): Promise<Slot[]> {
     const { data: slots, error: error } = await supabase
       .from("slots")
@@ -152,10 +180,10 @@ class SupabaseDataAccessor implements DataAccessor {
     return slots;
   }
 
-  async getWorkshopBookings(id: string): Promise<Booking[]> {
+  async getWorkshopBookings(id: string): Promise<BookingDetails[]> {
     const { data: bookings, error: error } = await supabase
       .from("bookings")
-      .select("*")
+      .select("*,slots:slot_id(*)")
       .eq("workshop_id", id);
     if (error) throw error;
     return bookings;
@@ -175,12 +203,28 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async createSlots(slots: Slot[]): Promise<boolean> {
-    const { error: error } = await supabase
+    const { data: data, error: error } = await supabase
       .from("slots")
-      .insert([...slots]);
+      .insert([...slots])
+      .select();
     
     if (error) {
-      throw new Error(error.message);
+      console.log(`Failed to create slots: ${JSON.stringify(error)}`)
+      return false
+    }
+
+    if (data) {
+      for (let i = 0; i < data.length; i++) {
+        const slot: Slot = data[i]
+        console.log(`Scheduling event post processing for: ${JSON.stringify(slot)}`)
+        const success = await api.scheduleSlotPostProcessing(data[i].id!, `${slot.date}T${slot.end_time}`)
+        if (!success) {
+          return false
+        }
+      }
+    } else {
+      console.log(`Created zero slots`)
+      return false
     }
 
     return true;
@@ -221,7 +265,7 @@ class SupabaseDataAccessor implements DataAccessor {
         // Invalidate booking link
         throw Error(data[0].message)
       } else {
-        await email.sendBookingConfirmations(
+        await api.sendBookingConfirmations(
           workshop.user_id.toString(),
           user_id,
           slot,
@@ -241,7 +285,7 @@ class SupabaseDataAccessor implements DataAccessor {
     if (error) throw error;
 
     if (data) {
-      email.sendBookingCancellations(host_id, user_id, slot, ActionTrigger.Attendee)
+      api.sendBookingCancellations(host_id, user_id, slot, ActionTrigger.Attendee)
       return true
     } else {
       return false

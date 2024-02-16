@@ -1,6 +1,6 @@
 import { Slot } from "@schemas"
 
-export interface EmailSender {
+export interface InfrastructureAPI {
   /**
    * Sends a workshop creation confirmation email to the host 
    * @param host_user_id A host user id
@@ -25,6 +25,21 @@ export interface EmailSender {
    * @param triggered_by Action triggered by
    */
   sendBookingCancellations(host_user_id: string, attendee_user_id: string, slot: Slot, triggered_by: ActionTrigger): Promise<void>
+
+  /**
+   * Schedule a slot post processing event
+   * @param slot_id A slot id for which the post processing is to be scheduled
+   * @param slot_end_timestamp A timestamp of when the slot finishes in YYYY-MM-DD'T'HH:mm:ss format
+   * @returns A boolean representing the operation success
+   */
+  scheduleSlotPostProcessing(slot_id: string, slot_end_timestamp: string): Promise<boolean>
+
+  /**
+   * Cancel a slot post processing event
+   * @param slot_id A slot id for which the post processing is to be cancelled
+   * @returns A boolean representing the operation success
+   */
+  cancelSlotPostProcessing(slot_id: string): Promise<boolean>
 }
 
 export enum ActionTrigger {
