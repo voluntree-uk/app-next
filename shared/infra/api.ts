@@ -30,9 +30,16 @@ export interface InfrastructureAPI {
    * Schedule a slot post processing event
    * @param slot_id A slot id for which the post processing is to be scheduled
    * @param slot_end_timestamp A timestamp of when the slot finishes in YYYY-MM-DD'T'HH:mm:ss format
-   * @returns A schedule identifier or null if unsuccessful
+   * @returns A boolean representing the operation success
    */
-  scheduleSlotPostProcessing(slot_id: string, slot_end_timestamp: string): Promise<string|null>
+  scheduleSlotPostProcessing(slot_id: string, slot_end_timestamp: string): Promise<boolean>
+
+  /**
+   * Cancel a slot post processing event
+   * @param slot_id A slot id for which the post processing is to be cancelled
+   * @returns A boolean representing the operation success
+   */
+  cancelSlotPostProcessing(slot_id: string): Promise<boolean>
 }
 
 export enum ActionTrigger {

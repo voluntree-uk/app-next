@@ -13,6 +13,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
   private bookingConfirmationEndpoint: string;
   private bookingCancellationEndpoint: string;
   private scheduleSlotPostProcessingEndpoint: string;
+  private cancelSlotPostProcessingEndpoint: string;
   
   constructor(apiGatewayBaseUrl: string) {
     if (apiGatewayBaseUrl === "") {
@@ -22,6 +23,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     this.bookingConfirmationEndpoint = `${apiGatewayBaseUrl}/bookingConfirmation`
     this.bookingCancellationEndpoint = `${apiGatewayBaseUrl}/bookingCancellation`
     this.scheduleSlotPostProcessingEndpoint = `${apiGatewayBaseUrl}/scheduleSlotPostProcessing`
+    this.cancelSlotPostProcessingEndpoint = `${apiGatewayBaseUrl}/cancelSlotPostProcessing`
   }
 
   private axios_instance = axios.create({
@@ -105,21 +107,32 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     return
   }
 
-  async scheduleSlotPostProcessing(slot_id: string, slot_end_timestamp: string): Promise<string|null> {
+  async scheduleSlotPostProcessing(slot_id: string, slot_end_timestamp: string): Promise<boolean> {
     const data = {
       slot_id: slot_id,
       slot_end_timestamp: slot_end_timestamp
     }
     console.log(JSON.stringify(data))
-    // const response: AxiosResponse = await this.axios_instance.post(this.scheduleSlotPostProcessingEndpoint, JSON.stringify(data))
-    // console.log(`Response ${JSON.stringify(response)}`)
-    // return (response.statusText == "OK") ? response.data : null
     return this.axios_instance.post(this.scheduleSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
       console.log(`Response ${response.status}: ${response.data}`)
-      return (response.status == 200) ? response.data : null
+      return (response.status == 200) ? true : false
     }).catch((err) => {
       console.log("Failed to execute schedule slot post processing request")
-      return null
+      return false
+    })
+  }
+
+  async cancelSlotPostProcessing(slot_id: string): Promise<boolean> {
+    const data = {
+      schedule_name: `Slot-${slot_id}`
+    }
+    console.log(JSON.stringify(data))
+    return this.axios_instance.post(this.cancelSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
+      console.log(`Response ${response.status}: ${response.data}`)
+      return (response.status == 200) ? true : false
+    }).catch((err) => {
+      console.log("Failed to execute cancel slot post processing request")
+      return false
     })
   }
 }
