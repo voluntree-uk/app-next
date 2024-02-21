@@ -35,6 +35,9 @@ export interface Profile {
   surname?: string;
   hosted_workshops?: number;
   avatar_url?: string;
+  rating?: number;
+  reviews_received?: number;
+  award_points?: number;
 }
 
 export interface Slot {

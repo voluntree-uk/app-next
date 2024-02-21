@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { Box, Container, Flex, Heading, HStack, Text } from "@chakra-ui/react";
-import { HiOutlineMail, HiUserGroup } from "react-icons/hi";
+import { IconContext } from "react-icons";
+import { HiOutlineMail, HiUserGroup, HiOutlineStar } from "react-icons/hi";
+import { SiRuby } from "react-icons/si";
 import { auth } from "@auth/supabase";
 import { data } from "@data/supabase";
 import { User } from "@schemas";
@@ -18,8 +20,14 @@ export default function Account({ user }: { user: User }) {
     formState: { errors },
   } = useForm();
 
-  const { username, avatar_url, full_name, member_since, hosted_workshops } =
-    watch();
+  const username: string = watch("username");
+  const avatar_url: string = watch("avatar_url");
+  const full_name: string = watch("full_name");
+  const member_since: string = watch("member_since");
+  const hosted_workshops: number = watch("hosted_workshops");
+  const rating: number = watch("rating");
+  const reviews_received: number = watch("reviews_received");
+  const award_points: number = watch("award_points");
 
   const getProfile = useCallback(async () => {
     try {
@@ -38,6 +46,9 @@ export default function Account({ user }: { user: User }) {
         setValue("full_name", `${profile.name} ${profile.surname}`);
         setValue("member_since", profile.created_at);
         setValue("hosted_workshops", profile.hosted_workshops);
+        setValue("rating", profile.rating);
+        setValue("reviews_received", profile.reviews_received);
+        setValue("award_points", profile.award_points);
       }
     } catch (error: any) {
       alert(`Error getting profile: ${error.message}`);
@@ -66,6 +77,10 @@ export default function Account({ user }: { user: User }) {
     } finally {
       setLoading(false);
     }
+  }
+
+  function roundNumber(number: number | undefined, decimals: number = 0): string {
+    return (number !== undefined) ? number.toFixed(decimals) : "";
   }
 
   useEffect(() => {
@@ -97,7 +112,6 @@ export default function Account({ user }: { user: User }) {
             <Heading size={"md"}>
               {full_name} (@{username})
             </Heading>
-            {/* <Heading size={"md"}>@{username}</Heading> */}
             <Text size={"md"}>
               Member since {dateToReadable(member_since, false)}
             </Text>
@@ -112,6 +126,20 @@ export default function Account({ user }: { user: User }) {
               <Text size={"sm"} color={"gray.600"}>
                 Hosted {hosted_workshops}{" "}
                 {hosted_workshops == 1 ? "Workshop" : "Workshops"}
+              </Text>
+            </HStack>
+            <HStack spacing={2}>
+              <HiOutlineStar />
+              <Text size={"sm"} color={"gray.600"}>
+                {roundNumber(rating, 1)} ({reviews_received})
+              </Text>
+            </HStack>
+            <HStack spacing={2}>
+              <IconContext.Provider value={{ color: "red" }}>
+                <SiRuby />
+              </IconContext.Provider>
+              <Text size={"sm"} color={"gray.600"}>
+                {roundNumber(award_points)}
               </Text>
             </HStack>
           </Flex>
