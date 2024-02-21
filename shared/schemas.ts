@@ -23,6 +23,7 @@ export interface Workshop {
   postcode?: string;
   city?: string;
   virtual: boolean;
+  meeting_link?: string;
 }
 
 export interface Profile {

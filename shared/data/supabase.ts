@@ -68,6 +68,9 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async createWorkshop(workshop: Workshop): Promise<Workshop> {
+    if (workshop.virtual) {
+      workshop.meeting_link = await api.generateMeetingLink(workshop.name)
+    }
     const { data, error } = await supabase.from("workshops").insert([workshop]);
     if (error) throw error;
     if (data) {
@@ -269,7 +272,7 @@ class SupabaseDataAccessor implements DataAccessor {
           workshop.user_id.toString(),
           user_id,
           slot,
-          "https://dummy.online.meeting/"
+          workshop.meeting_link
         )
         return true;
       }
