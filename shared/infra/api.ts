@@ -40,6 +40,13 @@ export interface InfrastructureAPI {
    * @returns A boolean representing the operation success
    */
   cancelSlotPostProcessing(slot_id: string): Promise<boolean>
+
+  /**
+   * Generates a URL for an online meeting
+   * @param meeting_name The meeting name
+   * @returns A join URL
+   */
+  generateMeetingLink(meeting_name: string): Promise<string>
 }
 
 export enum ActionTrigger {
