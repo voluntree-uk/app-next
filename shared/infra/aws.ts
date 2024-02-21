@@ -14,6 +14,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
   private bookingCancellationEndpoint: string;
   private scheduleSlotPostProcessingEndpoint: string;
   private cancelSlotPostProcessingEndpoint: string;
+  private generateMeetingEndpoint: string;
   
   constructor(apiGatewayBaseUrl: string) {
     if (apiGatewayBaseUrl === "") {
@@ -24,6 +25,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     this.bookingCancellationEndpoint = `${apiGatewayBaseUrl}/bookingCancellation`
     this.scheduleSlotPostProcessingEndpoint = `${apiGatewayBaseUrl}/scheduleSlotPostProcessing`
     this.cancelSlotPostProcessingEndpoint = `${apiGatewayBaseUrl}/cancelSlotPostProcessing`
+    this.generateMeetingEndpoint = `${apiGatewayBaseUrl}/generateOnlineMeeting`
   }
 
   private axios_instance = axios.create({
@@ -52,7 +54,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     return
   }
 
-  async sendBookingConfirmations(host_user_id: string, attendee_user_id: string, slot: Slot, join_link: string): Promise<void> {
+  async sendBookingConfirmations(host_user_id: string, attendee_user_id: string, slot: Slot, join_link: string | undefined): Promise<void> {
     const host: Profile = await data.getProfile(host_user_id)
     const attendee: Profile = await data.getProfile(attendee_user_id)
     if (host && attendee) {
@@ -133,6 +135,20 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     }).catch((err) => {
       console.log("Failed to execute cancel slot post processing request")
       return false
+    })
+  }
+
+  async generateMeetingLink(meeting_name: string): Promise<string> {
+    const data = {
+      name: meeting_name
+    }
+    console.log(JSON.stringify(data))
+    return this.axios_instance.post(this.generateMeetingEndpoint, JSON.stringify(data)).then((response) => {
+      console.log(`Response ${response.status}: ${JSON.stringify(response.data)}`)
+      return (response.status == 200) ? response.data["message"] : null
+    }).catch((err) => {
+      console.log("Failed to generate an online meeting link", err)
+      return null
     })
   }
 }
