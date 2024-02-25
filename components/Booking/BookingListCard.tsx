@@ -1,15 +1,19 @@
-import { CalendarIcon, TimeIcon } from "@chakra-ui/icons";
-import { Flex, Text, useToast, Link, Avatar } from "@chakra-ui/react";
+import { ArrowForwardIcon, CalendarIcon, CheckIcon, CloseIcon, EditIcon, TimeIcon } from "@chakra-ui/icons";
+import { Flex, Text, useToast, Link, Avatar, useDisclosure, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { data } from "@data/supabase";
 import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
+import { Type } from "@components/Booking/BookingList";
+import { ReviewModal } from "@components/Review/ReviewModal";
 
 interface IProps {
   booking: BookingDetails;
+  type: Type;
 }
-export default function BookingListCard({ booking }: IProps) {
+export default function BookingListCard({ booking, type }: IProps) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
 
   const directToWorkshop = (booking: BookingDetails) => {
@@ -19,6 +23,81 @@ export default function BookingListCard({ booking }: IProps) {
   const toast = useToast();
 
   const [loading, setLoading] = useState(false);
+
+  function actionButton(): ReactElement {
+    switch (type) {
+      case Type.Upcoming:
+        return (
+          <Button
+            rightIcon={<CloseIcon fontSize={10} />}
+            width="18vw"
+            colorScheme="red"
+            variant="solid"
+            onClick={() => cancelBooking(booking)}
+          >
+            Cancel
+          </Button>
+        );
+      case Type.Past:
+        return isReviewed() ? (
+          <Button
+            rightIcon={<EditIcon fontSize={13} />}
+            width="18vw"
+            colorScheme="teal"
+            variant="solid"
+            onClick={onOpen}
+          >
+            Review
+          </Button>
+        ) : (
+          <Button
+            rightIcon={<CheckIcon fontSize={10} />}
+            width="18vw"
+            colorScheme="teal"
+            variant="ghost"
+            disabled={true}
+          >
+            Reviewed
+          </Button>
+        );
+    }
+  }
+
+  function isReviewed(): boolean {
+    return booking.review_rating !== null
+  }
+
+  async function reviewBooking(booking: BookingDetails, rating: number, comment: string): Promise<void> {
+    setLoading(true);
+
+    try {
+      const success = await data.reviewBooking(booking.id!, rating, comment);
+
+      if (success) {
+        router.push("/me/dashboard");
+
+        toast({
+          title: "Review submitted",
+          status: "success",
+          duration: 4000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      const message = (error as any).message;
+
+      toast({
+        title: "Problem cancelling booking",
+        description: message,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    } finally {
+      setLoading(false);
+      onClose();
+    }
+  }
 
   async function cancelBooking(booking: BookingDetails): Promise<void> {
     setLoading(true);
@@ -107,13 +186,15 @@ export default function BookingListCard({ booking }: IProps) {
               )}
             </Text>
           </Flex>
-          <Link
-            color="red"
-            onClick={() => cancelBooking(booking)}
-            rounded="full"
-          >
-            Cancel
-          </Link>
+          {actionButton()}
+          {type === Type.Past ? (
+            <ReviewModal
+              booking={booking}
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={reviewBooking}
+            />
+          ) : null}
         </Flex>
       </Flex>
     </Flex>

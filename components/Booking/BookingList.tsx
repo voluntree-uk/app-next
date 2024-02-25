@@ -6,15 +6,21 @@ import BookingListHeading from "@components/Booking/BookingListHeading";
 
 interface IProps {
   bookings: BookingDetails[];
+  type: Type;
 }
 
-export default function BookingList({ bookings }: IProps) {
+export enum Type {
+  Upcoming,
+  Past
+}
+
+export function BookingList({ bookings, type }: IProps) {
   return (
     <Box>
-      <BookingListHeading bookings={bookings} />
+      <BookingListHeading bookings={bookings} type={type} />
       <Stack spacing={0}>
         {bookings?.map((booking) => (
-          <BookingListCard key={booking.id} booking={booking} />
+          <BookingListCard key={booking.id} booking={booking} type={type} />
         ))}
       </Stack>
     </Box>

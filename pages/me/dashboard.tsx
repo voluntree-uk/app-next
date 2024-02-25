@@ -5,20 +5,24 @@ import { auth } from "@auth/supabase";
 import { User } from "@supabase/supabase-js";
 import { BookingDetails, Workshop } from "@schemas";
 import Layout from "@components/Layout/Layout";
-import BookingList from "@components/Booking/BookingList";
+import { BookingList, Type } from "@components/Booking/BookingList";
+import { isBeforeNow } from "@util/dates";
 
-export default function MyBookingsPage({
+export default function Dashboard({
   workshops,
-  bookings,
+  pastBookings,
+  upcomingBookings,
 }: {
   workshops: Workshop[];
-  bookings: BookingDetails[];
+  pastBookings: BookingDetails[];
+  upcomingBookings: BookingDetails[];
   user: User;
 }) {
   return (
     <Layout>
       <Box>
-        <BookingList bookings={bookings} />
+        <BookingList bookings={upcomingBookings} type={Type.Upcoming} />
+        <BookingList bookings={pastBookings} type={Type.Past} />
       </Box>
     </Layout>
   );
@@ -34,7 +38,15 @@ export async function getServerSideProps({ req }: any) {
   try {
     const workshops = await data.getUserWorkshops(user.id);
     const bookings = await data.getUserBookings(user.id);
-    return { props: { bookings, workshops, user } };
+    const pastBookings = bookings.filter((booking) =>
+      isBeforeNow(new Date(`${booking.slots.date}T${booking.slots.end_time}`))
+    );
+    const upcomingBookings = bookings.filter((booking) =>
+      !isBeforeNow(new Date(`${booking.slots.date}T${booking.slots.end_time}`))
+    );
+    console.log(`Upcoming: ${JSON.stringify(upcomingBookings)}`);
+    console.log(`Past: ${JSON.stringify(pastBookings)}`);
+    return { props: { workshops, pastBookings, upcomingBookings, user } };
   } catch (error) {
     console.error(`Error: ${JSON.stringify(error)}`);
     return { props: { user } };

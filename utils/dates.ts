@@ -119,3 +119,8 @@ export function endOfThisWeekendAsISOString(): string {
     return dateAsISOString(nextSunday(today))
   }
 }
+
+export function isBeforeNow(date: Date): boolean {
+  const now = new Date()
+  return date < now
+}

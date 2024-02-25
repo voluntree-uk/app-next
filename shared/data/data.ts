@@ -127,6 +127,15 @@ export interface DataAccessor {
   cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string): Promise<boolean>
 
   /**
+   * Submits a review for a booking
+   * @param booking_id A booking id
+   * @param rating Review rating out of 5
+   * @param comment Review comment
+   * @return A boolean representing the success of the method
+   */
+  reviewBooking(booking_id: string, rating: number, comment: string): Promise<boolean>
+
+  /**
    * Returns an avatar public URL given the path
    * @param path An avatar path
    * @return The avatar public URL
