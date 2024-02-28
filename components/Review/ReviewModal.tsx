@@ -19,6 +19,7 @@ import {
   Textarea
 } from "@chakra-ui/react";
 import { BookingDetails } from "@schemas";
+import { useRouter } from "next/router";
 
 interface IProps {
   booking: BookingDetails
@@ -28,6 +29,24 @@ interface IProps {
 }
 
 export function ReviewModal({ booking, isOpen, onSubmit, onClose }: IProps) {
+  const router = useRouter();
+
+  const onCloseWithRemoveParameter = (): void => {
+    delete router.query["review"];
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: router.query,
+      },
+      undefined,
+      /**
+       * Do not refresh the page
+       */
+      { shallow: true }
+    );
+    onClose();
+  };
+
   var rating = 5;
   var comment = "";
 
@@ -37,7 +56,7 @@ export function ReviewModal({ booking, isOpen, onSubmit, onClose }: IProps) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={() => onCloseWithRemoveParameter()}>
       <ModalOverlay />
       <ModalContent backgroundColor={"lightgray"}>
         <ModalHeader>{booking.workshops.name}</ModalHeader>

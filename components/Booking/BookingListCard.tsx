@@ -1,7 +1,7 @@
 import { ArrowForwardIcon, CalendarIcon, CheckIcon, CloseIcon, EditIcon, TimeIcon } from "@chakra-ui/icons";
 import { Flex, Text, useToast, Link, Avatar, useDisclosure, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { data } from "@data/supabase";
 import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
@@ -15,6 +15,15 @@ interface IProps {
 export default function BookingListCard({ booking, type }: IProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
+
+  /**
+   * Open review modal if review query parameter matches the booking id
+   */
+  useEffect(() => {
+    if (router.query["review"] == booking.id) {
+      onOpen();
+    }
+  })
 
   const directToWorkshop = (booking: BookingDetails) => {
     router.push(`/workshops/${booking.workshop_id}`);
@@ -41,16 +50,6 @@ export default function BookingListCard({ booking, type }: IProps) {
       case Type.Past:
         return isReviewed() ? (
           <Button
-            rightIcon={<EditIcon fontSize={13} />}
-            width="18vw"
-            colorScheme="teal"
-            variant="solid"
-            onClick={onOpen}
-          >
-            Review
-          </Button>
-        ) : (
-          <Button
             rightIcon={<CheckIcon fontSize={10} />}
             width="18vw"
             colorScheme="teal"
@@ -58,6 +57,16 @@ export default function BookingListCard({ booking, type }: IProps) {
             disabled={true}
           >
             Reviewed
+          </Button>
+        ) : (
+          <Button
+            rightIcon={<EditIcon fontSize={13} />}
+            width="18vw"
+            colorScheme="teal"
+            variant="solid"
+            onClick={() => onOpen()}
+          >
+            Review
           </Button>
         );
     }

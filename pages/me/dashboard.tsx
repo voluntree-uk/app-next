@@ -44,8 +44,6 @@ export async function getServerSideProps({ req }: any) {
     const upcomingBookings = bookings.filter((booking) =>
       !isBeforeNow(new Date(`${booking.slots.date}T${booking.slots.end_time}`))
     );
-    console.log(`Upcoming: ${JSON.stringify(upcomingBookings)}`);
-    console.log(`Past: ${JSON.stringify(pastBookings)}`);
     return { props: { workshops, pastBookings, upcomingBookings, user } };
   } catch (error) {
     console.error(`Error: ${JSON.stringify(error)}`);
