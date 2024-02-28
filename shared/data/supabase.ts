@@ -294,7 +294,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async reviewBooking(booking_id: string, rating: number, comment: string): Promise<boolean> {
-    const { error } = await supabase
+    const { error: b_error } = await supabase
       .from('bookings')
       .update({
         review_rating: rating,
@@ -302,12 +302,21 @@ class SupabaseDataAccessor implements DataAccessor {
       })
       .eq('id', booking_id)
 
-    if (error) {
-      console.log(`Failed to submit a booking review: ${JSON.stringify(error)}`)
+    if (b_error) {
+      console.log(`Failed to submit a booking review: ${JSON.stringify(b_error)}`)
       return false
     }
 
-    return true
+    const { data: r_data, error: r_error } = await supabase.rpc('update_user_rating', {
+      p_booking_id: booking_id
+    })
+
+    if (r_error) {
+      console.log(`Failed to update user rating: ${JSON.stringify(b_error)}`)
+      return false
+    }
+
+    return (r_data) ? true : false
   }
 
   async getAvatarUrl(path: string): Promise<string> {
