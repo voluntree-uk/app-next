@@ -4,6 +4,8 @@ export interface Booking {
   workshop_id: string;
   user_id: string;
   slot_id: string;
+  review_rating?: number;
+  review_comment?: string;
 }
 
 export interface BookingDetails extends Booking {

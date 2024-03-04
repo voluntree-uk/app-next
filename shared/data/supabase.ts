@@ -237,12 +237,10 @@ class SupabaseDataAccessor implements DataAccessor {
     const { data: bookings, error: error } = await supabase
       .from("bookings")
       .select(`
-      id,
-      user_id,
-      workshop_id,
+      *,
       workshops:workshop_id(name,user_id),
-      slots:slot_id(date, start_time, end_time)
-    `).eq(`user_id`, user_id);
+      slots:slot_id(date, start_time, end_time)`)
+      .eq(`user_id`, user_id);
 
     if (error) {
       throw new Error(error.message);
@@ -293,6 +291,32 @@ class SupabaseDataAccessor implements DataAccessor {
     } else {
       return false
     }
+  }
+
+  async reviewBooking(booking_id: string, rating: number, comment: string): Promise<boolean> {
+    const { error: b_error } = await supabase
+      .from('bookings')
+      .update({
+        review_rating: rating,
+        review_comment: comment
+      })
+      .eq('id', booking_id)
+
+    if (b_error) {
+      console.log(`Failed to submit a booking review: ${JSON.stringify(b_error)}`)
+      return false
+    }
+
+    const { data: r_data, error: r_error } = await supabase.rpc('update_user_rating', {
+      p_booking_id: booking_id
+    })
+
+    if (r_error) {
+      console.log(`Failed to update user rating: ${JSON.stringify(b_error)}`)
+      return false
+    }
+
+    return (r_data) ? true : false
   }
 
   async getAvatarUrl(path: string): Promise<string> {
