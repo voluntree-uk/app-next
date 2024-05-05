@@ -293,13 +293,15 @@ class SupabaseDataAccessor implements DataAccessor {
       return false
     }
 
-    for (let i = 0; i < bookings.length; i++) {
-      const booking: BookingDetails = bookings[i]
-      console.log(`Cancelling booking: ${JSON.stringify(booking)}`)
-      const success = await this.cancelBooking(booking.id!.toString(), booking.slots, booking.user_id, booking.workshops.user_id, ActionTrigger.Host)
-      if (!success) {
-        console.error(`Failed to cancel slot bookings`)
-        return false
+    if (bookings) {
+      for (let i = 0; i < bookings.length; i++) {
+        const booking: BookingDetails = bookings[i]
+        console.log(`Cancelling booking: ${JSON.stringify(booking)}`)
+        const success = await this.cancelBooking(booking.id!.toString(), booking.slots, booking.user_id, booking.workshops.user_id, ActionTrigger.Host)
+        if (!success) {
+          console.error(`Failed to cancel slot bookings`)
+          return false
+        }
       }
     }
 
