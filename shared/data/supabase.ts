@@ -147,19 +147,18 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async cancelWorkshop(workshop_id: string): Promise<boolean> {
-    const workshop = await this.getWorkshop(workshop_id)
+    const slots = await this.getWorkshopSlots(workshop_id)
 
-    this.getWorkshopSlots(workshop_id).then((slots) => {
-      slots.forEach(slot => {
-        api.cancelSlotPostProcessing(slot.id!)
-      })
-    })
-
-    this.getWorkshopBookings(workshop_id).then((bookings) => {
-      bookings.forEach(booking => {
-        api.sendBookingCancellations(workshop.user_id, booking.user_id, booking.slots, ActionTrigger.Host)
-      })
-    })
+    for (let i = 0; i < slots.length; i++) {
+      const slot = slots[i]
+      if (slot.id) {
+        const success = await this.cancelSlot(slot.id)
+        if (!success) {
+          console.error(`Failed to cancel workshop slots`)
+          return false
+        }
+      }
+    }
 
     const { error } = await supabase
       .from("workshops")
@@ -279,14 +278,56 @@ class SupabaseDataAccessor implements DataAccessor {
     return false;
   }
 
-  async cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string): Promise<boolean> {
+  async cancelSlot(slot_id: string): Promise<boolean> {
+    const { data: bookings, error: error } = await supabase
+      .from("bookings")
+      .select(`
+        *,
+        workshops:workshop_id(name,user_id),
+        slots:slot_id(date, start_time, end_time)
+      `)
+      .eq(`slot_id`, slot_id);
+
+    if (error) {
+      console.error(`Failed to get slot bookings: ${error.message}`)
+      return false
+    }
+
+    if (bookings) {
+      for (let i = 0; i < bookings.length; i++) {
+        const booking: BookingDetails = bookings[i]
+        console.log(`Cancelling booking: ${JSON.stringify(booking)}`)
+        const success = await this.cancelBooking(booking.id!.toString(), booking.slots, booking.user_id, booking.workshops.user_id, ActionTrigger.Host)
+        if (!success) {
+          console.error(`Failed to cancel slot bookings`)
+          return false
+        }
+      }
+    }
+
+    const { error: err } = await supabase
+      .from("slots")
+      .delete()
+      .eq("id", slot_id)
+
+    if (err) {
+      console.log(`Error deleting slot: ${error}`)
+      return false
+    }
+
+    await api.cancelSlotPostProcessing(slot_id)
+
+    return true
+  }
+
+  async cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string, triggered_by: ActionTrigger): Promise<boolean> {
     const { data, error } = await supabase.rpc('cancel_booking', {
       p_booking_id: booking_id
     })
     if (error) throw error;
 
     if (data) {
-      api.sendBookingCancellations(host_id, user_id, slot, ActionTrigger.Attendee)
+      api.sendBookingCancellations(host_id, user_id, slot, triggered_by)
       return true
     } else {
       return false

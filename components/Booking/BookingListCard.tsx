@@ -7,6 +7,7 @@ import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
 import { Type } from "@components/Booking/BookingList";
 import { ReviewModal } from "@components/Review/ReviewModal";
+import { ActionTrigger } from "@infra/api";
 
 interface IProps {
   booking: BookingDetails;
@@ -113,7 +114,7 @@ export default function BookingListCard({ booking, type }: IProps) {
 
     try {
       if (booking.id) {
-        const success = await data.cancelBooking(booking.id.toString(), booking.slots, booking.user_id, booking.workshops.user_id);
+        const success = await data.cancelBooking(booking.id.toString(), booking.slots, booking.user_id, booking.workshops.user_id, ActionTrigger.Attendee);
 
         // Redirect if booking cancelled successfully
         if (success) {
