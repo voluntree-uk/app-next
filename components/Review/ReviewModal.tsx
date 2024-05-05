@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Button,
-  Center,
   Modal,
   ModalBody,
   ModalCloseButton,

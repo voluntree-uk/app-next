@@ -1,3 +1,4 @@
+import { ActionTrigger } from "@infra/api";
 import {
   Profile,
   Workshop,
@@ -101,6 +102,13 @@ export interface DataAccessor {
   createSlots(slots: Slot[]): Promise<boolean>
 
   /**
+   * Cancells a slot with the given id
+   * @param slot_id An id of the slot to be cancelled
+   * @return A boolean representing the success of the method
+   */
+  cancelSlot(slot_id: string): Promise<boolean>
+
+  /**
    * Returns all bookings a user has made
    * @param user_id A user id
    * @return A list of matching bookings
@@ -122,9 +130,10 @@ export interface DataAccessor {
    * @param slot A slot for which the booking is cancelled
    * @param user_id An attendee user id
    * @param host_id A host user id
+   * @param triggered_by Who triggered the cancellation
    * @return A boolean representing the success of the method
    */
-  cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string): Promise<boolean>
+  cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string, triggered_by: ActionTrigger): Promise<boolean>
 
   /**
    * Submits a review for a booking
