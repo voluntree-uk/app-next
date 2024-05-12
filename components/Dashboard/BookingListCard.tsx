@@ -5,7 +5,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { data } from "@data/supabase";
 import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
-import { Type } from "@components/Booking/BookingList";
+import { Type } from "@components/Dashboard/BookingList";
 import { ReviewModal } from "@components/Review/ReviewModal";
 import { ActionTrigger } from "@infra/api";
 
@@ -39,10 +39,11 @@ export default function BookingListCard({ booking, type }: IProps) {
       case Type.Upcoming:
         return (
           <Button
-            rightIcon={<CloseIcon fontSize={10} />}
-            width="18vw"
+            rounded="full"
+            rightIcon={<CloseIcon />}
             colorScheme="red"
             variant="solid"
+            size={{ base: "sm", sm: "md" }}
             onClick={() => cancelBooking(booking)}
           >
             Cancel
@@ -51,20 +52,22 @@ export default function BookingListCard({ booking, type }: IProps) {
       case Type.Past:
         return isReviewed() ? (
           <Button
-            rightIcon={<CheckIcon fontSize={10} />}
-            width="18vw"
+            rounded="full"
+            rightIcon={<CheckIcon />}
             colorScheme="teal"
             variant="ghost"
+            size={{ base: "sm", sm: "md" }}
             disabled={true}
           >
             Reviewed
           </Button>
         ) : (
           <Button
-            rightIcon={<EditIcon fontSize={13} />}
-            width="18vw"
+            rounded="full"
+            rightIcon={<EditIcon />}
             colorScheme="teal"
             variant="solid"
+            size={{ base: "sm", sm: "md" }}
             onClick={() => onOpen()}
           >
             Review
@@ -151,7 +154,6 @@ export default function BookingListCard({ booking, type }: IProps) {
       alignItems={"center"}
       borderBottomWidth="1px"
       borderBottomColor={"gray.300"}
-      w={"80%"}
       _hover={{
         background: "gray.50",
       }}
