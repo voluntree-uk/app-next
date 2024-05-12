@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Stack } from "@chakra-ui/react";
 import { BookingDetails } from "@schemas";
-import BookingListCard from "@components/Booking/BookingListCard";
-import BookingListHeading from "@components/Booking/BookingListHeading";
+import BookingListCard from "@components/Dashboard/BookingListCard";
+import BookingListHeading from "@components/Dashboard/BookingListHeading";
 
 interface IProps {
   bookings: BookingDetails[];
@@ -16,7 +16,7 @@ export enum Type {
 
 export function BookingList({ bookings, type }: IProps) {
   return (
-    <Box>
+    <Box pb="10">
       <BookingListHeading bookings={bookings} type={type} />
       <Stack spacing={0}>
         {bookings?.map((booking) => (

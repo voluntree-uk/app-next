@@ -1,12 +1,13 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { data } from "@data/supabase";
 import { auth } from "@auth/supabase";
 import { User } from "@supabase/supabase-js";
 import { BookingDetails, Workshop } from "@schemas";
 import Layout from "@components/Layout/Layout";
-import { BookingList, Type } from "@components/Booking/BookingList";
+import { BookingList, Type } from "@components/Dashboard/BookingList";
 import { isBeforeNow } from "@util/dates";
+import { WorkshopList } from "@components/Dashboard/WorkshopList";
 
 export default function Dashboard({
   workshops,
@@ -20,10 +21,11 @@ export default function Dashboard({
 }) {
   return (
     <Layout>
-      <Box>
+      <Flex direction="column">
+        <WorkshopList workshops={workshops} />
         <BookingList bookings={upcomingBookings} type={Type.Upcoming} />
         <BookingList bookings={pastBookings} type={Type.Past} />
-      </Box>
+      </Flex>
     </Layout>
   );
 }

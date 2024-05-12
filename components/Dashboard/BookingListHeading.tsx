@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { BookingDetails } from "@schemas";
-import { Type } from "@components/Booking/BookingList";
+import { Type } from "@components/Dashboard/BookingList";
 
 interface IProps {
   bookings: BookingDetails[];
