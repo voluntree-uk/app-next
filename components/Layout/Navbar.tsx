@@ -73,7 +73,15 @@ export default function Navbar() {
   );
 
   return (
-    <Box borderBottom="1px" borderBottomColor={"gray.100"}>
+    <Box
+      borderBottom="1px"
+      borderBottomColor={"gray.100"}
+      backgroundColor="white"
+      as="header"
+      position="fixed"
+      w="100%"
+      zIndex={200}
+    >
       <Container maxWidth={"7xl"} margin="0 auto">
         <Box>
           <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
@@ -151,7 +159,7 @@ export default function Navbar() {
                     <MenuItem
                       onClick={() => {
                         auth.signOut();
-                        router.push("/")
+                        router.push("/");
                       }}
                     >
                       Log out
