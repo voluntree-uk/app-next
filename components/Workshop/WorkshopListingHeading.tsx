@@ -72,7 +72,8 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
       <Flex alignItems={"center"}>
         <Button
           rounded="full"
-          variant={"solid"}
+          colorScheme="blackAlpha"
+          variant={"outline"}
           onClick={() => cancelWorkshop(workshop)}
           rightIcon={<MdOutlineCancel />}
           size={{ base: "xs", sm: "md" }}
@@ -89,17 +90,12 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
       borderBottomWidth={"1px"}
       borderBottomColor="gray.200"
       p="6"
-      px={{ base: "2", md: "10" }}
+      px={{ base: "4", md: "6" }}
     >
       <Stack spacing={6}>
         {hostBanner()}
-        <Box display="flex" justifyContent={"space-between"}>
+        <Box px={{ base: "2", md: "10" }} display="flex" justifyContent={"space-between"}>
           <Flex alignItems={"center"}>
-            <Avatar
-              src="https://static.vecteezy.com/system/resources/previews/003/452/135/original/man-riding-bicycle-sport-illustration-vector.jpg"
-              size={"lg"}
-              mr="3"
-            ></Avatar>
             <Flex flexDir={"column"}>
               <Text
                 pb="1"
