@@ -24,6 +24,10 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
     data.getProfile(workshop.user_id)
   );
 
+  const directToHostProfile = (user_id: string | undefined) => {
+    if (user_id) router.push(`/user/${user_id}`);
+  };
+
   async function cancelWorkshop(workshop: Workshop): Promise<void> {
     setLoading(true);
 
@@ -94,7 +98,11 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
     >
       <Stack spacing={6}>
         {hostBanner()}
-        <Box px={{ base: "2", md: "10" }} display="flex" justifyContent={"space-between"}>
+        <Box
+          px={{ base: "2", md: "10" }}
+          display="flex"
+          justifyContent={"space-between"}
+        >
           <Flex alignItems={"center"}>
             <Flex flexDir={"column"}>
               <Text
@@ -108,7 +116,12 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
 
               <Text color="gray.500">
                 Hosted by{" "}
-                <Link color={"red.400"}>
+                <Link
+                  color={"red.400"}
+                  onClick={() =>
+                    directToHostProfile(ownerProfileQuery.data?.user_id)
+                  }
+                >
                   {ownerProfileQuery.data?.username}
                 </Link>
               </Text>
