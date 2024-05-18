@@ -1,5 +1,5 @@
 const config = {
-  categories: ["technology", "finance", "languages", "arts", "legal", "other"],
+  categories: ["technology", "art", "sport", "consultancy", "other"],
 };
 
 export default config;
