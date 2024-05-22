@@ -25,7 +25,7 @@ import { ActionTrigger } from "@infra/api";
  */
 class SupabaseDataAccessor implements DataAccessor {
   async createProfile(profile: Profile): Promise<Profile> {
-    const { data, error } = await supabase.from("profiles").insert([profile]);
+    const { data, error } = await supabase.from("profile").insert([profile]);
     if (error) throw error;
     if (data) {
       return data[0] as Profile;
@@ -35,7 +35,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async updateProfile(profile: Profile): Promise<Profile> {
-    const { data, error } = await supabase.from("profiles").upsert([profile]);
+    const { data, error } = await supabase.from("profile").upsert([profile]);
     if (error) throw error;
     if (data) {
       return data[0] as Profile;
@@ -55,7 +55,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async getProfile(id: string): Promise<Profile> {
     let { data, error } = await supabase
-      .from("profiles")
+      .from("profile")
       .select('*')
       .eq("user_id", id)
       .single();
@@ -71,7 +71,7 @@ class SupabaseDataAccessor implements DataAccessor {
     if (workshop.virtual) {
       workshop.meeting_link = await api.generateMeetingLink(workshop.name)
     }
-    const { data, error } = await supabase.from("workshops").insert([workshop]);
+    const { data, error } = await supabase.from("workshop").insert([workshop]);
     if (error) throw error;
     if (data) {
       await supabase.rpc('increment_hosted_workshops', { id: workshop.user_id });
@@ -84,9 +84,9 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]> {
     const query = supabase
-      .from("workshops")
-      .select('*, slots!inner(date, at_capacity)')
-      .eq('slots.at_capacity', false)
+      .from("workshop")
+      .select('*, slot!inner(date, at_capacity)')
+      .eq('slot.at_capacity', false)
       .order('created_at', { ascending: false });
 
     if (filters.category !== '') {
@@ -99,19 +99,19 @@ class SupabaseDataAccessor implements DataAccessor {
 
     switch (filters.time) {
       case TimeFilter.THIS_WEEK:
-        query.gte('slots.date', dateAsISOString())
-        query.lte('slots.date', endOfThisWeekAsISOString())
+        query.gte('slot.date', dateAsISOString())
+        query.lte('slot.date', endOfThisWeekAsISOString())
         break;
       case TimeFilter.THIS_WEEKEND:
-        query.gte('slots.date', startOfThisWeekendAsISOString())
-        query.lte('slots.date', endOfThisWeekendAsISOString())
+        query.gte('slot.date', startOfThisWeekendAsISOString())
+        query.lte('slot.date', endOfThisWeekendAsISOString())
         break;
       case TimeFilter.NEXT_WEEK:
-        query.gte('slots.date', startOfNextWeekAsISOString())
-        query.lte('slots.date', endOfNextWeekAsISOString())
+        query.gte('slot.date', startOfNextWeekAsISOString())
+        query.lte('slot.date', endOfNextWeekAsISOString())
         break;
       default:
-        query.gte('slots.date', dateAsISOString())
+        query.gte('slot.date', dateAsISOString())
         break;
     }
 
@@ -124,7 +124,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async getWorkshopsByCategory(category: string): Promise<Workshop[]> {
     const { data: workshops, error } = await supabase
-      .from("workshops")
+      .from("workshop")
       .select("*")
       .eq("category", category);
     if (error) throw error;
@@ -133,7 +133,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async getWorkshop(id: string): Promise<Workshop> {
     const { data: workshop, error: error } = await supabase
-      .from("workshops")
+      .from("workshop")
       .select("*")
       .eq("id", id);
     if (error) {
@@ -161,7 +161,7 @@ class SupabaseDataAccessor implements DataAccessor {
     }
 
     const { error } = await supabase
-      .from("workshops")
+      .from("workshop")
       .delete()
       .eq("id", workshop_id)
 
@@ -175,7 +175,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async getWorkshopSlots(id: string): Promise<Slot[]> {
     const { data: slots, error: error } = await supabase
-      .from("slots")
+      .from("slot")
       .select("*")
       .eq("workshop_id", id);
     if (error) throw error;
@@ -184,8 +184,8 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async getWorkshopBookings(id: string): Promise<BookingDetails[]> {
     const { data: bookings, error: error } = await supabase
-      .from("bookings")
-      .select("*,slots:slot_id(*)")
+      .from("booking")
+      .select("*,slot:slot_id(*)")
       .eq("workshop_id", id);
     if (error) throw error;
     return bookings;
@@ -193,7 +193,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async getUserWorkshops(user_id: string): Promise<Workshop[]> {
     const { data: workshopData, error } = await supabase
-      .from("workshops")
+      .from("workshop")
       .select("*")
       .eq("user_id", user_id);
     
@@ -206,7 +206,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async createSlots(slots: Slot[]): Promise<boolean> {
     const { data: data, error: error } = await supabase
-      .from("slots")
+      .from("slot")
       .insert([...slots])
       .select();
     
@@ -234,11 +234,11 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async getUserBookings(user_id: string): Promise<BookingDetails[]> {
     const { data: bookings, error: error } = await supabase
-      .from("bookings")
+      .from("booking")
       .select(`
       *,
-      workshops:workshop_id(name,user_id),
-      slots:slot_id(date, start_time, end_time)`)
+      workshop:workshop_id(name,user_id),
+      slot:slot_id(date, start_time, end_time)`)
       .eq(`user_id`, user_id);
 
     if (error) {
@@ -280,11 +280,11 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async cancelSlot(slot_id: string): Promise<boolean> {
     const { data: bookings, error: error } = await supabase
-      .from("bookings")
+      .from("booking")
       .select(`
         *,
-        workshops:workshop_id(name,user_id),
-        slots:slot_id(date, start_time, end_time)
+        workshop:workshop_id(name,user_id),
+        slot:slot_id(date, start_time, end_time)
       `)
       .eq(`slot_id`, slot_id);
 
@@ -297,7 +297,7 @@ class SupabaseDataAccessor implements DataAccessor {
       for (let i = 0; i < bookings.length; i++) {
         const booking: BookingDetails = bookings[i]
         console.log(`Cancelling booking: ${JSON.stringify(booking)}`)
-        const success = await this.cancelBooking(booking.id!.toString(), booking.slots, booking.user_id, booking.workshops.user_id, ActionTrigger.Host)
+        const success = await this.cancelBooking(booking.id!.toString(), booking.slot, booking.user_id, booking.workshop.user_id, ActionTrigger.Host)
         if (!success) {
           console.error(`Failed to cancel slot bookings`)
           return false
@@ -306,7 +306,7 @@ class SupabaseDataAccessor implements DataAccessor {
     }
 
     const { error: err } = await supabase
-      .from("slots")
+      .from("slot")
       .delete()
       .eq("id", slot_id)
 
@@ -336,7 +336,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async reviewBooking(booking_id: string, rating: number, comment: string): Promise<boolean> {
     const { error: b_error } = await supabase
-      .from('bookings')
+      .from('booking')
       .update({
         review_rating: rating,
         review_comment: comment
