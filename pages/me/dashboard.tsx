@@ -41,10 +41,10 @@ export async function getServerSideProps({ req }: any) {
     const workshops = await data.getUserWorkshops(user.id);
     const bookings = await data.getUserBookings(user.id);
     const pastBookings = bookings.filter((booking) =>
-      isBeforeNow(new Date(`${booking.slots.date}T${booking.slots.end_time}`))
+      isBeforeNow(new Date(`${booking.slot.date}T${booking.slot.end_time}`))
     );
     const upcomingBookings = bookings.filter((booking) =>
-      !isBeforeNow(new Date(`${booking.slots.date}T${booking.slots.end_time}`))
+      !isBeforeNow(new Date(`${booking.slot.date}T${booking.slot.end_time}`))
     );
     return { props: { workshops, pastBookings, upcomingBookings, user } };
   } catch (error) {

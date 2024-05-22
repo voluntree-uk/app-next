@@ -117,7 +117,7 @@ export default function BookingListCard({ booking, type }: IProps) {
 
     try {
       if (booking.id) {
-        const success = await data.cancelBooking(booking.id.toString(), booking.slots, booking.user_id, booking.workshops.user_id, ActionTrigger.Attendee);
+        const success = await data.cancelBooking(booking.id.toString(), booking.slot, booking.user_id, booking.workshop.user_id, ActionTrigger.Attendee);
 
         // Redirect if booking cancelled successfully
         if (success) {
@@ -173,7 +173,7 @@ export default function BookingListCard({ booking, type }: IProps) {
               mb="0.5"
               onClick={() => directToWorkshop(booking)}
             >
-              {booking.workshops?.name}
+              {booking.workshop?.name}
             </Link>
             <Text
               color="gray.500"
@@ -183,7 +183,7 @@ export default function BookingListCard({ booking, type }: IProps) {
               mb="0.5"
             >
               <CalendarIcon mr="2" />
-              {dateToReadable(booking.slots.date)}
+              {dateToReadable(booking.slot.date)}
             </Text>
             <Text
               color="gray.500"
@@ -193,8 +193,8 @@ export default function BookingListCard({ booking, type }: IProps) {
             >
               <TimeIcon mr="2" />{" "}
               {timeToReadable(
-                booking.slots?.start_time,
-                booking.slots?.end_time
+                booking.slot?.start_time,
+                booking.slot?.end_time
               )}
             </Text>
           </Flex>
