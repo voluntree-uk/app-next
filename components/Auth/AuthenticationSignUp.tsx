@@ -42,11 +42,11 @@ export default function AuthenticationSignUp({ onSuccess }: IProps) {
   const signUp = async (formData: any) => {
     setIsLoading(true);
     try {
-      const password = formData.password;
-      const confirmedPassword = formData.confirmedPassword;
+      const password = formData.signupPassword;
+      const confirmedPassword = formData.signupConfirmedPassword;
 
       if (password === confirmedPassword) {
-        const success = await auth.signUp(formData.email, password);
+        const success = await auth.signUp(formData.signupEmail, password);
 
         if (success) {
           showToast("Success", "Verify your email to continue");
@@ -119,9 +119,9 @@ export default function AuthenticationSignUp({ onSuccess }: IProps) {
           </Stack>
           <Stack spacing="6">
             <Stack spacing="3">
-              {makeFormField("email", "email", "Email", "email")}
-              {makeFormField("password", "password", "Password", "password")}
-              {makeFormField("confirmedPassword", "password", "Confirm Password", "password")}
+              {makeFormField("signupEmail", "email", "Email", "email")}
+              {makeFormField("signupPassword", "password", "Password", "password")}
+              {makeFormField("signupConfirmedPassword", "password", "Confirm Password", "password")}
             </Stack>
             <Stack spacing="6">
               <Stack>
