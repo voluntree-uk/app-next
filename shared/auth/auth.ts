@@ -49,7 +49,7 @@ export interface Auth {
    * @param password user's new password
    * @return A boolean representing the success of the method
    */
-  updatePassword(password: string): Promise<Boolean>
+  updatePassword(password: string): Promise<{ success: Boolean, message: string}>
 
   /**
    * Sets an authentication cookie
