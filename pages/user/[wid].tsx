@@ -16,7 +16,7 @@ export default function UserPage({ profile, isMe, workshops }: IProps) {
   return (
     <Layout>
       <UserProfile profile={profile} isMe={isMe} />
-      <HostedWorkshops workshops={workshops} />
+      <HostedWorkshops workshops={workshops} isMe={isMe} />
     </Layout>
   );
 }

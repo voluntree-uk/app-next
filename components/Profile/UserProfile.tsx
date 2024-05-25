@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Box, Container, Flex, Heading, HStack, Text, Tooltip } from "@chakra-ui/react";
-import { IconContext } from "react-icons";
+import { Box, Container, Flex, Heading, HStack, Stat, StatGroup, StatLabel, StatNumber, Text } from "@chakra-ui/react";
 import { HiUserGroup, HiOutlineStar } from "react-icons/hi";
 import { SiRuby } from "react-icons/si";
 import { auth } from "@auth/supabase";
@@ -19,7 +18,6 @@ export default function UserProfile({ profile, isMe }: IProps) {
   const [loading, setLoading] = useState(true);
 
   const {
-    register,
     setValue,
     watch,
     formState: { errors },
@@ -62,7 +60,7 @@ export default function UserProfile({ profile, isMe }: IProps) {
   }, [profile]);
 
   return (
-    <Container maxW="container.sm">
+    <Container maxW="container.lg">
       <Box>
         <Flex
           px={5}
@@ -73,7 +71,7 @@ export default function UserProfile({ profile, isMe }: IProps) {
             base: "column",
             md: "row",
           }}
-          gap={10}
+          gap={5}
         >
           <AccountAvatar
             url={avatar_url}
@@ -83,7 +81,12 @@ export default function UserProfile({ profile, isMe }: IProps) {
               updateProfile({ avatar_url: url });
             }}
           />
-          <Flex flexDirection={"column"} justifyContent="center" ml={1}>
+          <Flex
+            minWidth={"40%"}
+            flexDirection={"column"}
+            justifyContent="center"
+            ml={1}
+          >
             <Heading size={"md"}>
               {`${profile.name} ${profile.surname}`} (@{profile.username})
             </Heading>
@@ -100,25 +103,25 @@ export default function UserProfile({ profile, isMe }: IProps) {
                 {profile.hosted_workshops == 1 ? "Workshop" : "Workshops"}
               </Text>
             </HStack>
-            <HStack spacing={2}>
-              <HiOutlineStar />
-              <Tooltip hasArrow label="Volunteer Rating" placement="auto-start">
-                <Text size={"sm"} color={"gray.600"}>
-                  {roundNumber(profile.rating, 1)} ({profile.reviews_received})
-                </Text>
-              </Tooltip>
-            </HStack>
-            <HStack spacing={2}>
-              <IconContext.Provider value={{ color: "red" }}>
-                <SiRuby />
-              </IconContext.Provider>
-              <Tooltip hasArrow label="Plenties Awarded" placement="auto-start">
-                <Text size={"sm"} color={"gray.600"}>
-                {roundNumber(profile.award_points)}
-                </Text>
-              </Tooltip>
-            </HStack>
           </Flex>
+          <StatGroup alignContent={"center"} minWidth={"40%"}>
+            <Stat>
+              <HStack>
+                <SiRuby color="red" />
+                <StatLabel>Plenties Awarded</StatLabel>
+              </HStack>
+              <StatNumber>{roundNumber(profile.award_points)}</StatNumber>
+            </Stat>
+            <Stat>
+              <HStack>
+                <HiOutlineStar color="#ffd700" />
+                <StatLabel>Volunteer Rating</StatLabel>
+              </HStack>
+              <StatNumber>
+                {roundNumber(profile.rating, 1)} ({profile.reviews_received})
+              </StatNumber>
+            </Stat>
+          </StatGroup>
         </Flex>
       </Box>
     </Container>
