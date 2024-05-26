@@ -9,6 +9,7 @@ import { Type } from "@components/Dashboard/BookingList";
 import { ReviewModal } from "@components/Review/ReviewModal";
 import { ActionTrigger } from "@infra/api";
 import Show from "@components/Helpers/Show";
+import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
 
 interface IProps {
   booking: BookingDetails;
@@ -23,7 +24,9 @@ export default function BookingListCard({ booking, type }: IProps) {
    */
   useEffect(() => {
     if (router.query["review"] == booking.id) {
-      onOpen();
+      if (type == Type.Past && !isReviewed()) {
+        onOpen();
+      }
     }
   })
 
@@ -71,7 +74,7 @@ export default function BookingListCard({ booking, type }: IProps) {
     }
   }
 
-  async function cancelBooking(booking: BookingDetails): Promise<void> {
+  async function cancelBooking(): Promise<void> {
     setLoading(true);
 
     try {
@@ -81,7 +84,6 @@ export default function BookingListCard({ booking, type }: IProps) {
         // Redirect if booking cancelled successfully
         if (success) {
           router.push("/me/dashboard");
-
           toast({
             title: "Booking cancelled",
             status: "success",
@@ -92,7 +94,6 @@ export default function BookingListCard({ booking, type }: IProps) {
       }
     } catch (error) {
       const message = (error as any).message;
-
       toast({
         title: "Problem cancelling booking",
         description: message,
@@ -102,6 +103,7 @@ export default function BookingListCard({ booking, type }: IProps) {
       });
     } finally {
       setLoading(false);
+      onClose();
     }
   }
 
@@ -161,10 +163,17 @@ export default function BookingListCard({ booking, type }: IProps) {
               colorScheme="red"
               variant="solid"
               size={{ base: "sm", sm: "md" }}
-              onClick={() => cancelBooking(booking)}
+              onClick={onOpen}
             >
               Cancel
             </Button>
+            <ConfirmActionDialog
+              title="Cancel Booking"
+              message="Are you sure you want to cancel this booking? This action cannot be undone."
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={cancelBooking}
+            />
           </Show>
           <Show showIf={type === Type.Past}>
             <Show showIf={isReviewed()}>
