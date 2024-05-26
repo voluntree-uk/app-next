@@ -55,17 +55,6 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
               {workshop.description}
             </Text>
           </Box>
-          {/* <Box
-            justifyContent="space-between"
-            pr={10}
-            color={"gray.500"}
-            display={{ base: "none", md: "flex" }}
-            pt="2"
-          >
-            <Text fontSize={"14px"} fontWeight="medium">
-              4 spaces available
-            </Text>
-          </Box> */}
         </Box>
       </HStack>
     </Box>

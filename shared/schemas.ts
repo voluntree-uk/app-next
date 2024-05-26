@@ -9,8 +9,8 @@ export interface Booking {
 }
 
 export interface BookingDetails extends Booking {
-  workshops: Workshop;
-  slots: Slot;
+  workshop: Workshop;
+  slot: Slot;
 }
 
 export interface Workshop {

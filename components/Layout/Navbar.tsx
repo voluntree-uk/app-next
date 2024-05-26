@@ -26,6 +26,7 @@ import AuthenticationModal from "@components/Auth/AuthenticationModal";
 import { useSession } from "@util/hooks";
 import { auth } from "@auth/supabase";
 import { authenticationModalState } from "@atoms";
+import Show from "@components/Helpers/Show";
 
 const Links = [
   { label: "Find workshops", href: "/workshops" },
@@ -132,7 +133,7 @@ export default function Navbar() {
                   Log in
                 </Button>
               ) : null}
-              {session?.user ? (
+              <Show showIf={session?.user != null}>
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -166,11 +167,10 @@ export default function Navbar() {
                     </MenuItem>
                   </MenuList>
                 </Menu>
-              ) : null}
+              </Show>
             </Flex>
           </Flex>
-
-          {isOpen ? (
+          <Show showIf={isOpen}>
             <Box pb={4} display={{ md: "none" }}>
               <Stack as={"nav"} spacing={4}>
                 {Links.map((link) => (
@@ -190,7 +190,7 @@ export default function Navbar() {
                 ))}
               </Stack>
             </Box>
-          ) : null}
+          </Show>
         </Box>
 
         <AuthenticationModal

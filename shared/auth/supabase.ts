@@ -56,14 +56,20 @@ class SupabaseAuth implements Auth {
     }
   }
 
-  async updatePassword(password: string): Promise<Boolean> {
+  async updatePassword(password: string): Promise<{ success: Boolean, message: string}> {
     const { user, error } = await supabase.auth.update({
       password: password,
     })
     if (error) {
-      return false;
+      return {
+        success: false,
+        message: error.message
+      };
     } else {
-      return true;
+      return {
+        success: true,
+        message: "Success"
+      };
     }
   }
 

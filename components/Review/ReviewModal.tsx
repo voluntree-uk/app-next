@@ -58,7 +58,7 @@ export function ReviewModal({ booking, isOpen, onSubmit, onClose }: IProps) {
     <Modal isOpen={isOpen} onClose={() => onCloseWithRemoveParameter()}>
       <ModalOverlay />
       <ModalContent backgroundColor={"lightgray"}>
-        <ModalHeader>{booking.workshops.name}</ModalHeader>
+        <ModalHeader>{booking.workshop.name}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Stack spacing="3">

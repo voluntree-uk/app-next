@@ -7,6 +7,7 @@ import { Booking, Slot, Workshop } from "@schemas";
 import { useSession } from "@util/hooks";
 import WorkshopListingSlot from "@components/Workshop/WorkshopListingSlot";
 import { WorkshopListingNewSlotModal } from "@components/Workshop/WorkshopListingNewSlotModal";
+import Show from "@components/Helpers/Show";
 
 interface IProps {
   workshop: Workshop;
@@ -26,23 +27,6 @@ export default function WorkshopListingSlotList({ slots, workshop, bookings }: I
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isUserHost = () => session?.user?.id == workshop.user_id;
-
-  function newSlotButton(): ReactElement | null {
-    return isUserHost() ? (
-      <><Button
-        variant="solid"
-        colorScheme="teal"
-        rightIcon={<MdAdd />}
-        onClick={() => onOpen()}
-      >
-        New Slot
-      </Button><WorkshopListingNewSlotModal
-          workshop={workshop}
-          isOpen={isOpen}
-          onClose={onClose}
-          onSubmit={addNewSlot} /></>
-    ) : null;
-  }
 
   async function confirmBooking(slot: Slot): Promise<void> {
     setLoading(true);
@@ -153,7 +137,22 @@ export default function WorkshopListingSlotList({ slots, workshop, bookings }: I
             onCancel={(slot) => cancelSlot(slot)}
           />
         ))}
-        {newSlotButton()}
+        <Show showIf={isUserHost()}>
+          <Button
+            variant="solid"
+            colorScheme="teal"
+            rightIcon={<MdAdd />}
+            onClick={() => onOpen()}
+          >
+            New Slot
+          </Button>
+          <WorkshopListingNewSlotModal
+            workshop={workshop}
+            isOpen={isOpen}
+            onClose={onClose}
+            onSubmit={addNewSlot}
+          />
+        </Show>
       </Stack>
     </Box>
   );

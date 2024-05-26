@@ -6,6 +6,7 @@ import { Workshop } from "@schemas";
 import { useSession } from "@util/hooks";
 import { MdOutlineCancel } from "react-icons/md";
 import { useRouter } from "next/router";
+import Show from "@components/Helpers/Show";
 
 interface IProps {
   workshop: Workshop;
@@ -59,36 +60,6 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
     }
   }
 
-  function hostBanner(): ReactElement | null {
-    return isUserHost() ? (
-      <Alert rounded={10} status="info">
-        <AlertIcon />
-        <AlertTitle>Thank you for hosting this workshop!</AlertTitle>
-        <AlertDescription>
-          Below you can edit the available slots.
-        </AlertDescription>
-      </Alert>
-    ) : null;
-  }
-
-  function cancelButton(): ReactElement | null {
-    return isUserHost() ? (
-      <Flex alignItems={"center"}>
-        <Button
-          rounded="full"
-          colorScheme="blackAlpha"
-          variant={"outline"}
-          onClick={() => cancelWorkshop(workshop)}
-          rightIcon={<MdOutlineCancel />}
-          size={{ base: "xs", sm: "md" }}
-          mr="3"
-        >
-          Cancel
-        </Button>
-      </Flex>
-    ) : null;
-  }
-
   return (
     <Box
       borderBottomWidth={"1px"}
@@ -97,7 +68,15 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
       px={{ base: "4", md: "6" }}
     >
       <Stack spacing={6}>
-        {hostBanner()}
+        <Show showIf={isUserHost()}>
+          <Alert rounded={10} status="info">
+            <AlertIcon />
+            <AlertTitle>Thank you for hosting this workshop!</AlertTitle>
+            <AlertDescription>
+              Below you can edit the available slots.
+            </AlertDescription>
+          </Alert>
+        </Show>
         <Box
           px={{ base: "2", md: "10" }}
           display="flex"
@@ -127,7 +106,21 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
               </Text>
             </Flex>
           </Flex>
-          {cancelButton()}
+          <Show showIf={isUserHost()}>
+            <Flex alignItems={"center"}>
+              <Button
+                rounded="full"
+                colorScheme="blackAlpha"
+                variant={"outline"}
+                onClick={() => cancelWorkshop(workshop)}
+                rightIcon={<MdOutlineCancel />}
+                size={{ base: "xs", sm: "md" }}
+                mr="3"
+              >
+                Cancel
+              </Button>
+            </Flex>
+          </Show>
         </Box>
       </Stack>
     </Box>

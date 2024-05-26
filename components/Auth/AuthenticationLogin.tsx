@@ -51,7 +51,7 @@ export default function AuthenticationLogin({ onSuccess }: IProps) {
   const logIn = async (formData: any) => {
     setIsLoading(true);
     try {
-      const user = await auth.signIn(formData.email, formData.password);
+      const user = await auth.signIn(formData.loginEmail, formData.loginPassword);
 
       if (user) {
         onSuccess();
@@ -75,7 +75,7 @@ export default function AuthenticationLogin({ onSuccess }: IProps) {
   const resetPassword = async (formData: any) => {
     setIsLoading(true);
     try {
-      const success = await auth.resetPassword(formData.email, `${window.location.origin}/auth/update-password`);
+      const success = await auth.resetPassword(formData.loginEmail, `${window.location.origin}/auth/update-password`);
 
       if (success) {
         onSuccess();
@@ -170,9 +170,9 @@ export default function AuthenticationLogin({ onSuccess }: IProps) {
           </Stack>
           <Stack spacing="6">
             <Stack spacing="3">
-              {makeFormField("email", "email", "Email", "email")}
+              {makeFormField("loginEmail", "email", "Email", "email")}
               {mode === Mode.LOGIN
-                ? makeFormField("password", "password", "Password", "password")
+                ? makeFormField("loginPassword", "password", "Password", "password")
                 : null}
             </Stack>
             <Stack spacing="6">

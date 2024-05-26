@@ -1,13 +1,14 @@
-import { ArrowForwardIcon, CalendarIcon, CheckIcon, CloseIcon, EditIcon, TimeIcon } from "@chakra-ui/icons";
+import { CalendarIcon, CheckIcon, CloseIcon, EditIcon, TimeIcon } from "@chakra-ui/icons";
 import { Flex, Text, useToast, Link, Avatar, useDisclosure, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { data } from "@data/supabase";
 import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
 import { Type } from "@components/Dashboard/BookingList";
 import { ReviewModal } from "@components/Review/ReviewModal";
 import { ActionTrigger } from "@infra/api";
+import Show from "@components/Helpers/Show";
 
 interface IProps {
   booking: BookingDetails;
@@ -33,48 +34,6 @@ export default function BookingListCard({ booking, type }: IProps) {
   const toast = useToast();
 
   const [loading, setLoading] = useState(false);
-
-  function actionButton(): ReactElement {
-    switch (type) {
-      case Type.Upcoming:
-        return (
-          <Button
-            rounded="full"
-            rightIcon={<CloseIcon />}
-            colorScheme="red"
-            variant="solid"
-            size={{ base: "sm", sm: "md" }}
-            onClick={() => cancelBooking(booking)}
-          >
-            Cancel
-          </Button>
-        );
-      case Type.Past:
-        return isReviewed() ? (
-          <Button
-            rounded="full"
-            rightIcon={<CheckIcon />}
-            colorScheme="teal"
-            variant="ghost"
-            size={{ base: "sm", sm: "md" }}
-            disabled={true}
-          >
-            Reviewed
-          </Button>
-        ) : (
-          <Button
-            rounded="full"
-            rightIcon={<EditIcon />}
-            colorScheme="teal"
-            variant="solid"
-            size={{ base: "sm", sm: "md" }}
-            onClick={() => onOpen()}
-          >
-            Review
-          </Button>
-        );
-    }
-  }
 
   function isReviewed(): boolean {
     return booking.review_rating !== null
@@ -117,7 +76,7 @@ export default function BookingListCard({ booking, type }: IProps) {
 
     try {
       if (booking.id) {
-        const success = await data.cancelBooking(booking.id.toString(), booking.slots, booking.user_id, booking.workshops.user_id, ActionTrigger.Attendee);
+        const success = await data.cancelBooking(booking.id.toString(), booking.slot, booking.user_id, booking.workshop.user_id, ActionTrigger.Attendee);
 
         // Redirect if booking cancelled successfully
         if (success) {
@@ -173,7 +132,7 @@ export default function BookingListCard({ booking, type }: IProps) {
               mb="0.5"
               onClick={() => directToWorkshop(booking)}
             >
-              {booking.workshops?.name}
+              {booking.workshop?.name}
             </Link>
             <Text
               color="gray.500"
@@ -183,7 +142,7 @@ export default function BookingListCard({ booking, type }: IProps) {
               mb="0.5"
             >
               <CalendarIcon mr="2" />
-              {dateToReadable(booking.slots.date)}
+              {dateToReadable(booking.slot.date)}
             </Text>
             <Text
               color="gray.500"
@@ -192,21 +151,53 @@ export default function BookingListCard({ booking, type }: IProps) {
               fontSize="small"
             >
               <TimeIcon mr="2" />{" "}
-              {timeToReadable(
-                booking.slots?.start_time,
-                booking.slots?.end_time
-              )}
+              {timeToReadable(booking.slot?.start_time, booking.slot?.end_time)}
             </Text>
           </Flex>
-          {actionButton()}
-          {type === Type.Past ? (
+          <Show showIf={type === Type.Upcoming}>
+            <Button
+              rounded="full"
+              rightIcon={<CloseIcon />}
+              colorScheme="red"
+              variant="solid"
+              size={{ base: "sm", sm: "md" }}
+              onClick={() => cancelBooking(booking)}
+            >
+              Cancel
+            </Button>
+          </Show>
+          <Show showIf={type === Type.Past}>
+            <Show showIf={isReviewed()}>
+              <Button
+                rounded="full"
+                rightIcon={<CheckIcon />}
+                colorScheme="teal"
+                variant="ghost"
+                size={{ base: "sm", sm: "md" }}
+                disabled={true}
+              >
+                Reviewed
+              </Button>
+            </Show>
+            <Show showIf={!isReviewed()}>
+              <Button
+                rounded="full"
+                rightIcon={<EditIcon />}
+                colorScheme="teal"
+                variant="solid"
+                size={{ base: "sm", sm: "md" }}
+                onClick={() => onOpen()}
+              >
+                Review
+              </Button>
+            </Show>
             <ReviewModal
               booking={booking}
               isOpen={isOpen}
               onClose={onClose}
               onSubmit={reviewBooking}
             />
-          ) : null}
+          </Show>
         </Flex>
       </Flex>
     </Flex>

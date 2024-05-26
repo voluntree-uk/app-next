@@ -39,19 +39,19 @@ export default function PasswordReset() {
       const newPassword = formData.password;
       const confirmedPassword = formData.confirmedPassword;
       if (newPassword === confirmedPassword) {
-        const success = await auth.updatePassword(newPassword);
-
+        const { success, message } = await auth.updatePassword(newPassword);
         if (success) {
           showToast("Successfully updated password");
           router.push(getRedirectPath());
         } else {
-          showToast("Failed to update password", null, false);
+          showToast("Failed to update password", message, false);
         }
       } else {
         showToast("Passwords must match", null, false);
       }
     } catch (error: any) {
-      showToast("Failed to update password", error.message, false);
+      console.log(`ERROR: ${JSON.stringify(error)}`)
+      showToast("Failed to update password", error.msg, false);
     } finally {
       setIsLoading(false);
     }
