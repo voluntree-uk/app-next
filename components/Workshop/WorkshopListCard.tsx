@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Box, Img, Text } from "@chakra-ui/react";
+import { Box, HStack, Img, Text } from "@chakra-ui/react";
 import { Workshop } from "@schemas";
 
 export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
@@ -18,13 +18,16 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
         background: "gray.50",
       }}
     >
-      <Box display="flex" pr="4">
-        <Img
-          src="https://thumbs.dreamstime.com/b/software-development-programming-coding-learning-information-technology-courses-courses-all-levels-computing-hi-tech-158671629.jpg"
-          rounded={"lg"}
-          mx="4"
-          height={{ base: "40px", md: "90px" }}
-        />
+      <HStack display="flex" spacing="1em">
+        <Box alignItems={"center"}>
+          <Img
+            src={`/img/${workshop.category}.png`}
+            rounded={"lg"}
+            mx="1em"
+            height={{ base: "50px", md: "100px" }}
+            width={{ base: "75px", md: "150px" }}
+          />
+        </Box>
         <Box
           display={"flex"}
           flexDir="column"
@@ -53,7 +56,7 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
             </Text>
           </Box>
         </Box>
-      </Box>
+      </HStack>
     </Box>
   );
 }

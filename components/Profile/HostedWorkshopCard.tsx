@@ -1,6 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { Image, Card, CardBody, Heading, Link } from "@chakra-ui/react";
+import { Img, Card, CardBody, Heading, Link, VStack } from "@chakra-ui/react";
 import { Workshop } from "@schemas";
 
 interface IProps {
@@ -18,12 +18,17 @@ export default function HostedWorkshopCard({ workshop }: IProps) {
     <Link onClick={() => directToWorkshop(workshop.id)}>
       <Card variant="outline" maxW="sm">
         <CardBody>
-          <Image
-            src="https://thumbs.dreamstime.com/b/software-development-programming-coding-learning-information-technology-courses-courses-all-levels-computing-hi-tech-158671629.jpg"
-            alt={workshop.category}
-            borderRadius="lg"
-          />
-          <Heading size="sm">{workshop.name}</Heading>
+          <VStack>
+            <Img
+              src={`/img/${workshop.category}.png`}
+              alt={workshop.category}
+              rounded={"lg"}
+              mx="1em"
+              height={{ base: "135px", md: "135px" }}
+              width={{ base: "225px", md: "225px" }}
+            />
+            <Heading textAlign={"start"} size="md">{workshop.name}</Heading>
+          </VStack>
         </CardBody>
       </Card>
     </Link>
