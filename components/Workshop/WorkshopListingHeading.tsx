@@ -1,12 +1,13 @@
 import React, { ReactElement, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Box, Text, Link, Flex, Avatar, Stack, Alert, AlertIcon, AlertDescription, AlertTitle, Button, useToast } from "@chakra-ui/react";
+import { Box, Text, Link, Flex, Stack, Alert, AlertIcon, AlertDescription, AlertTitle, Button, useToast, useDisclosure } from "@chakra-ui/react";
 import { data } from "@data/supabase";
 import { Workshop } from "@schemas";
 import { useSession } from "@util/hooks";
 import { MdOutlineCancel } from "react-icons/md";
 import { useRouter } from "next/router";
 import Show from "@components/Helpers/Show";
+import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
 
 interface IProps {
   workshop: Workshop;
@@ -16,6 +17,8 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
   const router = useRouter();
   const session = useSession();
   const toast = useToast();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +32,7 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
     if (user_id) router.push(`/user/${user_id}`);
   };
 
-  async function cancelWorkshop(workshop: Workshop): Promise<void> {
+  async function cancelWorkshop(): Promise<void> {
     setLoading(true);
 
     try {
@@ -112,7 +115,7 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
                 rounded="full"
                 colorScheme="blackAlpha"
                 variant={"outline"}
-                onClick={() => cancelWorkshop(workshop)}
+                onClick={onOpen}
                 rightIcon={<MdOutlineCancel />}
                 size={{ base: "xs", sm: "md" }}
                 mr="3"
@@ -120,6 +123,13 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
                 Cancel
               </Button>
             </Flex>
+            <ConfirmActionDialog
+              title="Cancel Workshop"
+              message="Are you sure you want to cancel this workshop? This action cannot be undone."
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={cancelWorkshop}
+            />
           </Show>
         </Box>
       </Stack>
