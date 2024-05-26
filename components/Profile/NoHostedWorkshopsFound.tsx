@@ -1,4 +1,5 @@
 import { Box, Button, Center, VStack } from "@chakra-ui/react";
+import Show from "@components/Helpers/Show";
 import { useRouter } from "next/router";
 
 interface IProps {
@@ -17,7 +18,7 @@ export default function NoHostedWorkshopsFound({ isMe }: IProps) {
       <Box textColor="gray.600">
         <Center>No Workshops Found</Center>
       </Box>
-      {isMe ? (
+      <Show showIf={isMe}>
         <Box>
           <Button
             variant={"outline"}
@@ -26,7 +27,7 @@ export default function NoHostedWorkshopsFound({ isMe }: IProps) {
             Create Workshop
           </Button>
         </Box>
-      ) : null}
+      </Show>
     </VStack>
   );
 }
