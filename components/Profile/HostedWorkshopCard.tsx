@@ -20,7 +20,7 @@ export default function HostedWorkshopCard({ workshop }: IProps) {
         <CardBody>
           <VStack>
             <Img
-              src={`/img/${workshop.category}.jpg`}
+              src={`/img/${workshop.category}.png`}
               alt={workshop.category}
               rounded={"lg"}
               mx="1em"

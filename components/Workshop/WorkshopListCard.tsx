@@ -20,13 +20,13 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
     >
       <HStack display="flex" spacing="1em">
         <Box alignItems={"center"}>
-            <Img
-              src={`/img/${workshop.category}.jpg`}
-              rounded={"lg"}
-              mx="1em"
-              height={{ base: "45px", md: "90px" }}
-              width={{ base: "75px", md: "150px" }}
-            />
+          <Img
+            src={`/img/${workshop.category}.png`}
+            rounded={"lg"}
+            mx="1em"
+            height={{ base: "50px", md: "100px" }}
+            width={{ base: "75px", md: "150px" }}
+          />
         </Box>
         <Box
           display={"flex"}
