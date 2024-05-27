@@ -46,7 +46,7 @@ export default function AuthenticationSignUp({ onSuccess }: IProps) {
       const confirmedPassword = formData.signupConfirmedPassword;
 
       if (password === confirmedPassword) {
-        const success = await auth.signUp(formData.signupEmail, password);
+        const success = await auth.signUp(formData.signupEmail, password, `${window.location.origin}/auth/setup-profile`);
 
         if (success) {
           showToast("Success", "Verify your email to continue");
