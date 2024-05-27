@@ -26,9 +26,10 @@ export interface Auth {
    * Signs up the user given an email address and a password 
    * @param email User account email address
    * @param password User account password
+   * @param redirectTo a URL location to which to redirect user to
    * @return A boolean representing the success of the method
    */
-  signUp(email: string, password: string): Promise<Boolean>
+  signUp(email: string, password: string, redirectTo: string): Promise<Boolean>
 
   /**
    * Signs out the currently logged in user

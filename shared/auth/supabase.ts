@@ -25,11 +25,14 @@ class SupabaseAuth implements Auth {
     return user;
   }
 
-  async signUp(email: string, password: string): Promise<Boolean> {
+  async signUp(email: string, password: string, redirectTo: string): Promise<Boolean> {
     const { user, error } = await supabase.auth.signUp({
       email: email,
       password: password,
-    });
+    }, {
+      redirectTo: redirectTo
+    }
+    );
 
     if (error) throw error;
 
