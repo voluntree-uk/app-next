@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Box, Text, Link, Flex, Stack, Alert, AlertIcon, AlertDescription, AlertTitle, Button, useToast, useDisclosure } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { data } from "@data/supabase";
 import { Profile, Workshop } from "@schemas";
 import { useSession } from "@util/hooks";
@@ -23,10 +24,6 @@ export default function WorkshopListingHeading({ workshop, host }: IProps) {
   const [loading, setLoading] = useState(false);
 
   const isUserHost = () => session?.user?.id == workshop.user_id
-
-  const directToHostProfile = (user_id: string | undefined) => {
-    if (user_id) router.push(`/user/${user_id}`);
-  };
 
   async function cancelWorkshop(): Promise<void> {
     setLoading(true);
@@ -94,14 +91,9 @@ export default function WorkshopListingHeading({ workshop, host }: IProps) {
 
               <Text color="gray.500">
                 Hosted by{" "}
-                <Link
-                  color={"red.400"}
-                  onClick={() =>
-                    directToHostProfile(host.user_id)
-                  }
-                >
-                  {host.username}
-                </Link>
+                <NextLink href={`/user/${host.user_id}`} passHref>
+                  <Link color={"red.400"}>{host.username}</Link>
+                </NextLink>
               </Text>
             </Flex>
           </Flex>
