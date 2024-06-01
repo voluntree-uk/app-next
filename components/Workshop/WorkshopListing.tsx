@@ -1,6 +1,6 @@
 import { Box, Stack } from "@chakra-ui/react";
 import React from "react";
-import { Booking, Slot, Workshop } from "@schemas";
+import { Booking, Profile, Slot, Workshop } from "@schemas";
 import WorkshopListingHeading from "@components/Workshop/WorkshopListingHeading";
 import WorkshopListingSlotList from "@components/Workshop/WorkshopListingSlotList";
 import WorkshopListingLocation from "@components/Workshop/WorkshopListingLocation";
@@ -8,14 +8,15 @@ import WorkshopListingDescription from "@components/Workshop/WorkshopListingDesc
 
 interface IProps {
   workshop: Workshop;
+  host: Profile;
   slots: Slot[];
   bookings: Booking[];
 }
 
-export default function WorkshopListing({ workshop, slots, bookings }: IProps) {
+export default function WorkshopListing({ workshop, host, slots, bookings }: IProps) {
   return (
     <Stack>
-      <WorkshopListingHeading workshop={workshop} />
+      <WorkshopListingHeading workshop={workshop} host={host} />
       <WorkshopListingLocation workshop={workshop} />
       <WorkshopListingDescription workshop={workshop} />
       <WorkshopListingSlotList

@@ -1,8 +1,7 @@
-import React, { ReactElement, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
 import { Box, Text, Link, Flex, Stack, Alert, AlertIcon, AlertDescription, AlertTitle, Button, useToast, useDisclosure } from "@chakra-ui/react";
 import { data } from "@data/supabase";
-import { Workshop } from "@schemas";
+import { Profile, Workshop } from "@schemas";
 import { useSession } from "@util/hooks";
 import { MdOutlineCancel } from "react-icons/md";
 import { useRouter } from "next/router";
@@ -11,9 +10,10 @@ import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
 
 interface IProps {
   workshop: Workshop;
+  host: Profile;
 }
 
-export default function WorkshopListingHeading({ workshop }: IProps) {
+export default function WorkshopListingHeading({ workshop, host }: IProps) {
   const router = useRouter();
   const session = useSession();
   const toast = useToast();
@@ -23,10 +23,6 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
   const [loading, setLoading] = useState(false);
 
   const isUserHost = () => session?.user?.id == workshop.user_id
-
-  const ownerProfileQuery = useQuery(["profile"], () =>
-    data.getProfile(workshop.user_id)
-  );
 
   const directToHostProfile = (user_id: string | undefined) => {
     if (user_id) router.push(`/user/${user_id}`);
@@ -101,10 +97,10 @@ export default function WorkshopListingHeading({ workshop }: IProps) {
                 <Link
                   color={"red.400"}
                   onClick={() =>
-                    directToHostProfile(ownerProfileQuery.data?.user_id)
+                    directToHostProfile(host.user_id)
                   }
                 >
-                  {ownerProfileQuery.data?.username}
+                  {host.username}
                 </Link>
               </Text>
             </Flex>
