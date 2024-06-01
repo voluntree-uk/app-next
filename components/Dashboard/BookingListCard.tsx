@@ -2,6 +2,7 @@ import { CalendarIcon, CheckIcon, CloseIcon, EditIcon, TimeIcon } from "@chakra-
 import { Flex, Text, useToast, Link, Avatar, useDisclosure, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import NextLink from "next/link";
 import { data } from "@data/supabase";
 import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
@@ -129,13 +130,14 @@ export default function BookingListCard({ booking, type }: IProps) {
         ></Avatar>
         <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
           <Flex flexDir={"column"} w={"100%"}>
-            <Link
-              fontWeight={"bold"}
-              mb="0.5"
-              onClick={() => directToWorkshop(booking)}
-            >
-              {booking.workshop?.name}
-            </Link>
+            <NextLink href={`/workshops/${booking.workshop_id}`} passHref>
+              <Link
+                fontWeight={"bold"}
+                mb="0.5"
+              >
+                {booking.workshop?.name}
+              </Link>
+            </NextLink>
             <Text
               color="gray.500"
               display={"flex"}

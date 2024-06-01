@@ -1,3 +1,4 @@
+import NextLink from "next/link";
 import { EditIcon } from "@chakra-ui/icons";
 import { Flex, useToast, Link, Avatar, Button } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -41,13 +42,14 @@ export default function WorkshopListCard({ workshop }: IProps) {
         ></Avatar>
         <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
           <Flex flexDir={"column"} w={"100%"}>
-            <Link
-              fontWeight={"bold"}
-              mb="0.5"
-              onClick={() => directToWorkshop(workshop)}
-            >
-              {workshop.name}
-            </Link>
+            <NextLink href={`/workshops/${workshop.id}`} passHref>
+              <Link
+                fontWeight={"bold"}
+                mb="0.5"
+              >
+                {workshop.name}
+              </Link>
+            </NextLink>
           </Flex>
           <Button
             rounded="full"
