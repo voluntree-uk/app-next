@@ -54,7 +54,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     return
   }
 
-  async sendBookingConfirmations(host_user_id: string, attendee_user_id: string, slot: Slot, join_link: string | undefined): Promise<void> {
+  async sendBookingConfirmations(host_user_id: string, attendee_user_id: string, workshop_name: string, slot: Slot, join_link: string | undefined): Promise<void> {
     const host: Profile = await data.getProfile(host_user_id)
     const attendee: Profile = await data.getProfile(attendee_user_id)
     if (host && attendee) {
@@ -68,6 +68,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           email: attendee.email
         },
         event: {
+          name: workshop_name,
           date: dateToReadable(slot.date),
           time: slot.start_time,
           join_link: join_link
@@ -81,7 +82,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     return
   }
 
-  async sendBookingCancellations(host_user_id: string, attendee_user_id: string, slot: Slot, triggered_by: ActionTrigger): Promise<void> {
+  async sendBookingCancellations(host_user_id: string, attendee_user_id: string, workshop_name: string, slot: Slot, triggered_by: ActionTrigger): Promise<void> {
     const host: Profile = await data.getProfile(host_user_id)
     const attendee: Profile = await data.getProfile(attendee_user_id)
     if (host && attendee) {
@@ -97,6 +98,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           didCancel: triggered_by === ActionTrigger.Attendee
         },
         event: {
+          name: workshop_name,
           date: dateToReadable(slot.date),
           time: slot.start_time
         }

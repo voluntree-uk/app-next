@@ -268,6 +268,7 @@ class SupabaseDataAccessor implements DataAccessor {
         await api.sendBookingConfirmations(
           workshop.user_id.toString(),
           user_id,
+          workshop.name,
           slot,
           workshop.meeting_link
         )
@@ -297,7 +298,7 @@ class SupabaseDataAccessor implements DataAccessor {
       for (let i = 0; i < bookings.length; i++) {
         const booking: BookingDetails = bookings[i]
         console.log(`Cancelling booking: ${JSON.stringify(booking)}`)
-        const success = await this.cancelBooking(booking.id!.toString(), booking.slot, booking.user_id, booking.workshop.user_id, ActionTrigger.Host)
+        const success = await this.cancelBooking(booking, ActionTrigger.Host)
         if (!success) {
           console.error(`Failed to cancel slot bookings`)
           return false
@@ -320,14 +321,14 @@ class SupabaseDataAccessor implements DataAccessor {
     return true
   }
 
-  async cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string, triggered_by: ActionTrigger): Promise<boolean> {
+  async cancelBooking(booking: BookingDetails, triggered_by: ActionTrigger): Promise<boolean> {
     const { data, error } = await supabase.rpc('cancel_booking', {
-      p_booking_id: booking_id
+      p_booking_id: booking.id?.toString()
     })
     if (error) throw error;
 
     if (data) {
-      api.sendBookingCancellations(host_id, user_id, slot, triggered_by)
+      api.sendBookingCancellations(booking.workshop.user_id, booking.user_id, booking.workshop.name, booking.slot, triggered_by)
       return true
     } else {
       return false
