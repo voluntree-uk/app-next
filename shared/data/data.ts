@@ -126,14 +126,11 @@ export interface DataAccessor {
 
   /**
    * Cancels a booking with a given id
-   * @param booking_id A booking id
-   * @param slot A slot for which the booking is cancelled
-   * @param user_id An attendee user id
-   * @param host_id A host user id
+   * @param booking A booking to be cancelled
    * @param triggered_by Who triggered the cancellation
    * @return A boolean representing the success of the method
    */
-  cancelBooking(booking_id: string, slot: Slot, user_id: string, host_id: string, triggered_by: ActionTrigger): Promise<boolean>
+  cancelBooking(booking: BookingDetails, triggered_by: ActionTrigger): Promise<boolean>
 
   /**
    * Submits a review for a booking
