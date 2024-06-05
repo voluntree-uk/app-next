@@ -130,14 +130,14 @@ export default function BookingListCard({ booking, type }: IProps) {
         ></Avatar>
         <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
           <Flex flexDir={"column"} w={"100%"}>
-            <NextLink href={`/workshops/${booking.workshop_id}`} passHref>
-              <Link
-                fontWeight={"bold"}
-                mb="0.5"
-              >
-                {booking.workshop?.name}
-              </Link>
-            </NextLink>
+            <Link
+              as={NextLink}
+              href={`/workshops/${booking.workshop_id}`}
+              fontWeight={"bold"}
+              mb="0.5"
+            >
+              {booking.workshop?.name}
+            </Link>
             <Text
               color="gray.500"
               display={"flex"}

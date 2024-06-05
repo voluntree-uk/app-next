@@ -46,21 +46,20 @@ const NavLink = ({
   };
 }) => {
   return (
-    <NextLink passHref href={href}>
-      <Link
-        px={2}
-        py={1}
-        rounded={"md"}
-        _hover={{
-          textDecoration: "none",
-          bg: useColorModeValue("gray.200", "gray.700"),
-        }}
-        display={display}
-        href={href}
-      >
-        {children}
-      </Link>
-    </NextLink>
+    <Link
+      as={NextLink}
+      px={2}
+      py={1}
+      rounded={"md"}
+      _hover={{
+        textDecoration: "none",
+        bg: useColorModeValue("gray.200", "gray.700"),
+      }}
+      display={display}
+      href={href}
+    >
+      {children}
+    </Link>
   );
 };
 

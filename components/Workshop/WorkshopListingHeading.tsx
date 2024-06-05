@@ -91,9 +91,13 @@ export default function WorkshopListingHeading({ workshop, host }: IProps) {
 
               <Text color="gray.500">
                 Hosted by{" "}
-                <NextLink href={`/user/${host.user_id}`} passHref>
-                  <Link color={"red.400"}>{host.username}</Link>
-                </NextLink>
+                  <Link
+                    as={NextLink}
+                    href={`/user/${host.user_id}`}
+                    color={"red.400"}
+                  >
+                    {host.username}
+                  </Link>
               </Text>
             </Flex>
           </Flex>

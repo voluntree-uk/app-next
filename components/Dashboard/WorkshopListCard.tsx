@@ -42,14 +42,14 @@ export default function WorkshopListCard({ workshop }: IProps) {
         ></Avatar>
         <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
           <Flex flexDir={"column"} w={"100%"}>
-            <NextLink href={`/workshops/${workshop.id}`} passHref>
-              <Link
-                fontWeight={"bold"}
-                mb="0.5"
-              >
-                {workshop.name}
-              </Link>
-            </NextLink>
+            <Link
+              as={NextLink}
+              href={`/workshops/${workshop.id}`}
+              fontWeight={"bold"}
+              mb="0.5"
+            >
+              {workshop.name}
+            </Link>
           </Flex>
           <Button
             rounded="full"
