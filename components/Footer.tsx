@@ -10,7 +10,8 @@ import {
   chakra,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import { FaLinkedin, FaInstagram } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 
 const ListHeader = ({ children }: { children: ReactNode }) => {
   return (
@@ -104,13 +105,13 @@ export default function Footer() {
         >
           <Text>© 2022 Voluntree. All rights reserved</Text>
           <Stack direction={"row"} spacing={6}>
-            <SocialButton label={"Twitter"} href={"#"}>
-              <FaTwitter />
+            <SocialButton label={"Twitter"} href={"https://x.com/voluntree2024"}>
+              <FaXTwitter />
             </SocialButton>
-            <SocialButton label={"YouTube"} href={"#"}>
-              <FaYoutube />
+            <SocialButton label={"Linkedin"} href={"https://www.linkedin.com/company/voluntree2024/about/"}>
+              <FaLinkedin />
             </SocialButton>
-            <SocialButton label={"Instagram"} href={"#"}>
+            <SocialButton label={"Instagram"} href={"https://www.instagram.com/voluntree2024/"}>
               <FaInstagram />
             </SocialButton>
           </Stack>
