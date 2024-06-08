@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { FieldError, FieldErrorsImpl, Merge, useForm } from "react-hook-form";
 import { AddIcon } from "@chakra-ui/icons";

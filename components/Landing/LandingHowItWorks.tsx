@@ -1,6 +1,8 @@
+"use client";
+
 import { Button, Flex, Heading, Text, Box } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import LandingHowItWorksCard from "@components/Landing/LandingHowItWorksCard";
+import { Link } from "@chakra-ui/next-js";
 
 const howItWorksCardContent = [
   {
@@ -24,8 +26,6 @@ const howItWorksCardContent = [
 ];
 
 export default function LandingHowItWorks() {
-  const router = useRouter();
-
   return (
     <Flex flexDir={"column"} alignItems="center" gap={25}>
       <Flex alignItems={"center"} flexDir={"column"}>
@@ -48,9 +48,9 @@ export default function LandingHowItWorks() {
           />
         ))}
       </Flex>
-      <Button onClick={() => router.push("/workshops")} colorScheme={"green"}>
-        Find workshops
-      </Button>
+      <Link href={"/workshops"}>
+        <Button colorScheme={"green"}>Find workshops</Button>
+      </Link>
     </Flex>
   );
 }

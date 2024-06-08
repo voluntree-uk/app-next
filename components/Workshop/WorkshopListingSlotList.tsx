@@ -1,11 +1,19 @@
+"use client";
+
 import React, { useState } from "react";
-import { useRouter } from "next/router";
-import { Box, Button, Heading, Stack, useDisclosure, useToast } from "@chakra-ui/react";
-import { data } from "@data/supabase";
+import { useRouter } from "next/navigation";
+import {
+  Box,
+  Button,
+  Heading,
+  Stack,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
+import { clientData } from "@data/supabase";
 import { MdAdd } from "react-icons/md";
-import { Booking, Slot, Workshop } from "@schemas";
-import { useSession } from "@util/hooks";
-import WorkshopListingSlot from "@components/Workshop/WorkshopListingSlot";
+import { Booking, Slot, User, Workshop } from "@schemas";
+import { WorkshopListingSlot } from "@components/Workshop/WorkshopListingSlot";
 import { WorkshopListingNewSlotModal } from "@components/Workshop/WorkshopListingNewSlotModal";
 import Show from "@components/Helpers/Show";
 
@@ -13,18 +21,23 @@ interface IProps {
   workshop: Workshop;
   slots: Slot[];
   bookings: Booking[];
+  user: User | null;
 }
 
-export default function WorkshopListingSlotList({ slots, workshop, bookings }: IProps) {
+export default function WorkshopListingSlotList({
+  slots,
+  workshop,
+  bookings,
+  user,
+}: IProps) {
   const router = useRouter();
-  const session = useSession();
   const toast = useToast();
 
   const [loading, setLoading] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const isUserHost = () => session?.user?.id == workshop.user_id;
+  const isUserHost = () => user?.id == workshop.user_id;
 
   const getActiveBookingsForSlot = (slot: Slot): Booking[] => {
     return bookings.filter((b) => b.slot_id === slot.id);
@@ -35,10 +48,10 @@ export default function WorkshopListingSlotList({ slots, workshop, bookings }: I
 
     try {
       if (slot) {
-        const success = await data.createSlots([slot]);
+        const success = await clientData.createSlots([slot]);
         // Redirect if slot created successfully
         if (success) {
-          router.reload()
+          router.refresh();
         }
       }
     } catch (error) {
@@ -53,6 +66,7 @@ export default function WorkshopListingSlotList({ slots, workshop, bookings }: I
       });
     } finally {
       setLoading(false);
+      onClose();
     }
   }
 
@@ -74,6 +88,7 @@ export default function WorkshopListingSlotList({ slots, workshop, bookings }: I
             key={slot.id}
             slot={slot}
             slotBookings={getActiveBookingsForSlot(slot)}
+            user={user}
           />
         ))}
         <Show showIf={isUserHost()}>

@@ -1,9 +1,25 @@
-import { CalendarIcon, CheckIcon, CloseIcon, EditIcon, TimeIcon } from "@chakra-ui/icons";
-import { Flex, Text, useToast, Link, Avatar, useDisclosure, Button } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+"use client";
+
+import {
+  CalendarIcon,
+  CheckIcon,
+  CloseIcon,
+  EditIcon,
+  TimeIcon,
+} from "@chakra-ui/icons";
+import {
+  Flex,
+  Text,
+  useToast,
+  Link,
+  Avatar,
+  useDisclosure,
+  Button,
+} from "@chakra-ui/react";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import NextLink from "next/link";
-import { data } from "@data/supabase";
+import { clientData } from "@data/supabase";
 import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
 import { Type } from "@components/Dashboard/BookingList";
@@ -19,17 +35,18 @@ interface IProps {
 export default function BookingListCard({ booking, type }: IProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
+  const query = useSearchParams();
 
   /**
    * Open review modal if review query parameter matches the booking id
    */
   useEffect(() => {
-    if (router.query["review"] == booking.id) {
+    if (query?.get("review") == booking.id) {
       if (type == Type.Past && !isReviewed()) {
         onOpen();
       }
     }
-  })
+  });
 
   const directToWorkshop = (booking: BookingDetails) => {
     router.push(`/workshops/${booking.workshop_id}`);
@@ -40,24 +57,32 @@ export default function BookingListCard({ booking, type }: IProps) {
   const [loading, setLoading] = useState(false);
 
   function isReviewed(): boolean {
-    return booking.review_rating !== null
+    return booking.review_rating !== null;
   }
 
-  async function reviewBooking(booking: BookingDetails, rating: number, comment: string): Promise<void> {
+  async function reviewBooking(
+    booking: BookingDetails,
+    rating: number,
+    comment: string
+  ): Promise<void> {
     setLoading(true);
 
     try {
-      const success = await data.reviewBooking(booking.id!, rating, comment);
+      const success = await clientData.reviewBooking(
+        booking.id!,
+        rating,
+        comment
+      );
 
       if (success) {
-        router.push("/me/dashboard");
-
         toast({
           title: "Review submitted",
           status: "success",
           duration: 4000,
           isClosable: true,
         });
+
+        router.push("/me/dashboard");
       }
     } catch (error) {
       const message = (error as any).message;
@@ -80,17 +105,20 @@ export default function BookingListCard({ booking, type }: IProps) {
 
     try {
       if (booking.id) {
-        const success = await data.cancelBooking(booking, ActionTrigger.Attendee);
+        const success = await clientData.cancelBooking(
+          booking,
+          ActionTrigger.Attendee
+        );
 
         // Redirect if booking cancelled successfully
         if (success) {
-          router.push("/me/dashboard");
           toast({
             title: "Booking cancelled",
             status: "success",
             duration: 4000,
             isClosable: true,
           });
+          router.push("/me/dashboard");
         }
       }
     } catch (error) {

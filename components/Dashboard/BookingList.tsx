@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Box, Stack } from "@chakra-ui/react";
 import { BookingDetails } from "@schemas";
@@ -11,7 +13,7 @@ interface IProps {
 
 export enum Type {
   Upcoming,
-  Past
+  Past,
 }
 
 export function BookingList({ bookings, type }: IProps) {

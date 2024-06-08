@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Box, HStack, Input, Select, Flex } from "@chakra-ui/react";
@@ -11,18 +13,18 @@ interface IProps {
 
 export default function WorkshopListFilter({ onFilterChange }: IProps) {
   const { register, watch } = useForm<FilterProps>({
-    defaultValues: DefaultFilterProps
+    defaultValues: DefaultFilterProps,
   });
 
   React.useEffect(() => {
     const subscription = watch((data) => {
-      console.log("Filter change!")
-      onFilterChange(data)
-    })
+      console.log("Filter change!");
+      onFilterChange(data);
+    });
 
     return () => {
-      subscription.unsubscribe()
-    }
+      subscription.unsubscribe();
+    };
   }, [watch]);
 
   return (

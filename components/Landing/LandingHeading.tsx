@@ -1,3 +1,5 @@
+"use client";
+
 import { Flex, Box, Heading, Img, Text } from "@chakra-ui/react";
 
 export default function LandingHeading() {

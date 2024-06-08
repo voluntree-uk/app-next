@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -16,19 +20,53 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@auth/*": [ "shared/auth/*" ],
-      "@data/*": [ "shared/data/*" ],
-      "@infra/*": [ "shared/infra/*" ],
-      "@components/*": [ "components/*" ],
-      "@test-util/*": [ "utils/test-utils/*" ],
-      "@util/*": [ "utils/*" ],
-      "@styles/*": [ "styles/*" ],
-      "@config": [ "app-config" ],
-      "@atoms" : [ "shared/recoil/atoms" ],
-      "@schemas": [ "shared/schemas" ],
-      "@supabaseClient": [ "supabase/supabaseClient" ]
+      "@auth/*": [
+        "shared/auth/*"
+      ],
+      "@data/*": [
+        "shared/data/*"
+      ],
+      "@infra/*": [
+        "shared/infra/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@test-util/*": [
+        "utils/test-utils/*"
+      ],
+      "@util/*": [
+        "utils/*"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ],
+      "@config": [
+        "app-config"
+      ],
+      "@atoms": [
+        "shared/recoil/atoms"
+      ],
+      "@schemas": [
+        "shared/schemas"
+      ],
+      "@supabaseClient": [
+        "supabase/supabaseClient"
+      ]
     },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

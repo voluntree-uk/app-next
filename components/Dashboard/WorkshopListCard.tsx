@@ -1,8 +1,10 @@
+"use client";
+
 import NextLink from "next/link";
 import { EditIcon } from "@chakra-ui/icons";
-import { Flex, useToast, Link, Avatar, Button } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { Flex, Link, Avatar, Button } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { Workshop } from "@schemas";
 
 interface IProps {
@@ -14,10 +16,6 @@ export default function WorkshopListCard({ workshop }: IProps) {
   const directToWorkshop = (workshop: Workshop) => {
     router.push(`/workshops/${workshop.id}`);
   };
-
-  const toast = useToast();
-
-  const [loading, setLoading] = useState(false);
 
   return (
     <Flex

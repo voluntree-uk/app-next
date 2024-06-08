@@ -1,11 +1,12 @@
+"use client";
+
 import React from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { Box, HStack, Img, Text } from "@chakra-ui/react";
 import { Workshop } from "@schemas";
 
 export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
   const router = useRouter();
-
   return (
     <Box
       cursor={"pointer"}

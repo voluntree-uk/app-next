@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 import { Workshop } from "@schemas";

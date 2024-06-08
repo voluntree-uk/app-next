@@ -1,6 +1,7 @@
+"use client";
+
 import React from "react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import { Img, Card, CardBody, Heading, Link, VStack } from "@chakra-ui/react";
 import { Workshop } from "@schemas";
 
@@ -9,12 +10,6 @@ interface IProps {
 }
 
 export default function HostedWorkshopCard({ workshop }: IProps) {
-  const router = useRouter();
-
-  const directToWorkshop = (workshop_id: string | undefined) => {
-    if (workshop_id) router.push(`/workshops/${workshop_id}`);
-  };
-
   return (
     <Link as={NextLink} href={`/workshops/${workshop.id}`}>
       <Card variant="outline" maxW="sm">

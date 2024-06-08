@@ -1,6 +1,8 @@
+"use client";
+
 import { Box, Button, Center, VStack } from "@chakra-ui/react";
 import Show from "@components/Helpers/Show";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface IProps {
   isMe: boolean;
@@ -12,7 +14,7 @@ export default function NoHostedWorkshopsFound({ isMe }: IProps) {
   function directToNewWorkshop() {
     router.push(`/workshops/new`);
   }
-  
+
   return (
     <VStack spacing="1vw">
       <Box textColor="gray.600">
@@ -20,10 +22,7 @@ export default function NoHostedWorkshopsFound({ isMe }: IProps) {
       </Box>
       <Show showIf={isMe}>
         <Box>
-          <Button
-            variant={"outline"}
-            onClick={() => directToNewWorkshop()}
-          >
+          <Button variant={"outline"} onClick={() => directToNewWorkshop()}>
             Create Workshop
           </Button>
         </Box>

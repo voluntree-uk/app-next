@@ -1,10 +1,11 @@
+"use client"
+
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Box, Container, Flex, Heading, HStack, Stat, StatGroup, StatLabel, StatNumber, Text } from "@chakra-ui/react";
 import { HiUserGroup, HiOutlineStar } from "react-icons/hi";
 import { SiRuby } from "react-icons/si";
-import { auth } from "@auth/supabase";
-import { data } from "@data/supabase";
+import { clientData } from "@data/supabase";
 import { Profile } from "@schemas";
 import AccountAvatar from "@components/Profile/AccountAvatar";
 import { dateToReadable } from "@util/dates";
@@ -28,19 +29,14 @@ export default function UserProfile({ profile, isMe }: IProps) {
   async function updateProfile({ avatar_url }: any) {
     try {
       setLoading(true);
-      const user = await auth.getUser();
-
-      if (!user) {
-        return;
-      }
-
+      
       const updates = {
-        user_id: user.id,
-        email: user.email,
+        user_id: profile.user_id,
+        email: profile.email,
         avatar_url: avatar_url,
       };
 
-      await data.updateProfile(updates);
+      await clientData.updateProfile(updates);
     } catch (error: any) {
       alert(`Error updating profile: ${error.message}`);
     } finally {

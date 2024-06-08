@@ -1,9 +1,7 @@
 import { DataAccessor } from "@data/data";
-import { supabase } from "@supabaseClient";
 import {
   Workshop,
   Slot,
-  Booking,
   BookingDetails,
   Profile,
   FilterProps,
@@ -19,13 +17,23 @@ import {
 } from "@util/dates";
 import { api } from "@infra/aws";
 import { ActionTrigger } from "@infra/api";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@util/supabase/client";
 
 /**
  * A supabase implementation of the DataAccessor interface
  */
 class SupabaseDataAccessor implements DataAccessor {
+  private client: SupabaseClient
+
+  constructor(client: SupabaseClient) {
+    this.client = client;
+  }
+
   async createProfile(profile: Profile): Promise<Profile> {
-    const { data, error } = await supabase.from("profile").insert([profile]);
+    const { data, error } = await this.client.from("profile")
+      .insert([profile])
+      .select();
     if (error) throw error;
     if (data) {
       return data[0] as Profile;
@@ -35,7 +43,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async updateProfile(profile: Profile): Promise<Profile> {
-    const { data, error } = await supabase.from("profile").upsert([profile]);
+    const { data, error } = await this.client.from("profile").upsert([profile]);
     if (error) throw error;
     if (data) {
       return data[0] as Profile;
@@ -45,7 +53,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async hasProfile(id: string): Promise<Boolean> {
-    const { data, error } = await supabase.rpc('has_user_profile', {
+    const { data, error } = await this.client.rpc('has_user_profile', {
       p_user_id: id
     })
     if (error) throw error;
@@ -54,15 +62,19 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async getProfile(id: string): Promise<Profile> {
-    let { data, error } = await supabase
-      .from("profile")
-      .select('*')
-      .eq("user_id", id)
-      .single();
-    if (error) throw error;
-    if (data) {
-      return data;
-    } else {
+    try {
+      let { data, error } = await this.client
+        .from("profile")
+        .select('*')
+        .eq("user_id", id)
+        .single();
+      if (error) throw error;
+      if (data) {
+        return data;
+      } else {
+        throw Error(`Failed to find a profile with the user_id: ${id}`);
+      }
+    } catch (err) {
       throw Error(`Failed to find a profile with the user_id: ${id}`);
     }
   }
@@ -71,10 +83,12 @@ class SupabaseDataAccessor implements DataAccessor {
     if (workshop.virtual) {
       workshop.meeting_link = await api.generateMeetingLink(workshop.name)
     }
-    const { data, error } = await supabase.from("workshop").insert([workshop]);
+    const { data, error } = await this.client.from("workshop")
+      .insert([workshop])
+      .select();
     if (error) throw error;
     if (data) {
-      await supabase.rpc('increment_hosted_workshops', { id: workshop.user_id });
+      await this.client.rpc('increment_hosted_workshops', { id: workshop.user_id });
       await api.sendWorkshopCreationConfirmation(workshop.user_id, workshop.name);
       return data[0] as Workshop;
     } else {
@@ -83,7 +97,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]> {
-    const query = supabase
+    const query = this.client
       .from("workshop")
       .select('*, slot!inner(date, at_capacity)')
       .eq('slot.at_capacity', false)
@@ -123,7 +137,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async getWorkshopsByCategory(category: string): Promise<Workshop[]> {
-    const { data: workshops, error } = await supabase
+    const { data: workshops, error } = await this.client
       .from("workshop")
       .select("*")
       .eq("category", category);
@@ -132,7 +146,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async getWorkshop(id: string): Promise<Workshop> {
-    const { data: workshop, error: error } = await supabase
+    const { data: workshop, error: error } = await this.client
       .from("workshop")
       .select("*")
       .eq("id", id);
@@ -160,7 +174,7 @@ class SupabaseDataAccessor implements DataAccessor {
       }
     }
 
-    const { error } = await supabase
+    const { error } = await this.client
       .from("workshop")
       .delete()
       .eq("id", workshop_id)
@@ -174,7 +188,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async getWorkshopSlots(id: string): Promise<Slot[]> {
-    const { data: slots, error: error } = await supabase
+    const { data: slots, error: error } = await this.client
       .from("slot")
       .select("*")
       .eq("workshop_id", id);
@@ -183,7 +197,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async getWorkshopBookings(id: string): Promise<BookingDetails[]> {
-    const { data: bookings, error: error } = await supabase
+    const { data: bookings, error: error } = await this.client
       .from("booking")
       .select("*,slot:slot_id(*)")
       .eq("workshop_id", id);
@@ -192,7 +206,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async getUserWorkshops(user_id: string): Promise<Workshop[]> {
-    const { data: workshopData, error } = await supabase
+    const { data: workshopData, error } = await this.client
       .from("workshop")
       .select("*")
       .eq("user_id", user_id);
@@ -205,7 +219,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async createSlots(slots: Slot[]): Promise<boolean> {
-    const { data: data, error: error } = await supabase
+    const { data: data, error: error } = await this.client
       .from("slot")
       .insert([...slots])
       .select();
@@ -233,7 +247,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async getUserBookings(user_id: string): Promise<BookingDetails[]> {
-    const { data: bookings, error: error } = await supabase
+    const { data: bookings, error: error } = await this.client
       .from("booking")
       .select(`
       *,
@@ -250,7 +264,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async bookSlot(workshop: Workshop, slot: Slot, user_id: string): Promise<boolean> {
     // Generate booking link first
-    const { data, error } = await supabase.rpc('book_slot', {
+    const { data, error } = await this.client.rpc('book_slot', {
       p_workshop_id: workshop.id?.toString(),
       p_slot_id: slot.id?.toString(),
       p_user_id: user_id
@@ -280,7 +294,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async cancelSlot(slot_id: string): Promise<boolean> {
-    const { data: bookings, error: error } = await supabase
+    const { data: bookings, error: error } = await this.client
       .from("booking")
       .select(`
         *,
@@ -306,7 +320,7 @@ class SupabaseDataAccessor implements DataAccessor {
       }
     }
 
-    const { error: err } = await supabase
+    const { error: err } = await this.client
       .from("slot")
       .delete()
       .eq("id", slot_id)
@@ -322,7 +336,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async cancelBooking(booking: BookingDetails, triggered_by: ActionTrigger): Promise<boolean> {
-    const { data, error } = await supabase.rpc('cancel_booking', {
+    const { data, error } = await this.client.rpc('cancel_booking', {
       p_booking_id: booking.id?.toString()
     })
     if (error) throw error;
@@ -336,7 +350,7 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async reviewBooking(booking_id: string, rating: number, comment: string): Promise<boolean> {
-    const { error: b_error } = await supabase
+    const { error: b_error } = await this.client
       .from('booking')
       .update({
         review_rating: rating,
@@ -349,7 +363,7 @@ class SupabaseDataAccessor implements DataAccessor {
       return false
     }
 
-    const { data: r_data, error: r_error } = await supabase.rpc('update_user_rating', {
+    const { data: r_data, error: r_error } = await this.client.rpc('update_user_rating', {
       p_booking_id: booking_id
     })
 
@@ -362,19 +376,18 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async getAvatarUrl(path: string): Promise<string> {
-    const { data, error } = await supabase.storage
+    const { data } = await this.client.storage
       .from("avatars")
       .getPublicUrl(path);
-    if (error) throw error;
     if (data) {
-      return data?.publicURL;
+      return data?.publicUrl;
     } else {
       throw Error(`Failed to find an avatar on the given path: ${path}`)
     }
   }
 
   async uploadAvatar(path: string, file: string): Promise<boolean> {
-    let { error } = await supabase.storage
+    let { error } = await this.client.storage
       .from("avatars")
       .upload(path, file);
     if (error) throw error;
@@ -382,4 +395,5 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 }
 
-export const data = new SupabaseDataAccessor();
+export { SupabaseDataAccessor }
+export const clientData = new SupabaseDataAccessor(createClient());

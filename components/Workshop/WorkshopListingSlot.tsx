@@ -1,44 +1,53 @@
+"use client";
+
 import React, { useState } from "react";
-import { Box, Button, Text, Badge, Flex, useDisclosure, useToast } from "@chakra-ui/react";
 import {
-  MdOutlineCancel,
-  MdOutlineIosShare,
-  MdKeyboardArrowRight,
-} from "react-icons/md";
-import { authenticationModalState } from "@atoms";
-import { Booking, Slot, Workshop } from "@schemas";
+  Box,
+  Button,
+  Text,
+  Badge,
+  Flex,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
+import { MdOutlineCancel, MdKeyboardArrowRight } from "react-icons/md";
+import { Booking, Slot, User, Workshop } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
-import { useSession } from "@util/hooks";
-import { useRecoilState } from "recoil";
 import Show from "@components/Helpers/Show";
 import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
-import { useRouter } from "next/router";
-import { data } from "@data/supabase";
+import { useRouter } from "next/navigation";
+import { clientData } from "@data/supabase";
 
 interface IProps {
   workshop: Workshop;
   slot: Slot;
   slotBookings: Booking[];
+  user: User | null;
 }
 
-export default function WorkshopListingSlot({ workshop, slot, slotBookings }: IProps) {
+export function WorkshopListingSlot({
+  workshop,
+  slot,
+  slotBookings,
+  user,
+}: IProps) {
   const router = useRouter();
-  const session = useSession();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const isUserHost = () => session?.user?.id == workshop.user_id;
-  const [_, setAuthModalIsOpen] = useRecoilState(authenticationModalState);
-  const availableSpaces = slot.capacity - slotBookings.length
-  const availableSpacesMessage = `${availableSpaces} ${availableSpaces == 1 ? "space" : "spaces"} available`
+  const isUserHost = () => user?.id == workshop.user_id;
+  const availableSpaces = slot.capacity - slotBookings.length;
+  const availableSpacesMessage = `${availableSpaces} ${
+    availableSpaces == 1 ? "space" : "spaces"
+  } available`;
 
   async function confirmBooking(): Promise<void> {
     setLoading(true);
     try {
-      if (workshop.id && slot.id && session && session.user) {
-        const success = await data.bookSlot(workshop, slot, session.user.id);
+      if (workshop.id && slot.id && user) {
+        const success = await clientData.bookSlot(workshop, slot, user.id);
 
         // Redirect if booking created successfully
         if (success) {
@@ -64,10 +73,10 @@ export default function WorkshopListingSlot({ workshop, slot, slotBookings }: IP
     setLoading(true);
     try {
       if (slot.id) {
-        const success = await data.cancelSlot(slot.id);
+        const success = await clientData.cancelSlot(slot.id);
         // Redirect if slot created successfully
         if (success) {
-          router.reload();
+          router.refresh();
         }
       }
     } catch (error) {
@@ -104,16 +113,6 @@ export default function WorkshopListingSlot({ workshop, slot, slotBookings }: IP
         </Badge>
       </Box>
       <Flex alignItems={"center"}>
-        <Button
-          rounded="full"
-          colorScheme="linkedin"
-          rightIcon={<MdOutlineIosShare />}
-          variant={"solid"}
-          size={{ base: "xs", sm: "md" }}
-          mr="3"
-        >
-          Share
-        </Button>
         <Show showIf={isUserHost()}>
           <Button
             rounded="full"
@@ -139,10 +138,10 @@ export default function WorkshopListingSlot({ workshop, slot, slotBookings }: IP
             colorScheme="green"
             variant={availableSpaces == 0 ? "outline" : "solid"}
             onClick={() => {
-              if (session?.user) {
+              if (user) {
                 onOpen();
               } else {
-                setAuthModalIsOpen(true);
+                router.push("/login");
               }
             }}
             rightIcon={<MdKeyboardArrowRight />}
