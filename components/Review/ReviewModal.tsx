@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Button,
@@ -15,13 +17,13 @@ import {
   SliderTrack,
   Stack,
   Text,
-  Textarea
+  Textarea,
 } from "@chakra-ui/react";
 import { BookingDetails } from "@schemas";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 interface IProps {
-  booking: BookingDetails
+  booking: BookingDetails;
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (booking: BookingDetails, rating: number, comment: string) => void;
@@ -29,20 +31,16 @@ interface IProps {
 
 export function ReviewModal({ booking, isOpen, onSubmit, onClose }: IProps) {
   const router = useRouter();
+  const path = usePathname();
+  const query = useSearchParams();
 
   const onCloseWithRemoveParameter = (): void => {
-    delete router.query["review"];
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: router.query,
-      },
-      undefined,
-      /**
-       * Do not refresh the page
-       */
-      { shallow: true }
-    );
+    query?.get("review");
+
+    const params = new URLSearchParams(query?.toString());
+    params.delete("review");
+
+    router.replace(`${path}?${params.toString()}`);
     onClose();
   };
 

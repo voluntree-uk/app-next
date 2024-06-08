@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Container } from "@chakra-ui/react";
 import LandingHeading from "@components/Landing/LandingHeading";
 import LandingHowItWorks from "@components/Landing/LandingHowItWorks";

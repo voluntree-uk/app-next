@@ -1,32 +1,29 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
 import {
   Box,
   Flex,
   Avatar,
   HStack,
-  Link,
-  IconButton,
   Button,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  useDisclosure,
   useColorModeValue,
   Stack,
   Img,
   Divider,
   Container,
+  IconButton,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import AuthenticationModal from "@components/Auth/AuthenticationModal";
-import { useSession } from "@util/hooks";
-import { auth } from "@auth/supabase";
-import { authenticationModalState } from "@atoms";
 import Show from "@components/Helpers/Show";
+import { Link } from "@chakra-ui/next-js";
+import { createClient } from "@util/supabase/client";
+import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 const Links = [
   { label: "Find workshops", href: "/workshops" },
@@ -46,32 +43,38 @@ const NavLink = ({
   };
 }) => {
   return (
-    <NextLink passHref href={href}>
-      <Link
-        px={2}
-        py={1}
-        rounded={"md"}
-        _hover={{
-          textDecoration: "none",
-          bg: useColorModeValue("gray.200", "gray.700"),
-        }}
-        display={display}
-        href={href}
-      >
-        {children}
-      </Link>
-    </NextLink>
+    <Link
+      as={NextLink}
+      px={2}
+      py={1}
+      rounded={"md"}
+      _hover={{
+        textDecoration: "none",
+        bg: useColorModeValue("gray.200", "gray.700"),
+      }}
+      display={display}
+      href={href}
+    >
+      {children}
+    </Link>
   );
 };
 
-export default function Navbar() {
+export default function Navbar({ user }: { user: User|null }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [currentUser, setCurrentUser] = useState<User | null>(user);
+  
   const router = useRouter();
-  const session = useSession();
 
-  const [authModalIsOpen, setAuthModalModalIsOpen] = useRecoilState(
-    authenticationModalState
-  );
+  const getUser = async () => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    setCurrentUser(user);
+  }
+
+  useEffect(() => {
+    getUser();
+  }, [currentUser, getUser]);
 
   return (
     <Box
@@ -94,13 +97,15 @@ export default function Navbar() {
               onClick={isOpen ? onClose : onOpen}
             />
             <HStack spacing={8} alignItems={"center"}>
-              <Box onClick={() => router.push("/")}>
-                <Img
-                  height={"45px"}
-                  cursor="pointer"
-                  src="https://avatars.githubusercontent.com/u/93862968?s=400&u=e306baa9eeb66de4ea0b6b97058c68d44d503cf0&v=4"
-                ></Img>
-              </Box>
+              <Link href={"/"}>
+                <Box>
+                  <Img
+                    height={"45px"}
+                    cursor="pointer"
+                    src="https://avatars.githubusercontent.com/u/93862968?s=400&u=e306baa9eeb66de4ea0b6b97058c68d44d503cf0&v=4"
+                  ></Img>
+                </Box>
+              </Link>
               <HStack
                 as={"nav"}
                 spacing={4}
@@ -111,7 +116,7 @@ export default function Navbar() {
                     display={{
                       base: "block",
                       md:
-                        link.label === "Create workshop" && !session?.user
+                        link.label === "Create workshop" && !currentUser
                           ? "none"
                           : "block",
                     }}
@@ -124,16 +129,16 @@ export default function Navbar() {
               </HStack>
             </HStack>
             <Flex alignItems={"center"}>
-              {!session?.user ? (
+              {!currentUser ? (
                 <Button
                   variant={"text"}
                   size={"sm"}
-                  onClick={() => setAuthModalModalIsOpen(true)}
+                  onClick={() => router.push("/login")}
                 >
                   Log in
                 </Button>
               ) : null}
-              <Show showIf={session?.user != null}>
+              <Show showIf={currentUser != null}>
                 <Menu>
                   <MenuButton
                     as={Button}
@@ -150,17 +155,17 @@ export default function Navbar() {
                     />
                   </MenuButton>
                   <MenuList>
-                    <MenuItem onClick={() => router.push("/me")}>
-                      View profile
-                    </MenuItem>
-                    <MenuItem onClick={() => router.push("/me/dashboard")}>
-                      Dashboard
-                    </MenuItem>
+                    <Link href={`/user/${currentUser?.id}`}>
+                      <MenuItem>View profile</MenuItem>
+                    </Link>
+                    <Link href="/me/dashboard">
+                      <MenuItem>Dashboard</MenuItem>
+                    </Link>
                     <Divider />
                     <MenuItem
-                      onClick={() => {
-                        auth.signOut();
-                        router.push("/");
+                      onClick={async () => {
+                        await createClient().auth.signOut();
+                        router.refresh();
                       }}
                     >
                       Log out
@@ -177,7 +182,7 @@ export default function Navbar() {
                   <NavLink
                     display={{
                       base:
-                        link.label === "Create workshop" && !session?.user
+                        link.label === "Create workshop" && currentUser
                           ? "none"
                           : "block",
                       md: "block",
@@ -192,11 +197,6 @@ export default function Navbar() {
             </Box>
           </Show>
         </Box>
-
-        <AuthenticationModal
-          isOpen={authModalIsOpen}
-          onClose={() => setAuthModalModalIsOpen(false)}
-        />
       </Container>
     </Box>
   );

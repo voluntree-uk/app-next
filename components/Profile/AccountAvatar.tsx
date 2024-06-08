@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactElement, useEffect, useState } from "react";
 import {
   Avatar,
@@ -13,7 +15,7 @@ import {
   PopoverArrow,
 } from "@chakra-ui/react";
 import { FaUpload } from "react-icons/fa";
-import { data } from "@data/supabase";
+import { clientData } from "@data/supabase";
 
 interface IProps {
   url: string;
@@ -31,7 +33,7 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
 
   async function downloadImage(path: any) {
     try {
-      const url = await data.getAvatarUrl(path);
+      const url = await clientData.getAvatarUrl(path);
       setAvatarUrl(url ? url : null);
     } catch (error: any) {
       console.log("Error downloading image: ", error.message);
@@ -51,7 +53,7 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      const success = await data.uploadAvatar(filePath, file);
+      const success = await clientData.uploadAvatar(filePath, file);
       if (success) onUpload(filePath);
     } catch (error: any) {
       console.log(error);
@@ -90,9 +92,7 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
   function avatar(): ReactElement {
     return isMe ? (
       <Popover trigger="hover">
-        <PopoverTrigger>
-          { avatarForm }
-        </PopoverTrigger>
+        <PopoverTrigger>{avatarForm}</PopoverTrigger>
         <PopoverContent width="fit-content">
           <PopoverArrow />
           <PopoverBody>
@@ -104,18 +104,16 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
         </PopoverContent>
       </Popover>
     ) : (
-        avatarForm
-    )
+      avatarForm
+    );
   }
 
   return (
     <Box>
       <Box pos={"relative"} display="flex" justifyContent={"center"}>
-        { avatar() }
+        {avatar()}
       </Box>
-      <Box>
-        { isMe ? uploadInput : null}
-      </Box>
+      <Box>{isMe ? uploadInput : null}</Box>
     </Box>
   );
 }

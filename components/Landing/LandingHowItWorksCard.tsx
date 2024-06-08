@@ -1,3 +1,5 @@
+"use client";
+
 import { Flex, Img, Text, Link } from "@chakra-ui/react";
 
 interface IProps {

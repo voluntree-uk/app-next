@@ -1,10 +1,12 @@
+"use client"
+
 import { useCallback, useEffect, useState } from "react";
 import { Box, Stack } from "@chakra-ui/react";
 import React from "react";
 import { Workshop, FilterProps, DefaultFilterProps } from "@schemas";
 import WorkshopCard from "@components/Workshop/WorkshopListCard";
 import WorkshopListFilter from "@components/Workshop/WorkshopListFilter";
-import { data } from "@data/supabase";
+import { clientData } from "@data/supabase";
 
 interface IProps {
   hideFilter?: boolean;
@@ -16,7 +18,7 @@ export default function WorkshopList({ hideFilter }: IProps) {
 
   const filterWorkshops = useCallback(async (filters: FilterProps) => {
     console.log(`Filtering workshops on ${JSON.stringify(filters)}`)
-    const foundWorkshops = await data.filterAvailableWorkshops(filters);
+    const foundWorkshops = await clientData.filterAvailableWorkshops(filters);
     setWorkshops(foundWorkshops);
   }, []);
 
@@ -29,7 +31,7 @@ export default function WorkshopList({ hideFilter }: IProps) {
       {!hideFilter ? (
         <WorkshopListFilter onFilterChange={(data) => setSearch(data)} />
       ) : null}
-      <Stack overflow="scroll" spacing={0}>
+      <Stack spacing={0}>
         {workshops?.map((w) => (
           <WorkshopCard key={w.id} workshop={w} />
         ))}

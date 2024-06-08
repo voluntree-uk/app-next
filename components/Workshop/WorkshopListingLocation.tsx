@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { BsCameraVideo, BsPinMap } from "react-icons/bs";
 import { Box, Flex, Text } from "@chakra-ui/react";
@@ -22,11 +24,7 @@ export default function WorkshopListingLocation({ workshop }: IProps) {
           {workshop.virtual ? <BsCameraVideo /> : <BsPinMap />}
         </Box>
         <Box>
-          <Text
-            display={"flex"}
-            color={"black"}
-            alignItems="center"
-          >
+          <Text display={"flex"} color={"black"} alignItems="center">
             {workshop.virtual
               ? "Online event"
               : workshopToReadableAddress(workshop)}

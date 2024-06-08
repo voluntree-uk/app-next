@@ -1,5 +1,5 @@
 import { ActionTrigger, InfrastructureAPI } from "./api";
-import { data } from "../data/supabase";
+import { clientData } from "../data/supabase";
 import { Profile, Slot } from "../schemas";
 import axios, { AxiosResponse } from "axios";
 import { dateToReadable } from "@util/dates";
@@ -35,7 +35,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
   });
 
   async sendWorkshopCreationConfirmation(host_user_id: string, workshop_name: string): Promise<void> {
-    const host: Profile = await data.getProfile(host_user_id)
+    const host: Profile = await clientData.getProfile(host_user_id)
     if (host) {
       const data = {
         host: {
@@ -55,8 +55,8 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
   }
 
   async sendBookingConfirmations(host_user_id: string, attendee_user_id: string, workshop_name: string, slot: Slot, join_link: string | undefined): Promise<void> {
-    const host: Profile = await data.getProfile(host_user_id)
-    const attendee: Profile = await data.getProfile(attendee_user_id)
+    const host: Profile = await clientData.getProfile(host_user_id)
+    const attendee: Profile = await clientData.getProfile(attendee_user_id)
     if (host && attendee) {
       const data = {
         host: {
@@ -83,8 +83,8 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
   }
 
   async sendBookingCancellations(host_user_id: string, attendee_user_id: string, workshop_name: string, slot: Slot, triggered_by: ActionTrigger): Promise<void> {
-    const host: Profile = await data.getProfile(host_user_id)
-    const attendee: Profile = await data.getProfile(attendee_user_id)
+    const host: Profile = await clientData.getProfile(host_user_id)
+    const attendee: Profile = await clientData.getProfile(attendee_user_id)
     if (host && attendee) {
       const data = {
         host: {

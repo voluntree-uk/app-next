@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { BookingDetails } from "@schemas";
@@ -5,14 +7,14 @@ import { Type } from "@components/Dashboard/BookingList";
 
 interface IProps {
   bookings: BookingDetails[];
-  type: Type
+  type: Type;
 }
 
 export default function BookingListHeading({ bookings, type }: IProps) {
   function title(): string {
     switch (type) {
       case Type.Upcoming:
-        return `Your upcoming bookings (${bookings.length})`
+        return `Your upcoming bookings (${bookings.length})`;
       case Type.Past:
         return `Your past bookings (${bookings.length})`;
     }
@@ -30,10 +32,10 @@ export default function BookingListHeading({ bookings, type }: IProps) {
   return (
     <Box p="4">
       <Heading pb="1" size={"md"} color={"gray.700"}>
-        { title() }
+        {title()}
       </Heading>
       <Text fontSize={"sm"} color="gray.500">
-        { description() }
+        {description()}
       </Text>
     </Box>
   );

@@ -1,5 +1,7 @@
+"use client"
+
 import React, { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import {
   Stack,
   Input,
@@ -18,13 +20,11 @@ import {
 import { capitalize } from "lodash";
 import config from "@config";
 import { Workshop } from "@schemas";
-import { useSession } from "@util/hooks";
-import { data } from "@data/supabase";
+import { clientData } from "@data/supabase";
+import { User } from "@supabase/supabase-js";
 
 
-export default function WorkshopForm() {
-  const session = useSession();
-
+export default function WorkshopForm({ user }: {user: User}) {
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
@@ -64,7 +64,7 @@ export default function WorkshopForm() {
     setIsLoading(true);
 
     if (validateForm()) {
-      const createdBy = session?.user?.id;
+      const createdBy = user?.id;
 
       if (createdBy) {
         const newWorkshop: Workshop = {
@@ -75,7 +75,7 @@ export default function WorkshopForm() {
           virtual: true,
         };
 
-        const createdWorkshop = await data.createWorkshop(newWorkshop);
+        const createdWorkshop = await clientData.createWorkshop(newWorkshop);
 
         if (createdWorkshop.id) {
           router.push(`/workshops/${createdWorkshop.id}`);

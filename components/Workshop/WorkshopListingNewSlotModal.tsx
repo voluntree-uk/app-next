@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Button,
@@ -104,13 +106,15 @@ export function WorkshopListingNewSlotModal({
           <Button
             colorScheme="teal"
             mr={3}
-            onClick={() => onSubmit({
-              workshop_id: workshop.id!,
-              date: date,
-              start_time: start_time,
-              end_time: end_time,
-              capacity: capacity
-            })}
+            onClick={() =>
+              onSubmit({
+                workshop_id: workshop.id!,
+                date: date,
+                start_time: start_time,
+                end_time: end_time,
+                capacity: capacity,
+              })
+            }
           >
             Create
           </Button>
