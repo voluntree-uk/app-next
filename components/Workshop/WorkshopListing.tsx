@@ -7,6 +7,7 @@ import WorkshopListingHeading from "@components/Workshop/WorkshopListingHeading"
 import WorkshopListingSlotList from "@components/Workshop/WorkshopListingSlotList";
 import WorkshopListingLocation from "@components/Workshop/WorkshopListingLocation";
 import WorkshopListingDescription from "@components/Workshop/WorkshopListingDescription";
+import WorkshopListingShare from "@components/Workshop/WorkshopListingShare";
 
 interface IProps {
   workshop: Workshop;
@@ -28,6 +29,7 @@ export default function WorkshopListing({ workshop, host, slots, bookings, user 
         bookings={bookings}
         user={user}
       />
+      <WorkshopListingShare workshop={workshop} />
     </Stack>
   );
 }
