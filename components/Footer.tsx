@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import NextLink from "next/link";
 import {
   Box,
   Container,
@@ -79,8 +80,13 @@ export default function Footer() {
 
           <Stack align={"flex-start"}>
             <ListHeader>Legal</ListHeader>
-            <Link href={"#"}>Cookies Policy</Link>
-            <Link href={"#"}>Privacy Policy</Link>
+            <Link
+              as={NextLink}
+              target="_blank"
+              href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL}
+            >
+              Privacy Policy
+            </Link>
             <Link href={"#"}>Terms of Service</Link>
             <Link href={"#"}>Law Enforcement</Link>
           </Stack>
@@ -105,13 +111,22 @@ export default function Footer() {
         >
           <Text>© 2022 Voluntree. All rights reserved</Text>
           <Stack direction={"row"} spacing={6}>
-            <SocialButton label={"Twitter"} href={"https://x.com/voluntree2024"}>
+            <SocialButton
+              label={"Twitter"}
+              href={"https://x.com/voluntree2024"}
+            >
               <FaXTwitter />
             </SocialButton>
-            <SocialButton label={"Linkedin"} href={"https://www.linkedin.com/company/voluntree2024/about/"}>
+            <SocialButton
+              label={"Linkedin"}
+              href={"https://www.linkedin.com/company/voluntree2024/about/"}
+            >
               <FaLinkedin />
             </SocialButton>
-            <SocialButton label={"Instagram"} href={"https://www.instagram.com/voluntree2024/"}>
+            <SocialButton
+              label={"Instagram"}
+              href={"https://www.instagram.com/voluntree2024/"}
+            >
               <FaInstagram />
             </SocialButton>
           </Stack>

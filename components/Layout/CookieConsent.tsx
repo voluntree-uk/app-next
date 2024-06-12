@@ -14,7 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { setCookie, hasCookie, getCookie } from "cookies-next";
-import NextLink from 'next/link'
+import NextLink from 'next/link';
 import { useEffect, useRef, useState } from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { useRouter } from "next/navigation";
