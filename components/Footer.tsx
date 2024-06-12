@@ -107,9 +107,9 @@ export default function Footer() {
           direction={{ base: "column", md: "row" }}
           spacing={4}
           justify={{ md: "space-between" }}
-          align={{ md: "center" }}
+          align={"center"}
         >
-          <Text>© 2022 Voluntree. All rights reserved</Text>
+          <Text>© 2024 Voluntree Community Interest Company</Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton
               label={"Twitter"}
@@ -130,6 +130,16 @@ export default function Footer() {
               <FaInstagram />
             </SocialButton>
           </Stack>
+          <Text>
+            Graphics designed by{" "}
+            <Link
+              color={"blue"}
+              as={NextLink}
+              href="https://www.freepik.com/author/pch-vector"
+            >
+              pch.vector / Freepik
+            </Link>
+          </Text>
         </Container>
       </Box>
     </Box>
