@@ -27,7 +27,6 @@ export default function CookieConsent() {
   const [consent, setConsent] = useState(false);
 
   useEffect(() => {
-    console.log(`Cookie consent: ${getCookie("consent")}`)
     if (!hasCookie(analyticsConsent)) {
       setConsent(true);
       onOpen();
@@ -61,7 +60,6 @@ export default function CookieConsent() {
       isOpen={isOpen}
       size={"xl"}
       blockScrollOnMount={false}
-      // isOpen={!showConsent}
     >
       <ModalOverlay />
       <ModalContent>
@@ -89,9 +87,6 @@ export default function CookieConsent() {
                 can improve it.
               </Text>
             </Box>
-            {/* <Box ps={"1em"}>
-              <Switch id="accept-analytics" size="lg" />
-            </Box> */}
           </HStack>
         </ModalBody>
         <ModalFooter>
