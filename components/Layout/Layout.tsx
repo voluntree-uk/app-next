@@ -5,6 +5,7 @@ import { Box } from "@chakra-ui/react";
 import Footer from "@components/Footer";
 import Navbar from "@components/Layout/Navbar";
 import ResponsiveContainer from "@components/Layout/ResponsiveContainer";
+import CookieConsent from "@components/Layout/CookieConsent";
 import { User } from "@supabase/supabase-js";
 
 type LayoutProps = {
@@ -23,6 +24,7 @@ export default function Layout(props: LayoutProps) {
       <Box>
         <Navbar user={props.user} />
         <ResponsiveContainer>{props.children}</ResponsiveContainer>
+        <CookieConsent />
       </Box>
       <Footer />
     </Box>
