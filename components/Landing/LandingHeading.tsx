@@ -19,18 +19,17 @@ export default function LandingHeading() {
           Voluntree is a knowledge-sharing platform with a difference.
         </Heading>
         <Text fontSize={"md"} pb={{ base: "5", sm: "0" }}>
-          Totally <b>transparent</b>, directly <b>democratic</b>, and
-          <b> free</b> to use, Voluntree will enable you to help your community,
-          build your reputation and learn some brand new skills! Built on a
-          commitment to the idea that social exchange has real material value,
-          Voluntree is a social experiment platform that challenges the
-          conventional capitalist business structures.
+          Totally <b>transparent</b> and <b>free</b> to use, Voluntree will
+          enable you to help your community, build your reputation and learn
+          some brand new skills! Built on a commitment to the idea that social
+          exchange has real material value, Voluntree is a social experiment
+          platform designed to challenge the conventions of business.
         </Text>
       </Box>
       <Img
         mt={{ base: "8", sm: "0" }}
-        height={{ base: "150px", sm: "225px" }}
-        src="https://secure.meetupstatic.com/next/images/shared/online_events.svg?w=1080"
+        height={{ base: "15em", lg: "22em" }}
+        src="/img/meeting.jpg"
       ></Img>
     </Flex>
   );
