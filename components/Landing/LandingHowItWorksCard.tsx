@@ -1,43 +1,41 @@
 "use client";
 
-import { Flex, Img, Text, Link } from "@chakra-ui/react";
+import { Text, Link, Stack, Heading, Button } from "@chakra-ui/react";
+import NextLink from "next/link";
 
 interface IProps {
-  img: string;
+  btn: {
+    target: string;
+    text: string;
+    colorScheme: string;
+  };
   title: string;
   description: string;
 }
 
 export default function LandingHowItWorksCard({
-  img,
+  btn,
   title,
   description,
 }: IProps) {
   return (
-    <Flex
-      flexDir={"column"}
-      alignItems="center"
-      pb={{ base: "12", sm: "0" }}
-      px={{ base: "0", sm: "7" }}
-    >
-      <Img pb="2" src={img}></Img>
-      <Link
+    <Stack spacing={"1em"} maxHeight={"24em"}>
+      <Heading
+        textAlign={{ base: "center", lg: "start" }}
         fontWeight={"bold"}
-        color={"green.500"}
-        fontSize="lg"
+        size="lg"
         pb="3"
-        textDecor={"underline"}
       >
         {title}
-      </Link>
-      <Text
-        fontSize={"md"}
-        textAlign={"center"}
-        w={{ base: "full" }}
-        maxWidth={{ lg: "380px" }}
-      >
+      </Heading>
+      <Text>
         {description}
       </Text>
-    </Flex>
+      <Link as={NextLink} href={btn.target} target="_blank">
+        <Button width={"100%"} colorScheme={btn.colorScheme}>
+          {btn.text}
+        </Button>
+      </Link>
+    </Stack>
   );
 }
