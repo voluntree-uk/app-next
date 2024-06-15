@@ -63,18 +63,18 @@ const NavLink = ({
 export default function Navbar({ user }: { user: User|null }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentUser, setCurrentUser] = useState<User | null>(user);
-  
+
   const router = useRouter();
 
   const getUser = async () => {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    setCurrentUser(user);
+    const { data } = await supabase.auth.getUser();
+    setCurrentUser(data.user);
   }
 
   useEffect(() => {
     getUser();
-  }, [currentUser, getUser]);
+  }, [user]);
 
   return (
     <Box
