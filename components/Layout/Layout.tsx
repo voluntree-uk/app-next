@@ -1,7 +1,7 @@
 "use client"
 
 import React, { ReactNode } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, useDisclosure } from "@chakra-ui/react";
 import Footer from "@components/Footer";
 import Navbar from "@components/Layout/Navbar";
 import ResponsiveContainer from "@components/Layout/ResponsiveContainer";
@@ -14,6 +14,11 @@ type LayoutProps = {
 };
 
 export default function Layout(props: LayoutProps) {
+  const {
+    isOpen: isCookieConsentOpen,
+    onOpen: onCookieConsentOpen,
+    onClose: onCookieConsentClose
+  } = useDisclosure();
   return (
     <Box
       minH={"100vh"}
@@ -24,9 +29,13 @@ export default function Layout(props: LayoutProps) {
       <Box>
         <Navbar user={props.user} />
         <ResponsiveContainer>{props.children}</ResponsiveContainer>
-        <CookieConsent />
+        <CookieConsent
+          isOpen={isCookieConsentOpen}
+          onOpen={onCookieConsentOpen}
+          onClose={onCookieConsentClose}
+        />
       </Box>
-      <Footer />
+      <Footer openCookieConsent={onCookieConsentOpen} />
     </Box>
   );
 }

@@ -54,7 +54,11 @@ const SocialButton = ({
   );
 };
 
-export default function Footer() {
+export default function Footer({
+  openCookieConsent
+}: {
+  openCookieConsent: () => void;
+}) {
   return (
     <Box
       data-testid="footer"
@@ -94,6 +98,7 @@ export default function Footer() {
             >
               Terms of Service
             </Link>
+            <Link onClick={openCookieConsent}>Cookie Settings</Link>
           </Stack>
 
           <Stack align={"flex-start"}></Stack>
