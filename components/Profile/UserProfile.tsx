@@ -25,6 +25,7 @@ export default function UserProfile({ profile, isMe }: IProps) {
   } = useForm();
 
   const avatar_url: string = watch("avatar_url");
+  const full_name: string | undefined = profile.share_full_name_consent ? `${profile.name} ${profile.surname}` : profile.name
 
   async function updateProfile({ avatar_url }: any) {
     try {
@@ -84,7 +85,7 @@ export default function UserProfile({ profile, isMe }: IProps) {
             ml={1}
           >
             <Heading size={"md"}>
-              {`${profile.name} ${profile.surname}`} (@{profile.username})
+              {full_name} (@{profile.username})
             </Heading>
             <Text size={"md"}>
               Member since{" "}
