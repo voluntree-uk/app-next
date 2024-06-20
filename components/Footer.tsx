@@ -87,8 +87,13 @@ export default function Footer() {
             >
               Privacy Policy
             </Link>
-            <Link href={"#"}>Terms of Service</Link>
-            <Link href={"#"}>Law Enforcement</Link>
+            <Link
+              as={NextLink}
+              target="_blank"
+              href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
+            >
+              Terms of Service
+            </Link>
           </Stack>
 
           <Stack align={"flex-start"}></Stack>
@@ -133,7 +138,7 @@ export default function Footer() {
           <Text>
             Graphics designed by{" "}
             <Link
-              color={"blue"}
+              color={"blue.500"}
               as={NextLink}
               href="https://www.freepik.com/author/pch-vector"
             >
