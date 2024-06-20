@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
   Heading,
@@ -34,6 +35,7 @@ export default function SetupProfilePage({ user }: { user: User }) {
         name: formData.name,
         surname: formData.surname,
         dob: formData.dob,
+        share_full_name_consent: formData.fullNameConsent
       };
 
       const profile = await clientData.createProfile(values);
@@ -106,6 +108,15 @@ export default function SetupProfilePage({ user }: { user: User }) {
               {makeFormField("surname", "text", "Surname", "Surname")}
               {makeFormField("dob", "date", "Date of Birth", "")}
               {makeFormField("username", "text", "Username", "username")}
+              <FormControl>
+                <Checkbox
+                  {...register("fullNameConsent")}
+                  fontSize={"sm"}
+                  id={"fullNameConsent"}
+                >
+                  Display my full name on the profile page
+                </Checkbox>
+              </FormControl>
             </Stack>
             <Stack spacing="6">
               <Stack>

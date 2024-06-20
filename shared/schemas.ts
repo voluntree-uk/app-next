@@ -40,6 +40,7 @@ export interface Profile {
   rating?: number;
   reviews_received?: number;
   award_points?: number;
+  share_full_name_consent?: boolean;
 }
 
 export interface Slot {
