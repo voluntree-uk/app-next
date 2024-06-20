@@ -43,7 +43,9 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async updateProfile(profile: Profile): Promise<Profile> {
-    const { data, error } = await this.client.from("profile").upsert([profile]);
+    const { data, error } = await this.client.from("profile")
+      .upsert([profile])
+      .select();
     if (error) throw error;
     if (data) {
       return data[0] as Profile;
