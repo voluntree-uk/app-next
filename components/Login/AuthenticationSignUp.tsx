@@ -1,20 +1,23 @@
 "use client";
 
-import * as React from "react";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
+import NextLink from "next/link";
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
   Heading,
   Input,
+  Link,
   Stack,
   useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 interface IProps {
   signUp(
@@ -122,6 +125,20 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
                 "Confirm Password",
                 "password"
               )}
+              {/* Accept T&C */}
+              <FormControl>
+                <Checkbox fontSize={"sm"} id={"acceptT&C"} isRequired={true}>
+                  I accept{" "}
+                  <Link
+                    as={NextLink}
+                    color={"blue.500"}
+                    href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
+                    target="_blank"
+                  >
+                    Terms & Conditions
+                  </Link>
+                </Checkbox>
+              </FormControl>
             </Stack>
             <Stack spacing="6">
               <Stack>
