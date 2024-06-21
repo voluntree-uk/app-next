@@ -2,13 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Box, Container, Flex, Heading, HStack, Stat, StatGroup, StatLabel, StatNumber, Text } from "@chakra-ui/react";
-import { HiUserGroup, HiOutlineStar } from "react-icons/hi";
+import { Box, Button, Container, Flex, Heading, HStack, Stat, StatGroup, StatLabel, StatNumber, Text, useDisclosure } from "@chakra-ui/react";
+import { HiUserGroup, HiOutlineStar, HiOutlineMail } from "react-icons/hi";
 import { SiRuby } from "react-icons/si";
 import { clientData } from "@data/supabase";
 import { Profile } from "@schemas";
 import AccountAvatar from "@components/Profile/AccountAvatar";
 import { dateToReadable } from "@util/dates";
+import { MdSettings } from "react-icons/md";
+import Show from "@components/Helpers/Show";
+import { UserProfileSettingsModal } from "@components/Profile/UserProfileSettingsModal";
 
 interface IProps {
   profile: Profile;
@@ -17,6 +20,7 @@ interface IProps {
 
 export default function UserProfile({ profile, isMe }: IProps) {
   const [loading, setLoading] = useState(true);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
     setValue,
@@ -27,7 +31,7 @@ export default function UserProfile({ profile, isMe }: IProps) {
   const avatar_url: string = watch("avatar_url");
   const full_name: string | undefined = profile.share_full_name_consent ? `${profile.name} ${profile.surname}` : profile.name
 
-  async function updateProfile({ avatar_url }: any) {
+  async function updateAvatar({ avatar_url }: any) {
     try {
       setLoading(true);
       
@@ -35,6 +39,25 @@ export default function UserProfile({ profile, isMe }: IProps) {
         user_id: profile.user_id,
         email: profile.email,
         avatar_url: avatar_url,
+      };
+
+      await clientData.updateProfile(updates);
+    } catch (error: any) {
+      alert(`Error updating profile: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updateVisibilitySettings(profile: Profile) {
+    try {
+      setLoading(true);
+
+      const updates = {
+        user_id: profile.user_id,
+        email: profile.email,
+        share_full_name_consent: profile.share_full_name_consent,
+        share_email_consent: profile.share_email_consent,
       };
 
       await clientData.updateProfile(updates);
@@ -75,7 +98,7 @@ export default function UserProfile({ profile, isMe }: IProps) {
             isMe={isMe}
             onUpload={(url: any) => {
               setValue("avatar_url", url);
-              updateProfile({ avatar_url: url });
+              updateAvatar({ avatar_url: url });
             }}
           />
           <Flex
@@ -93,6 +116,14 @@ export default function UserProfile({ profile, isMe }: IProps) {
                 ? dateToReadable(profile.created_at.toString(), false)
                 : null}
             </Text>
+            <Show showIf={profile.share_email_consent == true}>
+              <HStack spacing={2}>
+                <HiOutlineMail />
+                <Text size={"sm"} color={"gray.600"}>
+                  {profile.email}
+                </Text>
+              </HStack>
+            </Show>
             <HStack spacing={2}>
               <HiUserGroup />
               <Text size={"sm"} color={"gray.600"}>
@@ -100,6 +131,24 @@ export default function UserProfile({ profile, isMe }: IProps) {
                 {profile.hosted_workshops == 1 ? "Workshop" : "Workshops"}
               </Text>
             </HStack>
+            <Show showIf={isMe}>
+              <Button
+                width={{ base: "8em" }}
+                size={"sm"}
+                variant="outline"
+                colorScheme="linkedin"
+                leftIcon={<MdSettings />}
+                onClick={onOpen}
+              >
+                Settings
+              </Button>
+              <UserProfileSettingsModal
+                profile={profile}
+                isOpen={isOpen}
+                onClose={onClose}
+                onSubmit={updateVisibilitySettings}
+              />
+            </Show>
           </Flex>
           <StatGroup alignContent={"center"} minWidth={"40%"}>
             <Stat>

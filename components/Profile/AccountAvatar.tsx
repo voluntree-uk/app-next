@@ -1,20 +1,12 @@
 "use client";
 
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
   FormLabel,
-  HStack,
   Input,
-  Popover,
-  PopoverBody,
-  PopoverContent,
-  Text,
-  PopoverTrigger,
-  PopoverArrow,
 } from "@chakra-ui/react";
-import { FaUpload } from "react-icons/fa";
 import { clientData } from "@data/supabase";
 
 interface IProps {
@@ -89,29 +81,10 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
     />
   );
 
-  function avatar(): ReactElement {
-    return isMe ? (
-      <Popover trigger="hover">
-        <PopoverTrigger>{avatarForm}</PopoverTrigger>
-        <PopoverContent width="fit-content">
-          <PopoverArrow />
-          <PopoverBody>
-            <HStack spacing={2}>
-              <FaUpload />
-              <Text>Upload new profile photo</Text>
-            </HStack>
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
-    ) : (
-      avatarForm
-    );
-  }
-
   return (
     <Box>
       <Box pos={"relative"} display="flex" justifyContent={"center"}>
-        {avatar()}
+        {avatarForm}
       </Box>
       <Box>{isMe ? uploadInput : null}</Box>
     </Box>

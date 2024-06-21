@@ -41,6 +41,7 @@ export interface Profile {
   reviews_received?: number;
   award_points?: number;
   share_full_name_consent?: boolean;
+  share_email_consent?: boolean;
 }
 
 export interface Slot {
