@@ -16,6 +16,7 @@ import { Booking, Slot, User, Workshop } from "@schemas";
 import { WorkshopListingSlot } from "@components/Workshop/WorkshopListingSlot";
 import { WorkshopListingNewSlotModal } from "@components/Workshop/WorkshopListingNewSlotModal";
 import Show from "@components/Helpers/Show";
+import { isBeforeNow } from "@util/dates";
 
 interface IProps {
   workshop: Workshop;
@@ -82,15 +83,17 @@ export default function WorkshopListingSlotList({
         <Heading as="h2" size="md" pb="0.5em">
           Availability
         </Heading>
-        {slots.map((slot) => (
-          <WorkshopListingSlot
-            workshop={workshop}
-            key={slot.id}
-            slot={slot}
-            slotBookings={getActiveBookingsForSlot(slot)}
-            user={user}
-          />
-        ))}
+        {slots
+          .filter((slot) => !isBeforeNow(new Date(slot.date)))
+          .map((slot) => (
+            <WorkshopListingSlot
+              workshop={workshop}
+              key={slot.id}
+              slot={slot}
+              slotBookings={getActiveBookingsForSlot(slot)}
+              user={user}
+            />
+          ))}
         <Show showIf={isUserHost()}>
           <Button
             variant="solid"
