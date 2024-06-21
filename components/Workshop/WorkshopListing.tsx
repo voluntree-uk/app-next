@@ -8,6 +8,7 @@ import WorkshopListingSlotList from "@components/Workshop/WorkshopListingSlotLis
 import WorkshopListingLocation from "@components/Workshop/WorkshopListingLocation";
 import WorkshopListingDescription from "@components/Workshop/WorkshopListingDescription";
 import WorkshopListingShare from "@components/Workshop/WorkshopListingShare";
+import WorkshopListingUserBooking from "@components/Workshop/WorkshopListingUserBooking";
 
 interface IProps {
   workshop: Workshop;
@@ -18,17 +19,28 @@ interface IProps {
 }
 
 export default function WorkshopListing({ workshop, host, slots, bookings, user }: IProps) {
+  const userBooking = bookings.find((booking) => booking.user_id == user?.id);
+
   return (
     <Stack>
       <WorkshopListingHeading workshop={workshop} host={host} user={user} />
       <WorkshopListingLocation workshop={workshop} />
       <WorkshopListingDescription workshop={workshop} />
-      <WorkshopListingSlotList
-        workshop={workshop}
-        slots={slots}
-        bookings={bookings}
-        user={user}
-      />
+      {userBooking ? (
+        <WorkshopListingUserBooking
+          workshop={workshop}
+          slot={slots.find((slot) => slot.id == userBooking?.slot_id)!}
+          bookings={bookings}
+          user_booking={userBooking}
+        />
+      ) : (
+        <WorkshopListingSlotList
+          workshop={workshop}
+          slots={slots}
+          bookings={bookings}
+          user={user}
+        />
+      )}
       <WorkshopListingShare workshop={workshop} />
     </Stack>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import NextLink from "next/link";
 import {
   Box,
   Button,
@@ -9,8 +10,10 @@ import {
   Flex,
   useDisclosure,
   useToast,
+  Link,
+  ButtonGroup,
 } from "@chakra-ui/react";
-import { MdOutlineCancel, MdKeyboardArrowRight } from "react-icons/md";
+import { MdOutlineCancel, MdKeyboardArrowRight, MdStart } from "react-icons/md";
 import { Booking, Slot, User, Workshop } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
 import Show from "@components/Helpers/Show";
@@ -51,7 +54,7 @@ export function WorkshopListingSlot({
 
         // Redirect if booking created successfully
         if (success) {
-          router.push("/me/dashboard");
+          router.refresh();
         }
       }
     } catch (error) {
@@ -114,16 +117,29 @@ export function WorkshopListingSlot({
       </Box>
       <Flex alignItems={"center"}>
         <Show showIf={isUserHost()}>
-          <Button
-            rounded="full"
-            colorScheme="red"
-            variant="solid"
-            onClick={onOpen}
-            rightIcon={<MdOutlineCancel />}
-            size={{ base: "xs", sm: "md" }}
-          >
-            Cancel
-          </Button>
+          <ButtonGroup gap={{ base: "0", md: "2" }}>
+            <Link as={NextLink} href={workshop.meeting_link} target="_blank">
+              <Button
+                rounded="full"
+                colorScheme="linkedin"
+                variant="solid"
+                rightIcon={<MdStart />}
+                size={{ base: "xs", sm: "md" }}
+              >
+                Join
+              </Button>
+            </Link>
+            <Button
+              rounded="full"
+              colorScheme="red"
+              variant="solid"
+              onClick={onOpen}
+              rightIcon={<MdOutlineCancel />}
+              size={{ base: "xs", sm: "md" }}
+            >
+              Cancel
+            </Button>
+          </ButtonGroup>
           <ConfirmActionDialog
             title="Cancel Slot"
             message="Are you sure you want to cancel this slot? This action cannot be undone."
@@ -147,7 +163,7 @@ export function WorkshopListingSlot({
             rightIcon={<MdKeyboardArrowRight />}
             size={{ base: "xs", sm: "md" }}
           >
-            Join
+            Book
           </Button>
           <ConfirmActionDialog
             title="Confirm Booking"
