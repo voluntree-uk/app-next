@@ -30,7 +30,7 @@ export default function WorkshopListingLocation({ workshop }: IProps) {
               : workshopToReadableAddress(workshop)}
           </Text>
           <Text fontSize={"14px"} color={"gray.600"}>
-            {workshop.virtual ? "Link visible for attendees" : workshop.city}
+            {workshop.virtual ? "Join link available to attendees" : workshop.city}
           </Text>
         </Box>
       </Flex>
