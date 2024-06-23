@@ -24,6 +24,7 @@ import { createClient } from "@util/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { AiOutlineUser } from "react-icons/ai";
 
 const Links = [
   { label: "Find workshops", href: "/workshops" },
@@ -110,10 +111,7 @@ export default function Navbar({ user }: { user: User|null }) {
                 display={{ base: "none", md: "flex" }}
               >
                 {Links.map((link) => (
-                  <NavLink
-                    key={link?.label}
-                    href={link?.href}
-                  >
+                  <NavLink key={link?.label} href={link?.href}>
                     {link.label}
                   </NavLink>
                 ))}
@@ -140,9 +138,8 @@ export default function Navbar({ user }: { user: User|null }) {
                   >
                     <Avatar
                       size={"sm"}
-                      src={
-                        "https://efhzkzupjdpnsounrzhp.supabase.co/storage/v1/object/public/avatars/default_avatar.png"
-                      }
+                      bg="#0c70ab"
+                      icon={<AiOutlineUser fontSize="1.5rem" />}
                     />
                   </MenuButton>
                   <MenuList>
@@ -170,10 +167,7 @@ export default function Navbar({ user }: { user: User|null }) {
             <Box pb={4} display={{ md: "none" }}>
               <Stack as={"nav"} spacing={4}>
                 {Links.map((link) => (
-                  <NavLink
-                    key={link?.label}
-                    href={link?.href}
-                  >
+                  <NavLink key={link?.label} href={link?.href}>
                     {link.label}
                   </NavLink>
                 ))}
