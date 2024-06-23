@@ -1,11 +1,11 @@
 "use client"
 
-import * as React from "react";
-import { useForm } from "react-hook-form";
 import {
   Box,
   Button,
   FormControl,
+  FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -14,15 +14,22 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter, usePathname } from "next/navigation";
-import { createClient } from "@util/supabase/client";
+import { useState } from "react";
 
-export default function UpdatePasswordPage() {
-  const { register, handleSubmit } = useForm();
-  const [isLoading, setIsLoading] = React.useState(false);
+interface IProps {
+  updatePassword(
+    password: string
+  ): Promise<{ success: boolean; error: string | undefined }>;
+}
+
+export default function UpdatePasswordPage({ updatePassword }: IProps) {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const toast = useToast();
-  const supabase = createClient();
+
+  const [password, setPassword] = useState<string | null>(null);
+  const [confirmedPassword, setConfirmedPassword] = useState<string | null>(null);
 
   /**
    * Redirect to after successful authentication
@@ -35,30 +42,6 @@ export default function UpdatePasswordPage() {
     return pathname === "/workshops/[wid]"
       ? router.back()
       : router.push("/workshops");
-  };
-
-  const setPassword = async (formData: any) => {
-    setIsLoading(true);
-    try {
-      const newPassword = formData.password;
-      const confirmedPassword = formData.confirmedPassword;
-      if (newPassword === confirmedPassword) {
-        const { data, error } = await supabase.auth.updateUser({ password: newPassword });
-        if (error) {
-          showToast("Failed to update password", error.message, false);
-        } else {
-          showToast("Successfully updated password");
-          redirect();
-        }
-      } else {
-        showToast("Passwords must match", null, false);
-      }
-    } catch (error: any) {
-      console.log(`ERROR: ${JSON.stringify(error)}`)
-      showToast("Failed to update password", error.msg, false);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const showToast = (
@@ -75,68 +58,108 @@ export default function UpdatePasswordPage() {
     });
   };
 
+  function validateForm(): boolean {
+    var isValid = true;
+    if (!password) {
+      setPassword("");
+      isValid = false;
+    }
+    if (!confirmedPassword) {
+      setConfirmedPassword("");
+      isValid = false;
+    }
+    if (password !== confirmedPassword) {
+      isValid = false;
+    }
+    return isValid;
+  }
+
+  async function onSubmit() {
+    setLoading(true);
+
+    if (validateForm()) {
+      const { success, error } = await updatePassword(password!);
+      if (error) {
+        showToast("Failed to update password", error, false);
+      } else {
+        showToast("Successfully updated password");
+        redirect();
+      }
+    }
+
+    setLoading(false);
+  }
+
   return (
-    <form onSubmit={handleSubmit(setPassword)}>
-      <Stack
-        paddingLeft={"10vw"}
-        paddingRight={"10vw"}
+    <Stack paddingLeft={"10vw"} paddingRight={"10vw"}>
+      <Box
+        py={{ base: "4", sm: "8" }}
+        px={{ base: "4", sm: "10" }}
+        bg={useBreakpointValue({ base: "white", sm: "white" })}
+        boxShadow={{ base: "none" }}
+        borderRadius={{ base: "2xl", sm: "xl" }}
       >
-        <Box
-          py={{ base: "4", sm: "8" }}
-          px={{ base: "4", sm: "10" }}
-          bg={useBreakpointValue({ base: "white", sm: "white" })}
-          boxShadow={{ base: "none" }}
-          borderRadius={{ base: "2xl", sm: "xl" }}
-        >
-          <Stack textAlign="center" padding="5">
-            <Heading size={useBreakpointValue({ base: "sm", md: "md" })}>
-              Choose New Password
-            </Heading>
+        <Stack textAlign="center" padding="5">
+          <Heading size={useBreakpointValue({ base: "sm", md: "md" })}>
+            Choose New Password
+          </Heading>
+        </Stack>
+        <Stack spacing="6">
+          <Stack spacing="3">
+            <FormControl isInvalid={password === ""}>
+              <FormLabel htmlFor="password" fontSize={"md"}>
+                New Password
+              </FormLabel>
+              <Input
+                id="password"
+                type="password"
+                isRequired={true}
+                placeholder="New Password"
+                onChange={(e) => setPassword(e.target.value)}
+                p="4"
+              />
+              {password === "" ? (
+                <FormErrorMessage>Password is required</FormErrorMessage>
+              ) : (
+                <FormHelperText>Choose a strong password</FormHelperText>
+              )}
+            </FormControl>
+            <FormControl
+              isInvalid={
+                confirmedPassword != null && password !== confirmedPassword
+              }
+            >
+              <FormLabel fontSize={"sm"} htmlFor="confirmedPassword">
+                Confirm Password
+              </FormLabel>
+              <Input
+                id="confirmedPassword"
+                type="password"
+                isRequired={true}
+                placeholder="Confirm Password"
+                onChange={(e) => setConfirmedPassword(e.target.value)}
+                p="4"
+              />
+              {confirmedPassword != null && password !== confirmedPassword ? (
+                <FormErrorMessage>Passwords must match</FormErrorMessage>
+              ) : null}
+            </FormControl>
           </Stack>
           <Stack spacing="6">
-            <Stack spacing="3">
-              <FormControl>
-                <FormLabel fontSize={"sm"} htmlFor="password">
-                  New Password
-                </FormLabel>
-                <Input
-                  {...register("password")}
-                  id="password"
-                  type="password"
-                  isRequired={true}
-                  placeholder="New Password"
-                  p="4"
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel fontSize={"sm"} htmlFor="confirmedPassword">
-                  Confirm Password
-                </FormLabel>
-                <Input
-                  {...register("confirmedPassword")}
-                  id="confirmedPassword"
-                  type="password"
-                  isRequired={true}
-                  placeholder="Confirm Password"
-                  p="4"
-                />
-              </FormControl>
-            </Stack>
-            <Stack spacing="6">
-              <Stack>
-                <Button
-                  colorScheme={"green"}
-                  type="submit"
-                  isLoading={isLoading}
-                  boxShadow="lg"
-                >
-                  Set New Password
-                </Button>
-              </Stack>
+            <Stack>
+              <Button
+                colorScheme={"green"}
+                type="submit"
+                boxShadow="lg"
+                isLoading={loading}
+                onClick={() => onSubmit()}
+              >
+                Set New Password
+              </Button>
             </Stack>
           </Stack>
-        </Box>
-      </Stack>
-    </form>
+        </Stack>
+      </Box>
+    </Stack>
   );
 }
