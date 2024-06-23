@@ -3,9 +3,8 @@
 import React from "react";
 import { SupabaseDataAccessor } from "@data/supabase";
 import { redirect } from "next/navigation";
-import UserProfile from "@components/Profile/UserProfile";
-import HostedWorkshops from "@components/Profile/HostedWorkshops";
 import { createClient } from "@util/supabase/server";
+import UserPage from "app/user/[uid]/user-page";
 
 export default async function Page({ params }: { params: any }) {
   const supabase = createClient();
@@ -25,18 +24,8 @@ export default async function Page({ params }: { params: any }) {
       redirect("/")
     }
   } else {
-    const profile = await data.getProfile(user_id);
-    const workshops = await data.getUserWorkshops(user_id);
-
-    return (
-      <>
-        <UserProfile profile={profile} isMe={isMe} />
-        <HostedWorkshops workshops={workshops} isMe={isMe} />
-      </>
-    );
+    return <UserPage user_id={user_id} isMe={isMe} />
   }
-
-  
 
 }
 

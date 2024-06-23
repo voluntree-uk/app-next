@@ -24,6 +24,7 @@ import { createClient } from "@util/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { AiOutlineUser } from "react-icons/ai";
 
 const Links = [
   { label: "Find workshops", href: "/workshops" },
@@ -32,15 +33,10 @@ const Links = [
 
 const NavLink = ({
   children,
-  display,
   href,
 }: {
   children: ReactNode;
   href: string;
-  display: {
-    base: string;
-    md: string;
-  };
 }) => {
   return (
     <Link
@@ -52,7 +48,10 @@ const NavLink = ({
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
-      display={display}
+      display={{
+        base: "block",
+        md: "block",
+      }}
       href={href}
     >
       {children}
@@ -112,17 +111,7 @@ export default function Navbar({ user }: { user: User|null }) {
                 display={{ base: "none", md: "flex" }}
               >
                 {Links.map((link) => (
-                  <NavLink
-                    display={{
-                      base: "block",
-                      md:
-                        link.label === "Create workshop" && !currentUser
-                          ? "none"
-                          : "block",
-                    }}
-                    key={link?.label}
-                    href={link?.href}
-                  >
+                  <NavLink key={link?.label} href={link?.href}>
                     {link.label}
                   </NavLink>
                 ))}
@@ -149,16 +138,15 @@ export default function Navbar({ user }: { user: User|null }) {
                   >
                     <Avatar
                       size={"sm"}
-                      src={
-                        "https://efhzkzupjdpnsounrzhp.supabase.co/storage/v1/object/public/avatars/default_avatar.png"
-                      }
+                      bg="#0c70ab"
+                      icon={<AiOutlineUser fontSize="1.5rem" />}
                     />
                   </MenuButton>
                   <MenuList>
-                    <Link href={`/user/${currentUser?.id}`}>
+                    <Link as={NextLink} href={`/user/${currentUser?.id}`}>
                       <MenuItem>View profile</MenuItem>
                     </Link>
-                    <Link href="/me/dashboard">
+                    <Link as={NextLink} href="/me/dashboard">
                       <MenuItem>Dashboard</MenuItem>
                     </Link>
                     <Divider />
@@ -179,17 +167,7 @@ export default function Navbar({ user }: { user: User|null }) {
             <Box pb={4} display={{ md: "none" }}>
               <Stack as={"nav"} spacing={4}>
                 {Links.map((link) => (
-                  <NavLink
-                    display={{
-                      base:
-                        link.label === "Create workshop" && currentUser
-                          ? "none"
-                          : "block",
-                      md: "block",
-                    }}
-                    key={link?.label}
-                    href={link?.href}
-                  >
+                  <NavLink key={link?.label} href={link?.href}>
                     {link.label}
                   </NavLink>
                 ))}

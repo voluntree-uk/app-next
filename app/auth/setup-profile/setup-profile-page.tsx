@@ -1,13 +1,11 @@
 "use client"
 
-import { ReactElement, useState } from "react";
-import { User } from "@supabase/supabase-js";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import {
   Box,
   Button,
-  Checkbox,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Input,
@@ -16,39 +14,26 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { clientData } from "@data/supabase";
+import { isOlderThan } from "@util/dates";
 
-export default function SetupProfilePage({ user }: { user: User }) {
-  const { register, handleSubmit } = useForm();
-  const [isLoading, setIsLoading] = useState(false);
+interface IProps {
+  setupProfile(
+    firstName: string,
+    lastName: string,
+    dob: string,
+    username: string
+  ): Promise<{ success: boolean; error?: string }>;
+}
+
+export default function SetupProfilePage({ setupProfile }: IProps) {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const toast = useToast();
 
-  const setupProfile = async (formData: any) => {
-    setIsLoading(true);
-    try {
-      // Form validation should go here. Users must be over 18 years old, etc.
-      const values = {
-        user_id: user.id,
-        username: formData.username,
-        email: user.email,
-        name: formData.name,
-        surname: formData.surname,
-        dob: formData.dob,
-        share_full_name_consent: formData.fullNameConsent
-      };
-
-      const profile = await clientData.createProfile(values);
-
-      showToast("Successfully updated profile");
-      router.push("/");
-
-    } catch (error: any) {
-      showToast("Failed to setup profile", error.message, false);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [firstName, setFirstName] = useState<string | null>(null);
+  const [lastName, setLastName] = useState<string | null>(null);
+  const [dob, setDOB] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
 
   const showToast = (
     title: any,
@@ -64,75 +49,161 @@ export default function SetupProfilePage({ user }: { user: User }) {
     });
   };
 
-  const makeFormField = (
-    id: string,
-    type: string,
-    title: string,
-    placeholder: string
-  ): ReactElement => {
-    return (
-      <FormControl>
-        <FormLabel fontSize={"sm"} htmlFor={id}>
-          {title}
-        </FormLabel>
-        <Input
-          {...register(id)}
-          id={id}
-          type={type}
-          isRequired={true}
-          placeholder={placeholder}
-          p="4"
-        />
-      </FormControl>
-    );
-  };
+  function validateForm(): boolean {
+    var isValid = true;
+    if (!firstName) {
+      setFirstName("");
+      isValid = false;
+    }
+    if (!lastName) {
+      setLastName("");
+      isValid = false;
+    }
+    if (!dob) {
+      setDOB("");
+      isValid = false;
+    } else {
+      try {
+        const userDOB = new Date(dob);
+        if (!isOlderThan(userDOB, { years: 18 })) {
+          isValid = false;
+        }
+      } catch (err) {
+        isValid = false;
+      }
+    }
+    if (!username) {
+      setUsername("");
+      isValid = false;
+    }
+    return isValid;
+  }
+
+  async function onSubmit() {
+    setLoading(true);
+
+    if (validateForm()) {
+      const { success, error } = await setupProfile(firstName!, lastName!, dob!, username!);
+      if (success) {
+        showToast("Successfully updated profile");
+        router.push("/");
+      }
+      if (error) {
+        showToast("Failed to setup profile", error, false);
+      }
+    }
+
+    setLoading(false);
+  }
 
   return (
-    <form onSubmit={handleSubmit(setupProfile)}>
-      <Stack spacing="8">
-        <Box
-          py={{ base: "4", sm: "8" }}
-          px={{ base: "4", sm: "10" }}
-          bg={useBreakpointValue({ base: "white", sm: "white" })}
-          boxShadow={{ base: "none" }}
-          borderRadius={{ base: "2xl", sm: "xl" }}
-        >
-          <Stack textAlign="center" padding="5">
-            <Heading size={useBreakpointValue({ base: "sm", md: "md" })}>
-              Let's finish setting up your profile
-            </Heading>
+    <Stack spacing="8">
+      <Box
+        py={{ base: "4", sm: "8" }}
+        px={{ base: "4", sm: "10" }}
+        bg={useBreakpointValue({ base: "white", sm: "white" })}
+        boxShadow={{ base: "none" }}
+        borderRadius={{ base: "2xl", sm: "xl" }}
+      >
+        <Stack textAlign="center" padding="5">
+          <Heading size={useBreakpointValue({ base: "sm", md: "md" })}>
+            Let's finish setting up your profile
+          </Heading>
+        </Stack>
+        <Stack spacing="6">
+          <Stack spacing="3">
+            {/* First Name */}
+            <FormControl isInvalid={firstName === ""}>
+              <FormLabel htmlFor="firstName" fontSize={"md"}>
+                First Name
+              </FormLabel>
+              <Input
+                id="firstName"
+                type="text"
+                isRequired={true}
+                placeholder="First Name"
+                onChange={(e) => setFirstName(e.target.value)}
+                p="4"
+              />
+              {firstName === "" && (
+                <FormErrorMessage>Name is required</FormErrorMessage>
+              )}
+            </FormControl>
+            {/* Last Name */}
+            <FormControl isInvalid={lastName === ""}>
+              <FormLabel htmlFor="lastName" fontSize={"md"}>
+                Last Name
+              </FormLabel>
+              <Input
+                id="lastName"
+                type="text"
+                isRequired={true}
+                placeholder="Last Name"
+                onChange={(e) => setLastName(e.target.value)}
+                p="4"
+              />
+              {lastName === "" && (
+                <FormErrorMessage>Last name is required</FormErrorMessage>
+              )}
+            </FormControl>
+            {/* Date of Birth */}
+            <FormControl
+              isInvalid={
+                dob === "" ||
+                (dob != null && !isOlderThan(new Date(dob!), { years: 18 }))
+              }
+            >
+              <FormLabel htmlFor="dob" fontSize={"md"}>
+                Date of Birth
+              </FormLabel>
+              <Input
+                id="dob"
+                type="date"
+                isRequired={true}
+                onChange={(e) => setDOB(e.target.value)}
+                p="4"
+              />
+              {dob === "" ||
+                (dob != null && !isOlderThan(new Date(dob!), { years: 18 }) && (
+                  <FormErrorMessage>
+                    You must be at least 18 years old
+                  </FormErrorMessage>
+                ))}
+            </FormControl>
+            {/* Username */}
+            <FormControl isInvalid={username === ""}>
+              <FormLabel htmlFor="username" fontSize={"md"}>
+                Username
+              </FormLabel>
+              <Input
+                id="username"
+                type="text"
+                isRequired={true}
+                placeholder="Username"
+                onChange={(e) => setUsername(e.target.value)}
+                p="4"
+              />
+              {username === "" && (
+                <FormErrorMessage>Username is required</FormErrorMessage>
+              )}
+            </FormControl>
           </Stack>
           <Stack spacing="6">
-            <Stack spacing="3">
-              {makeFormField("name", "text", "Name", "Name")}
-              {makeFormField("surname", "text", "Surname", "Surname")}
-              {makeFormField("dob", "date", "Date of Birth", "")}
-              {makeFormField("username", "text", "Username", "username")}
-              <FormControl>
-                <Checkbox
-                  {...register("fullNameConsent")}
-                  fontSize={"sm"}
-                  id={"fullNameConsent"}
-                >
-                  Display my full name on the profile page
-                </Checkbox>
-              </FormControl>
-            </Stack>
-            <Stack spacing="6">
-              <Stack>
-                <Button
-                  colorScheme={"green"}
-                  type="submit"
-                  isLoading={isLoading}
-                  boxShadow="lg"
-                >
-                  Submit
-                </Button>
-              </Stack>
+            <Stack>
+              {/* Submit */}
+              <Button
+                colorScheme={"green"}
+                type="submit"
+                isLoading={loading}
+                onClick={() => onSubmit()}
+                boxShadow="lg"
+              >
+                Submit
+              </Button>
             </Stack>
           </Stack>
-        </Box>
-      </Stack>
-    </form>
+        </Stack>
+      </Box>
+    </Stack>
   );
 }

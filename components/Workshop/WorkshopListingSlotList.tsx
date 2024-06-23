@@ -34,8 +34,6 @@ export default function WorkshopListingSlotList({
   const router = useRouter();
   const toast = useToast();
 
-  const [loading, setLoading] = useState(false);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isUserHost = () => user?.id == workshop.user_id;
@@ -45,8 +43,6 @@ export default function WorkshopListingSlotList({
   };
 
   async function addNewSlot(slot: Slot): Promise<void> {
-    setLoading(true);
-
     try {
       if (slot) {
         const success = await clientData.createSlots([slot]);
@@ -66,7 +62,6 @@ export default function WorkshopListingSlotList({
         isClosable: true,
       });
     } finally {
-      setLoading(false);
       onClose();
     }
   }

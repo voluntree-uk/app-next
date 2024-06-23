@@ -17,7 +17,8 @@ const howItWorksCardContent = [
     btn: {
       text: "Create workshop",
       target: "/workshops/new",
-      colorScheme: "green"
+      inNewTab: false,
+      colorScheme: "green",
     },
   },
   {
@@ -32,7 +33,8 @@ const howItWorksCardContent = [
     btn: {
       text: "Browse workshops",
       target: "/workshops",
-      colorScheme: "cyan"
+      inNewTab: false,
+      colorScheme: "cyan",
     },
   },
   {
@@ -45,7 +47,8 @@ const howItWorksCardContent = [
     btn: {
       text: "Finances page",
       target: "https://voluntree.net/finances",
-      colorScheme: "yellow"
+      inNewTab: true,
+      colorScheme: "yellow",
     },
   },
 ];

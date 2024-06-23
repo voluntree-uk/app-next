@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
@@ -32,11 +32,33 @@ export function WorkshopListingNewSlotModal({
   onClose,
   onSubmit,
 }: IProps) {
-  let date: string = endOfNextWeekAsISOString();
-  let start_time: string = "17:00";
-  let end_time: string = "18:00";
-  let capacity: number = 1;
 
+  const [date, setDate] = useState<string>(endOfNextWeekAsISOString());
+  const [startTime, setStartTime] = useState<string>("17:00");
+  const [endTime, setEndTime] = useState<string>("18:00");
+  const [capacity, setCapacity] = useState<number>(1);
+  
+  function validateForm(): boolean {
+    var isValid = true;
+    if (!date) {
+      setDate("");
+      isValid = false;
+    }
+    if (!startTime) {
+      setStartTime("");
+      isValid = false;
+    }
+    if (!endTime) {
+      setEndTime("");
+      isValid = false;
+    }
+    if (capacity < 1) {
+      setCapacity(0);
+      isValid = false;
+    }
+    return isValid;
+  }
+  
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -45,6 +67,7 @@ export function WorkshopListingNewSlotModal({
         <ModalCloseButton />
         <ModalBody>
           <Stack spacing="3">
+            {/* Date */}
             <FormControl isInvalid={!date} mr={1}>
               <FormLabel htmlFor="date" fontSize={{ base: "xs", sm: "sm" }}>
                 Date
@@ -54,11 +77,11 @@ export function WorkshopListingNewSlotModal({
                 placeholder="Date"
                 type="date"
                 defaultValue={date}
-                onChange={(e) => (date = e.target.value)}
+                onChange={(e) => setDate(e.target.value)}
               />
-              <FormErrorMessage>This is required</FormErrorMessage>
+              <FormErrorMessage>Date is required</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!start_time} mr={1}>
+            <FormControl isInvalid={!startTime} mr={1}>
               <FormLabel
                 htmlFor="startTime"
                 fontSize={{ base: "xs", sm: "sm" }}
@@ -69,12 +92,12 @@ export function WorkshopListingNewSlotModal({
                 id="startTime"
                 placeholder="Start Time"
                 type="time"
-                defaultValue={start_time}
-                onChange={(e) => (start_time = e.target.value)}
+                defaultValue={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
               />
-              <FormErrorMessage>This is required</FormErrorMessage>
+              <FormErrorMessage>Start time is required</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!end_time}>
+            <FormControl isInvalid={!endTime}>
               <FormLabel htmlFor="endTime" fontSize={{ base: "xs", sm: "sm" }}>
                 End Time
               </FormLabel>
@@ -82,12 +105,12 @@ export function WorkshopListingNewSlotModal({
                 id="endTime"
                 placeholder="End Time"
                 type="time"
-                defaultValue={end_time}
-                onChange={(e) => (end_time = e.target.value)}
+                defaultValue={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
               />
-              <FormErrorMessage>This is required</FormErrorMessage>
+              <FormErrorMessage>End time is required</FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={!capacity}>
+            <FormControl isInvalid={capacity < 1}>
               <FormLabel htmlFor="capacity" fontSize={{ base: "xs", sm: "sm" }}>
                 Capacity
               </FormLabel>
@@ -96,9 +119,11 @@ export function WorkshopListingNewSlotModal({
                 placeholder="Capacity"
                 type="number"
                 defaultValue={capacity}
-                onChange={(e) => (capacity = Number.parseInt(e.target.value))}
+                onChange={(e) =>
+                  e.target.value ? setCapacity(Number.parseInt(e.target.value)) : setCapacity(0)
+                }
               />
-              <FormErrorMessage>This is required</FormErrorMessage>
+              <FormErrorMessage>Capacity is required</FormErrorMessage>
             </FormControl>
           </Stack>
         </ModalBody>
@@ -106,15 +131,17 @@ export function WorkshopListingNewSlotModal({
           <Button
             colorScheme="teal"
             mr={3}
-            onClick={() =>
-              onSubmit({
-                workshop_id: workshop.id!,
-                date: date,
-                start_time: start_time,
-                end_time: end_time,
-                capacity: capacity,
-              })
-            }
+            onClick={() => {
+              if (validateForm()) {
+                onSubmit({
+                  workshop_id: workshop.id!,
+                  date: date,
+                  start_time: startTime,
+                  end_time: endTime,
+                  capacity: capacity,
+                });
+              }
+            }}
           >
             Create
           </Button>

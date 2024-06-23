@@ -7,19 +7,24 @@ import { Workshop, FilterProps, DefaultFilterProps } from "@schemas";
 import WorkshopCard from "@components/Workshop/WorkshopListCard";
 import WorkshopListFilter from "@components/Workshop/WorkshopListFilter";
 import { clientData } from "@data/supabase";
+import Loader from "@components/Loader";
+import { useRouter } from "next/navigation";
 
-interface IProps {
-  hideFilter?: boolean;
-}
 
-export default function WorkshopList({ hideFilter }: IProps) {
+export default function WorkshopList() {
+  const router = useRouter();
+
   const [search, setSearch] = useState<FilterProps>(DefaultFilterProps);
   const [workshops, setWorkshops] = useState<Workshop[]>();
+  const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("");
 
   const filterWorkshops = useCallback(async (filters: FilterProps) => {
-    console.log(`Filtering workshops on ${JSON.stringify(filters)}`)
+    setLoadingMessage("Searching for workshops");
+    setLoading(true);
     const foundWorkshops = await clientData.filterAvailableWorkshops(filters);
     setWorkshops(foundWorkshops);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -28,14 +33,16 @@ export default function WorkshopList({ hideFilter }: IProps) {
 
   return (
     <Box>
-      {!hideFilter ? (
-        <WorkshopListFilter onFilterChange={(data) => setSearch(data)} />
-      ) : null}
-      <Stack spacing={0}>
-        {workshops?.map((w) => (
-          <WorkshopCard key={w.id} workshop={w} />
-        ))}
-      </Stack>
+      <WorkshopListFilter onFilterChange={(data) => setSearch(data)} />
+      {loading ? (
+        <Loader message={"Searching for workshops"} />
+      ) : (
+        <Stack spacing={0}>
+          {workshops?.map((w) => (
+            <WorkshopCard key={w.id} workshop={w} />
+          ))}
+        </Stack>
+      )}
     </Box>
   );
 }

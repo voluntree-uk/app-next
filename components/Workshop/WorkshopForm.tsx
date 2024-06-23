@@ -22,10 +22,11 @@ import config from "@config";
 import { Workshop } from "@schemas";
 import { clientData } from "@data/supabase";
 import { User } from "@supabase/supabase-js";
+import Loader from "@components/Loader";
 
 
 export default function WorkshopForm({ user }: {user: User}) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const toast = useToast();
 
@@ -61,7 +62,7 @@ export default function WorkshopForm({ user }: {user: User}) {
    * @param formData - form field data
    */
   async function onSubmit() {
-    setIsLoading(true);
+    setLoading(true);
 
     if (validateForm()) {
       const createdBy = user?.id;
@@ -87,101 +88,103 @@ export default function WorkshopForm({ user }: {user: User}) {
             duration: 4000,
             isClosable: true,
           });
+          setLoading(false)
         }
       }
     }
-
-    setIsLoading(false);
   }
 
 
   return (
     <Container maxW="container.sm">
-      <Box p="1em">
-        <Stack spacing={6}>
-          <Heading size={"lg"}>Create Workshop</Heading>
+      {loading ? (
+        <Loader message="Creating an online workshop meeting room" />
+      ) : (
+        <Box p="1em">
+          <Stack spacing={6}>
+            <Heading size={"lg"}>Create Workshop</Heading>
 
-          {/* Name */}
-          <FormControl isInvalid={name === ""}>
-            <FormLabel htmlFor="name" fontSize="md">
-              Name
-            </FormLabel>
-            <Input
-              onChange={(e) => setName(e.target.value)}
-              isRequired={true}
-              autoFocus={true}
-            />
-            {name === "" ? (
-              <FormErrorMessage>Name is required</FormErrorMessage>
-            ) : (
-              <FormHelperText>Choose a name for your workshop</FormHelperText>
-            )}
-          </FormControl>
+            {/* Name */}
+            <FormControl isInvalid={name === ""}>
+              <FormLabel htmlFor="name" fontSize="md">
+                Name
+              </FormLabel>
+              <Input
+                onChange={(e) => setName(e.target.value)}
+                isRequired={true}
+                autoFocus={true}
+              />
+              {name === "" ? (
+                <FormErrorMessage>Name is required</FormErrorMessage>
+              ) : (
+                <FormHelperText>Choose a name for your workshop</FormHelperText>
+              )}
+            </FormControl>
 
-          {/* Category */}
-          <FormControl isInvalid={category === ""}>
-            <FormLabel htmlFor="category" fontSize="md">
-              Category
-            </FormLabel>
-            <Select
-              placeholder={"Please Select"}
-              required={true}
-              onChange={(e) => setCategory(e.target.value)}
+            {/* Category */}
+            <FormControl isInvalid={category === ""}>
+              <FormLabel htmlFor="category" fontSize="md">
+                Category
+              </FormLabel>
+              <Select
+                placeholder={"Please Select"}
+                required={true}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {config.categories.map((category) => {
+                  return (
+                    <option key={category} value={category}>
+                      {capitalize(category)}
+                    </option>
+                  );
+                })}
+              </Select>
+              {category === "" ? (
+                <FormErrorMessage>
+                  Category is required, please select one
+                </FormErrorMessage>
+              ) : (
+                <FormHelperText>
+                  Please select a category
+                </FormHelperText>
+              )}
+            </FormControl>
+
+            {/* Description */}
+            <FormControl
+              isInvalid={description != null && description.length < 200}
             >
-              {config.categories.map((category) => {
-                return (
-                  <option key={category} value={category}>
-                    {capitalize(category)}
-                  </option>
-                );
-              })}
-            </Select>
-            {category === "" ? (
-              <FormErrorMessage>
-                Category is required, please select one
-              </FormErrorMessage>
-            ) : (
-              <FormHelperText>
-                Please select a category
-              </FormHelperText>
-            )}
-          </FormControl>
+              <FormLabel htmlFor="description" fontSize="md">
+                Description
+              </FormLabel>
+              <Textarea
+                isRequired={true}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              {description && description?.length < 200 ? (
+                <FormErrorMessage>
+                  At least 200 characters required,{" "}
+                  {`${200 - description.length}`} characters remaining
+                </FormErrorMessage>
+              ) : (
+                <FormHelperText>
+                  Provide as much detail as possible
+                </FormHelperText>
+              )}
+            </FormControl>
 
-          {/* Description */}
-          <FormControl
-            isInvalid={description != null && description.length < 200}
-          >
-            <FormLabel htmlFor="description" fontSize="md">
-              Description
-            </FormLabel>
-            <Textarea
-              isRequired={true}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            {description && description?.length < 200 ? (
-              <FormErrorMessage>
-                At least 200 characters required,{" "}
-                {`${200 - description.length}`} characters remaining
-              </FormErrorMessage>
-            ) : (
-              <FormHelperText>
-                Provide as much detail as possible
-              </FormHelperText>
-            )}
-          </FormControl>
-
-          {/* Submit */}
-          <Button
-            colorScheme={"green"}
-            type="submit"
-            isLoading={isLoading}
-            boxShadow="lg"
-            onClick={() => onSubmit()}
-          >
-            Submit
-          </Button>
-        </Stack>
-      </Box>
+            {/* Submit */}
+            <Button
+              colorScheme={"green"}
+              type="submit"
+              boxShadow="lg"
+              onClick={() => onSubmit()}
+            >
+              Submit
+            </Button>
+          </Stack>
+        </Box>
+      )}
     </Container>
   );
 }
