@@ -6,6 +6,7 @@ import NextLink from "next/link";
 interface IProps {
   btn: {
     target: string;
+    inNewTab: boolean
     text: string;
     colorScheme: string;
   };
@@ -28,10 +29,12 @@ export default function LandingHowItWorksCard({
       >
         {title}
       </Heading>
-      <Text>
-        {description}
-      </Text>
-      <Link as={NextLink} href={btn.target} target="_blank">
+      <Text>{description}</Text>
+      <Link
+        as={NextLink}
+        href={btn.target}
+        target={btn.inNewTab ? "_blank" : "_self"}
+      >
         <Button width={"100%"} colorScheme={btn.colorScheme}>
           {btn.text}
         </Button>
