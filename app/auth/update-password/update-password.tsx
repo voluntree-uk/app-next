@@ -106,6 +106,7 @@ export default function UpdatePasswordPage({ updatePassword }: IProps) {
         </Stack>
         <Stack spacing="6">
           <Stack spacing="3">
+            {/* Password */}
             <FormControl isInvalid={password === ""}>
               <FormLabel htmlFor="password" fontSize={"md"}>
                 New Password
@@ -124,6 +125,7 @@ export default function UpdatePasswordPage({ updatePassword }: IProps) {
                 <FormHelperText>Choose a strong password</FormHelperText>
               )}
             </FormControl>
+            {/* Confirmed password */}
             <FormControl
               isInvalid={
                 confirmedPassword != null && password !== confirmedPassword
@@ -147,6 +149,7 @@ export default function UpdatePasswordPage({ updatePassword }: IProps) {
           </Stack>
           <Stack spacing="6">
             <Stack>
+              {/* Submit */}
               <Button
                 colorScheme={"green"}
                 type="submit"

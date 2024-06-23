@@ -7,7 +7,8 @@ import {
   isWeekend,
   nextMonday,
   nextSaturday,
-  nextSunday
+  nextSunday,
+  add
 } from "date-fns";
 
 dayjs.extend(relativeTime);
@@ -123,4 +124,8 @@ export function endOfThisWeekendAsISOString(): string {
 export function isBeforeNow(date: Date): boolean {
   const now = new Date()
   return date < now
+}
+
+export function isOlderThan(date: Date, duration: Duration): boolean {
+  return add(date, duration) < new Date()
 }
