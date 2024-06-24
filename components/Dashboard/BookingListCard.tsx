@@ -12,9 +12,9 @@ import {
   Text,
   useToast,
   Link,
-  Avatar,
   useDisclosure,
   Button,
+  VStack,
 } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -47,10 +47,6 @@ export default function BookingListCard({ booking, type }: IProps) {
       }
     }
   });
-
-  const directToWorkshop = (booking: BookingDetails) => {
-    router.push(`/workshops/${booking.workshop_id}`);
-  };
 
   const toast = useToast();
 
@@ -149,15 +145,8 @@ export default function BookingListCard({ booking, type }: IProps) {
       }}
     >
       <Flex w={"100%"}>
-        <Avatar
-          src="https://static.vecteezy.com/system/resources/previews/003/452/135/original/man-riding-bicycle-sport-illustration-vector.jpg"
-          size={"lg"}
-          mr="3"
-          cursor={"pointer"}
-          onClick={() => directToWorkshop(booking)}
-        ></Avatar>
         <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
-          <Flex flexDir={"column"} w={"100%"}>
+          <VStack w={"70%"} alignItems={"start"} spacing="0">
             <Link
               as={NextLink}
               href={`/workshops/${booking.workshop_id}`}
@@ -185,7 +174,7 @@ export default function BookingListCard({ booking, type }: IProps) {
               <TimeIcon mr="2" />{" "}
               {timeToReadable(booking.slot?.start_time, booking.slot?.end_time)}
             </Text>
-          </Flex>
+          </VStack>
           <Show showIf={type === Type.Upcoming}>
             <Button
               rounded="full"

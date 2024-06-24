@@ -2,10 +2,14 @@
 
 import NextLink from "next/link";
 import { EditIcon } from "@chakra-ui/icons";
-import { Flex, Link, Avatar, Button } from "@chakra-ui/react";
+import { Flex, Link, Text, Button, VStack, Icon } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import React from "react";
-import { Workshop } from "@schemas";
+import React, { useEffect, useState } from "react";
+import { Slot, Workshop } from "@schemas";
+import { MdEventAvailable } from "react-icons/md";
+import { BiSolidWebcam } from "react-icons/bi";
+import { clientData } from "@data/supabase";
+import { isBeforeNow } from "@util/dates";
 
 interface IProps {
   workshop: Workshop;
@@ -16,6 +20,13 @@ export default function WorkshopListCard({ workshop }: IProps) {
   const directToWorkshop = (workshop: Workshop) => {
     router.push(`/workshops/${workshop.id}`);
   };
+  const [slots, setSlots] = useState<Slot[] | null>(null);
+
+  useEffect(() => {
+    clientData.getWorkshopSlots(workshop.id!).then((slots) => {
+      setSlots(slots.filter((slot) => !isBeforeNow(new Date(slot.date))))
+    })
+  })
 
   return (
     <Flex
@@ -32,14 +43,8 @@ export default function WorkshopListCard({ workshop }: IProps) {
       onClick={() => directToWorkshop(workshop)}
     >
       <Flex w={"100%"}>
-        <Avatar
-          src="https://static.vecteezy.com/system/resources/previews/003/452/135/original/man-riding-bicycle-sport-illustration-vector.jpg"
-          size={"lg"}
-          mr="3"
-          cursor={"pointer"}
-        ></Avatar>
         <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
-          <Flex flexDir={"column"} w={"100%"}>
+          <VStack w={"70%"} alignItems={"start"} spacing="0">
             <Link
               as={NextLink}
               href={`/workshops/${workshop.id}`}
@@ -48,7 +53,27 @@ export default function WorkshopListCard({ workshop }: IProps) {
             >
               {workshop.name}
             </Link>
-          </Flex>
+            <Text
+              color="gray.500"
+              display={"flex"}
+              alignItems="center"
+              fontSize="small"
+              mb="0.5"
+            >
+              <Icon boxSize={"1.3em"} as={BiSolidWebcam} mr="2" />
+              {`Online Event`}
+            </Text>
+            <Text
+              color="gray.500"
+              display={"flex"}
+              alignItems="center"
+              fontSize="small"
+              mb="0.5"
+            >
+              <Icon boxSize={"1.3em"} as={MdEventAvailable} mr="2" />
+              {`${slots?.length} upcoming date${slots?.length == 1 ? "" : "s"}`}
+            </Text>
+          </VStack>
           <Button
             rounded="full"
             rightIcon={<EditIcon />}

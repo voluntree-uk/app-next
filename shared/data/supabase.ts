@@ -193,7 +193,8 @@ class SupabaseDataAccessor implements DataAccessor {
     const { data: slots, error: error } = await this.client
       .from("slot")
       .select("*")
-      .eq("workshop_id", id);
+      .eq("workshop_id", id)
+      .order("date");
     if (error) throw error;
     return slots;
   }
