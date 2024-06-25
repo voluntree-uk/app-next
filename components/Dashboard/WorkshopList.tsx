@@ -5,6 +5,8 @@ import { Box, Stack } from "@chakra-ui/react";
 import { Workshop } from "@schemas";
 import WorkshopListHeading from "@components/Dashboard/WorkshopListHeading";
 import WorkshopListCard from "@components/Dashboard/WorkshopListCard";
+import Show from "@components/Helpers/Show";
+import NoResults from "@components/NoResults";
 
 interface IProps {
   workshops: Workshop[];
@@ -16,9 +18,16 @@ export function WorkshopList({ workshops, navigate }: IProps) {
     <Box pb="10">
       <WorkshopListHeading workshops={workshops} />
       <Stack spacing={0}>
-        {workshops?.map((workshop) => (
-          <WorkshopListCard key={workshop.id} workshop={workshop} navigate={navigate} />
+        {workshops.map((workshop) => (
+          <WorkshopListCard
+            key={workshop.id}
+            workshop={workshop}
+            navigate={navigate}
+          />
         ))}
+        <Show showIf={workshops.length === 0}>
+          <NoResults message="No Workshops Found" />
+        </Show>
       </Stack>
     </Box>
   );

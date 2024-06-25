@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Box, Stack } from "@chakra-ui/react";
-import React from "react";
 import { Workshop, FilterProps, DefaultFilterProps } from "@schemas";
 import WorkshopCard from "@components/Workshop/WorkshopListCard";
 import WorkshopListFilter from "@components/Workshop/WorkshopListFilter";
 import { clientData } from "@data/supabase";
 import Loader from "@components/Loader";
 import { useRouter } from "next/navigation";
+import Show from "@components/Helpers/Show";
+import NoResults from "@components/NoResults";
 
 
 export default function WorkshopList() {
@@ -45,8 +46,15 @@ export default function WorkshopList() {
       ) : (
         <Stack spacing={0}>
           {workshops?.map((w) => (
-            <WorkshopCard key={w.id} workshop={w} navigate={navigateToWorkshop} />
+            <WorkshopCard
+              key={w.id}
+              workshop={w}
+              navigate={navigateToWorkshop}
+            />
           ))}
+          <Show showIf={!loading && workshops?.length === 0}>
+            <NoResults message="No Workshops Found" />
+          </Show>
         </Stack>
       )}
     </Box>

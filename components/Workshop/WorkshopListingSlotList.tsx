@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -17,6 +16,7 @@ import { WorkshopListingSlot } from "@components/Workshop/WorkshopListingSlot";
 import { WorkshopListingNewSlotModal } from "@components/Workshop/WorkshopListingNewSlotModal";
 import Show from "@components/Helpers/Show";
 import { isBeforeNow } from "@util/dates";
+import NoResults from "@components/NoResults";
 
 interface IProps {
   workshop: Workshop;
@@ -37,6 +37,7 @@ export default function WorkshopListingSlotList({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isUserHost = () => user?.id == workshop.user_id;
+  const futureSlots = slots.filter((slot) => !isBeforeNow(new Date(slot.date)));
 
   const getActiveBookingsForSlot = (slot: Slot): Booking[] => {
     return bookings.filter((b) => b.slot_id === slot.id);
@@ -78,17 +79,18 @@ export default function WorkshopListingSlotList({
         <Heading as="h2" size="md" pb="0.5em">
           Availability
         </Heading>
-        {slots
-          .filter((slot) => !isBeforeNow(new Date(slot.date)))
-          .map((slot) => (
-            <WorkshopListingSlot
-              workshop={workshop}
-              key={slot.id}
-              slot={slot}
-              slotBookings={getActiveBookingsForSlot(slot)}
-              user={user}
-            />
-          ))}
+        {futureSlots.map((slot) => (
+          <WorkshopListingSlot
+            workshop={workshop}
+            key={slot.id}
+            slot={slot}
+            slotBookings={getActiveBookingsForSlot(slot)}
+            user={user}
+          />
+        ))}
+        <Show showIf={futureSlots.length === 0}>
+          <NoResults message="Currently No Dates Available" />
+        </Show>
         <Show showIf={isUserHost()}>
           <Button
             variant="solid"
