@@ -8,15 +8,16 @@ import WorkshopListCard from "@components/Dashboard/WorkshopListCard";
 
 interface IProps {
   workshops: Workshop[];
+  navigate: (id: string) => void;
 }
 
-export function WorkshopList({ workshops }: IProps) {
+export function WorkshopList({ workshops, navigate }: IProps) {
   return (
     <Box pb="10">
       <WorkshopListHeading workshops={workshops} />
       <Stack spacing={0}>
         {workshops?.map((workshop) => (
-          <WorkshopListCard key={workshop.id} workshop={workshop} />
+          <WorkshopListCard key={workshop.id} workshop={workshop} navigate={navigate} />
         ))}
       </Stack>
     </Box>

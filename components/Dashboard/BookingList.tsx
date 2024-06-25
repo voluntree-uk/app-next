@@ -9,6 +9,7 @@ import BookingListHeading from "@components/Dashboard/BookingListHeading";
 interface IProps {
   bookings: BookingDetails[];
   type: Type;
+  navigate: (id: string) => void;
 }
 
 export enum Type {
@@ -16,13 +17,13 @@ export enum Type {
   Past,
 }
 
-export function BookingList({ bookings, type }: IProps) {
+export function BookingList({ bookings, type, navigate }: IProps) {
   return (
     <Box pb="10">
       <BookingListHeading bookings={bookings} type={type} />
       <Stack spacing={0}>
         {bookings?.map((booking) => (
-          <BookingListCard key={booking.id} booking={booking} type={type} />
+          <BookingListCard key={booking.id} booking={booking} type={type} navigate={navigate} />
         ))}
       </Stack>
     </Box>

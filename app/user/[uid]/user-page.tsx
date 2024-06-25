@@ -6,6 +6,7 @@ import { clientData } from "@data/supabase";
 import Loader from "@components/Loader";
 import UserProfile from "@components/Profile/UserProfile";
 import HostedWorkshops from "@components/Profile/HostedWorkshops";
+import { useRouter } from "next/navigation";
 
 export default function UserPage({
   user_id,
@@ -14,7 +15,10 @@ export default function UserPage({
   user_id: string,
   isMe: boolean
 }) {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState("Fetching user profile");
 
   const [profile, setProfile] = useState<Profile | null>(null);
   const [workshops, setWorkshops] = useState<Workshop[] | null>(null);
@@ -34,14 +38,20 @@ export default function UserPage({
     }
   }, [profile, workshops]);
 
+  const navigateToWorkshop = (id: string) => {
+    setLoadingMessage("Fetching workshop details");
+    setLoading(true);
+    router.push(`/workshops/${id}`);
+  };
+
   return (
     <>
       {loading ? (
-        <Loader message={"Fetching user profile"} fullScreen/>
+        <Loader message={loadingMessage} fullScreen/>
       ) : (
         <>
           <UserProfile profile={profile!} isMe={isMe} />
-          <HostedWorkshops workshops={workshops!} isMe={isMe} />
+          <HostedWorkshops workshops={workshops!} isMe={isMe} navigate={navigateToWorkshop} />
         </>
       )}
     </>

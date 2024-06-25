@@ -11,14 +11,12 @@ import {
   Flex,
   Text,
   useToast,
-  Link,
   useDisclosure,
   Button,
   VStack,
 } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import NextLink from "next/link";
 import { clientData } from "@data/supabase";
 import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
@@ -31,10 +29,10 @@ import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
 interface IProps {
   booking: BookingDetails;
   type: Type;
+  navigate: (id: string) => void;
 }
-export default function BookingListCard({ booking, type }: IProps) {
+export default function BookingListCard({ booking, type, navigate }: IProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const router = useRouter();
   const query = useSearchParams();
 
   /**
@@ -77,8 +75,7 @@ export default function BookingListCard({ booking, type }: IProps) {
           duration: 4000,
           isClosable: true,
         });
-
-        router.push("/me/dashboard");
+        window.location.reload();
       }
     } catch (error) {
       const message = (error as any).message;
@@ -114,7 +111,7 @@ export default function BookingListCard({ booking, type }: IProps) {
             duration: 4000,
             isClosable: true,
           });
-          router.push("/me/dashboard");
+          window.location.reload();
         }
       }
     } catch (error) {
@@ -134,8 +131,10 @@ export default function BookingListCard({ booking, type }: IProps) {
 
   return (
     <Flex
+      cursor={"pointer"}
       px="7"
       py="3"
+      w={"100%"}
       justifyContent="space-between"
       alignItems={"center"}
       borderBottomWidth="1px"
@@ -143,90 +142,90 @@ export default function BookingListCard({ booking, type }: IProps) {
       _hover={{
         background: "gray.50",
       }}
+      onClick={() => navigate(booking.workshop_id)}
     >
-      <Flex w={"100%"}>
-        <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
-          <VStack w={"70%"} alignItems={"start"} spacing="0">
-            <Link
-              as={NextLink}
-              href={`/workshops/${booking.workshop_id}`}
-              fontWeight={"bold"}
-              mb="0.5"
-            >
-              {booking.workshop?.name}
-            </Link>
-            <Text
-              color="gray.500"
-              display={"flex"}
-              alignItems="center"
-              fontSize="small"
-              mb="0.5"
-            >
-              <CalendarIcon mr="2" />
-              {dateToReadable(booking.slot.date)}
-            </Text>
-            <Text
-              color="gray.500"
-              display={"flex"}
-              alignItems="center"
-              fontSize="small"
-            >
-              <TimeIcon mr="2" />{" "}
-              {timeToReadable(booking.slot?.start_time, booking.slot?.end_time)}
-            </Text>
-          </VStack>
-          <Show showIf={type === Type.Upcoming}>
+      <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
+        <VStack w={"70%"} alignItems={"start"} spacing="0">
+          <Text fontWeight={"bold"} mb="0.5">
+            {booking.workshop?.name}
+          </Text>
+          <Text
+            color="gray.500"
+            display={"flex"}
+            alignItems="center"
+            fontSize="small"
+            mb="0.5"
+          >
+            <CalendarIcon mr="2" />
+            {dateToReadable(booking.slot.date)}
+          </Text>
+          <Text
+            color="gray.500"
+            display={"flex"}
+            alignItems="center"
+            fontSize="small"
+          >
+            <TimeIcon mr="2" />{" "}
+            {timeToReadable(booking.slot?.start_time, booking.slot?.end_time)}
+          </Text>
+        </VStack>
+        <Show showIf={type === Type.Upcoming}>
+          <Button
+            rounded="full"
+            rightIcon={<CloseIcon />}
+            colorScheme="red"
+            variant="solid"
+            size={{ base: "sm", sm: "md" }}
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpen();
+            }}
+          >
+            Cancel
+          </Button>
+          <ConfirmActionDialog
+            title="Cancel Booking"
+            message="Are you sure you want to cancel this booking? This action cannot be undone."
+            isOpen={isOpen}
+            onClose={onClose}
+            onSubmit={cancelBooking}
+          />
+        </Show>
+        <Show showIf={type === Type.Past}>
+          <Show showIf={isReviewed()}>
             <Button
               rounded="full"
-              rightIcon={<CloseIcon />}
-              colorScheme="red"
+              rightIcon={<CheckIcon />}
+              colorScheme="teal"
+              variant="ghost"
+              size={{ base: "sm", sm: "md" }}
+              disabled={true}
+            >
+              Reviewed
+            </Button>
+          </Show>
+          <Show showIf={!isReviewed()}>
+            <Button
+              rounded="full"
+              rightIcon={<EditIcon />}
+              colorScheme="teal"
               variant="solid"
               size={{ base: "sm", sm: "md" }}
-              onClick={onOpen}
+              onClick={(event) => {
+                event.stopPropagation();
+                onOpen();
+              }}
             >
-              Cancel
+              Review
             </Button>
-            <ConfirmActionDialog
-              title="Cancel Booking"
-              message="Are you sure you want to cancel this booking? This action cannot be undone."
-              isOpen={isOpen}
-              onClose={onClose}
-              onSubmit={cancelBooking}
-            />
           </Show>
-          <Show showIf={type === Type.Past}>
-            <Show showIf={isReviewed()}>
-              <Button
-                rounded="full"
-                rightIcon={<CheckIcon />}
-                colorScheme="teal"
-                variant="ghost"
-                size={{ base: "sm", sm: "md" }}
-                disabled={true}
-              >
-                Reviewed
-              </Button>
-            </Show>
-            <Show showIf={!isReviewed()}>
-              <Button
-                rounded="full"
-                rightIcon={<EditIcon />}
-                colorScheme="teal"
-                variant="solid"
-                size={{ base: "sm", sm: "md" }}
-                onClick={() => onOpen()}
-              >
-                Review
-              </Button>
-            </Show>
-            <ReviewModal
-              booking={booking}
-              isOpen={isOpen}
-              onClose={onClose}
-              onSubmit={reviewBooking}
-            />
-          </Show>
-        </Flex>
+          <ReviewModal
+            booking={booking}
+            isOpen={isOpen}
+            onClose={onClose}
+            onSubmit={reviewBooking}
+          />
+        </Show>
       </Flex>
     </Flex>
   );

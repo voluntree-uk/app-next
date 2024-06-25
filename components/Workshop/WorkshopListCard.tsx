@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation";
 import { Box, HStack, Img, Text } from "@chakra-ui/react";
 import { Workshop } from "@schemas";
 
-export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
+interface IProps {
+  workshop: Workshop;
+  navigate: (workshop: Workshop) => void;
+}
+
+export default function WorkshopCard({ workshop, navigate }: IProps) {
   const router = useRouter();
   return (
     <Box
@@ -13,7 +18,7 @@ export default function WorkshopCard({ workshop }: { workshop: Workshop }) {
       borderBottom="1px"
       borderBottomColor={"gray.300"}
       bg="white"
-      onClick={() => router.push(`/workshops/${workshop.id}`)}
+      onClick={() => navigate(workshop)}
       py={{ base: "2", md: "4" }}
       _hover={{
         background: "gray.50",

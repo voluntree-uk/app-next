@@ -31,15 +31,21 @@ export default function WorkshopList() {
     filterWorkshops(search);
   }, [search, filterWorkshops]);
 
+  const navigateToWorkshop = ((workshop: Workshop) => {
+    setLoadingMessage("Fetching workshop details");
+    setLoading(true);
+    router.push(`/workshops/${workshop.id}`);
+  })
+
   return (
     <Box>
       <WorkshopListFilter onFilterChange={(data) => setSearch(data)} />
       {loading ? (
-        <Loader message={"Searching for workshops"} />
+        <Loader message={loadingMessage} />
       ) : (
         <Stack spacing={0}>
           {workshops?.map((w) => (
-            <WorkshopCard key={w.id} workshop={w} />
+            <WorkshopCard key={w.id} workshop={w} navigate={navigateToWorkshop} />
           ))}
         </Stack>
       )}

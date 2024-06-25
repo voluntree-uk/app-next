@@ -14,9 +14,10 @@ import Show from "@components/Helpers/Show";
 interface IProps {
   workshops: Workshop[];
   isMe: boolean;
+  navigate: (id: string) => void;
 }
 
-export default function HostedWorkshops({ workshops, isMe }: IProps) {
+export default function HostedWorkshops({ workshops, isMe, navigate }: IProps) {
   return (
     <Box p="1em">
       <Heading pb="0.5em" size={"lg"} color={"gray.700"}>
@@ -25,7 +26,7 @@ export default function HostedWorkshops({ workshops, isMe }: IProps) {
       <Show showIf={workshops.length > 0}>
         <SimpleGrid minChildWidth="15em" spacing="1em">
           {workshops?.map((w) => (
-            <HostedWorkshopCard key={w.id} workshop={w} />
+            <HostedWorkshopCard key={w.id} workshop={w} navigate={navigate} />
           ))}
         </SimpleGrid>
       </Show>
