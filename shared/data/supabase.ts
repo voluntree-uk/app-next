@@ -371,7 +371,7 @@ class SupabaseDataAccessor implements DataAccessor {
     })
 
     if (r_error) {
-      console.log(`Failed to update user rating: ${JSON.stringify(b_error)}`)
+      console.log(`Failed to update user rating: ${JSON.stringify(r_error)}`)
       return false
     }
 
