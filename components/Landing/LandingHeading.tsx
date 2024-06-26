@@ -29,7 +29,7 @@ export default function LandingHeading() {
       <Img
         mt={{ base: "8", sm: "0" }}
         height={{ base: "15em", lg: "22em" }}
-        src="/img/meeting.jpg"
+        src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/meeting.jpg`}
       ></Img>
     </Flex>
   );

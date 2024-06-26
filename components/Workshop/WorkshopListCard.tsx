@@ -27,7 +27,7 @@ export default function WorkshopCard({ workshop, navigate }: IProps) {
       <HStack display="flex" spacing="1em">
         <Box alignItems={"center"}>
           <Img
-            src={`/img/${workshop.category}.png`}
+            src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${workshop.category}.png`}
             rounded={"lg"}
             mx="1em"
             height={{ base: "50px", md: "100px" }}
