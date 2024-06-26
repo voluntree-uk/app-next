@@ -35,8 +35,8 @@ const SocialButton = ({
     <chakra.button
       bg={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
       rounded={"full"}
-      w={8}
-      h={8}
+      w={6}
+      h={6}
       cursor={"pointer"}
       as={"a"}
       href={href}
@@ -65,43 +65,67 @@ export default function Footer({
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
     >
-      <Container as={Stack} maxW={"6xl"} py={10}>
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={8}>
+      <Container as={Stack} maxW={"6xl"} py={5}>
+        <SimpleGrid
+          columns={2}
+          spacing={8}
+          alignItems={"stretch"}
+          alignContent={"space-evenly"}
+        >
           <Stack align={"flex-start"}>
             <ListHeader>Company</ListHeader>
-            <Link href={"#"}>About Us</Link>
-            <Link href={"#"}>Blog</Link>
-            <Link href={"#"}>Careers</Link>
-            <Link href={"#"}>Contact Us</Link>
+            <Stack
+              align={"flex-start"}
+              direction={{ base: "column", md: "row" }}
+              spacing={{ base: 0, md: 10 }}
+            >
+              <Link
+                as={NextLink}
+                target="_blank"
+                href={"https://voluntree.net/"}
+              >
+                About Us
+              </Link>
+              <Link
+                as={NextLink}
+                target="_blank"
+                href={"https://voluntree.net/finances/"}
+              >
+                Finances
+              </Link>
+              <Link
+                as={NextLink}
+                target="_blank"
+                href={"https://voluntree.net/get-involved/"}
+              >
+                Get Involved
+              </Link>
+            </Stack>
           </Stack>
-
-          <Stack align={"flex-start"}>
-            <ListHeader>Support</ListHeader>
-            <Link href={"#"}>Help Center</Link>
-            <Link href={"#"}>Safety Center</Link>
-            <Link href={"#"}>Community Guidelines</Link>
-          </Stack>
-
           <Stack align={"flex-start"}>
             <ListHeader>Legal</ListHeader>
-            <Link
-              as={NextLink}
-              target="_blank"
-              href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL}
+            <Stack
+              align={"flex-start"}
+              direction={{ base: "column", md: "row" }}
+              spacing={{ base: 0, md: 10 }}
             >
-              Privacy Policy
-            </Link>
-            <Link
-              as={NextLink}
-              target="_blank"
-              href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
-            >
-              Terms of Service
-            </Link>
-            <Link onClick={openCookieConsent}>Cookie Settings</Link>
+              <Link
+                as={NextLink}
+                target="_blank"
+                href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL}
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                as={NextLink}
+                target="_blank"
+                href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
+              >
+                Terms of Service
+              </Link>
+              <Link onClick={openCookieConsent}>Cookie Settings</Link>
+            </Stack>
           </Stack>
-
-          <Stack align={"flex-start"}></Stack>
         </SimpleGrid>
       </Container>
 
@@ -119,7 +143,9 @@ export default function Footer({
           justify={{ md: "space-between" }}
           align={"center"}
         >
-          <Text>© 2024 Voluntree Community Interest Company</Text>
+          <Text align={"center"}>
+            © 2024 Voluntree Community Interest Company
+          </Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton
               label={"Twitter"}
