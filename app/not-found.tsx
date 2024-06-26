@@ -1,13 +1,18 @@
-"use server"
+"use client"
 
-import Link from "next/link";
+import { Link, Heading, Center, Button } from "@chakra-ui/react";
+import NextLink from "next/link";
 
-export default async function NotFound() {
+export default function NotFound() {
   return (
-    <div>
-      <h2>Not Found</h2>
-      <p>Could not find requested resource</p>
-      <Link href="/">Return Home</Link>
-    </div>
+    <Center flexDirection={"column"}>
+      <Heading size="lg" fontSize="170px">
+        404
+      </Heading>
+      <Heading size="4xl">Page not found</Heading>
+      <Link as={NextLink} href="/" color={"blue.500"} pt="2em">
+        <Button>Return Home</Button>
+      </Link>
+    </Center>
   );
 }
