@@ -42,7 +42,7 @@ export default function WorkshopList() {
     <Box>
       <WorkshopListFilter onFilterChange={(data) => setSearch(data)} />
       {loading ? (
-        <Loader message={loadingMessage} />
+        <Loader message={loadingMessage} fullScreen/>
       ) : (
         <Stack spacing={0}>
           {workshops?.map((w) => (

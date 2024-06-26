@@ -98,7 +98,7 @@ export default function WorkshopForm({ user }: {user: User}) {
   return (
     <Container maxW="container.sm">
       {loading ? (
-        <Loader message="Creating an online workshop meeting room" />
+        <Loader message="Creating an online workshop meeting room" fullScreen />
       ) : (
         <Box p="1em">
           <Stack spacing={6}>
