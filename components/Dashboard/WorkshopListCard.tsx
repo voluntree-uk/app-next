@@ -7,7 +7,7 @@ import { Slot, Workshop } from "@schemas";
 import { MdEventAvailable } from "react-icons/md";
 import { BiSolidWebcam } from "react-icons/bi";
 import { clientData } from "@data/supabase";
-import { isBeforeToday } from "@util/dates";
+import { isBeforeNow } from "@util/dates";
 
 interface IProps {
   workshop: Workshop;
@@ -18,7 +18,7 @@ export default function WorkshopListCard({ workshop, navigate }: IProps) {
 
   useEffect(() => {
     clientData.getWorkshopSlots(workshop.id!).then((slots) => {
-      setSlots(slots.filter((slot) => !isBeforeToday(new Date(slot.date))))
+      setSlots(slots.filter((slot) => !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))))
     })
   }, [])
 

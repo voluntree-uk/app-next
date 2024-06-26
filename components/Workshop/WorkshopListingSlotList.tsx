@@ -15,7 +15,7 @@ import { Booking, Slot, User, Workshop } from "@schemas";
 import { WorkshopListingSlot } from "@components/Workshop/WorkshopListingSlot";
 import { WorkshopListingNewSlotModal } from "@components/Workshop/WorkshopListingNewSlotModal";
 import Show from "@components/Helpers/Show";
-import { isBeforeToday } from "@util/dates";
+import { isBeforeNow } from "@util/dates";
 import NoResults from "@components/NoResults";
 
 interface IProps {
@@ -37,7 +37,7 @@ export default function WorkshopListingSlotList({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isUserHost = () => user?.id == workshop.user_id;
-  const futureSlots = slots.filter((slot) => !isBeforeToday(new Date(slot.date)));
+  const futureSlots = slots.filter((slot) => !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)));
 
   const getActiveBookingsForSlot = (slot: Slot): Booking[] => {
     return bookings.filter((b) => b.slot_id === slot.id);
