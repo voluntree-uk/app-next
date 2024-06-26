@@ -126,6 +126,11 @@ export function isBeforeNow(date: Date): boolean {
   return date < now
 }
 
+export function isBeforeToday(date: Date): boolean {
+  const today = new Date(new Date().toDateString())
+  return date < today
+}
+
 export function isOlderThan(date: Date, duration: Duration): boolean {
   return add(date, duration) < new Date()
 }

@@ -9,7 +9,7 @@ import WorkshopListingLocation from "@components/Workshop/WorkshopListingLocatio
 import WorkshopListingDescription from "@components/Workshop/WorkshopListingDescription";
 import WorkshopListingShare from "@components/Workshop/WorkshopListingShare";
 import WorkshopListingUserBooking from "@components/Workshop/WorkshopListingUserBooking";
-import { isBeforeNow } from "@util/dates";
+import { isBeforeNow, isBeforeToday } from "@util/dates";
 
 interface IProps {
   workshop: Workshop;
@@ -29,7 +29,7 @@ export default function WorkshopListing({
   const userBooking = bookings.find((booking) => {
     const bookingSlot = slots.find((slot) => slot.id == booking.slot_id);
     return (
-      booking.user_id == user?.id && bookingSlot && !isBeforeNow(new Date(bookingSlot.date))
+      booking.user_id == user?.id && bookingSlot && !isBeforeToday(new Date(bookingSlot.date))
     );
   });
 
@@ -42,7 +42,7 @@ export default function WorkshopListing({
         <WorkshopListingUserBooking
           workshop={workshop}
           slot={slots.find((slot) => slot.id == userBooking?.slot_id)!}
-          bookings={bookings}
+          bookings={bookings.filter((booking) => userBooking?.id == booking.id)}
           user_booking={userBooking}
         />
       ) : (

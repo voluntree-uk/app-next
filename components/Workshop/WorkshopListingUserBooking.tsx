@@ -18,8 +18,8 @@ import {
 } from "@chakra-ui/react";
 import { clientData } from "@data/supabase";
 import { MdOutlineCancel, MdStart } from "react-icons/md";
-import { Booking, BookingDetails, Slot, User, Workshop } from "@schemas";
-import { dateToReadable, isBeforeNow, timeToReadable } from "@util/dates";
+import { Booking, BookingDetails, Slot, Workshop } from "@schemas";
+import { dateToReadable, timeToReadable } from "@util/dates";
 import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
 import { ActionTrigger } from "@infra/api";
 
