@@ -55,7 +55,7 @@ export function ReviewModal({ booking, isOpen, onSubmit, onClose }: IProps) {
   return (
     <Modal isOpen={isOpen} onClose={() => onCloseWithRemoveParameter()}>
       <ModalOverlay />
-      <ModalContent backgroundColor={"lightgray"}>
+      <ModalContent>
         <ModalHeader>{booking.workshop.name}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -88,7 +88,7 @@ export function ReviewModal({ booking, isOpen, onSubmit, onClose }: IProps) {
               <SliderTrack>
                 <SliderFilledTrack />
               </SliderTrack>
-              <SliderThumb boxSize={6} />
+              <SliderThumb boxSize={6}/>
             </Slider>
             <Text>Additional information (optional):</Text>
             <Textarea
