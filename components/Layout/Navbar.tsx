@@ -34,9 +34,11 @@ const Links = [
 const NavLink = ({
   children,
   href,
+  onClick,
 }: {
   children: ReactNode;
   href: string;
+  onClick?: () => void;
 }) => {
   return (
     <Link
@@ -53,6 +55,7 @@ const NavLink = ({
         md: "block",
       }}
       href={href}
+      onClick={onClick}
     >
       {children}
     </Link>
@@ -167,7 +170,7 @@ export default function Navbar({ user }: { user: User|null }) {
             <Box pb={4} display={{ md: "none" }}>
               <Stack as={"nav"} spacing={4}>
                 {Links.map((link) => (
-                  <NavLink key={link?.label} href={link?.href}>
+                  <NavLink key={link?.label} href={link?.href} onClick={onClose}>
                     {link.label}
                   </NavLink>
                 ))}
