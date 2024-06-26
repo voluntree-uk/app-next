@@ -106,6 +106,14 @@ export default function UserProfile({ profile, isMe }: IProps) {
             flexDirection={"column"}
             justifyContent="center"
             ml={1}
+            alignItems={{
+              base: "center",
+              md: "start",
+            }}
+            textAlign={{
+              base: "center",
+              md: "start",
+            }}
           >
             <Heading size={"md"}>
               {full_name} (@{profile.username})
@@ -151,15 +159,15 @@ export default function UserProfile({ profile, isMe }: IProps) {
             </Show>
           </Flex>
           <StatGroup alignContent={"center"} minWidth={"40%"}>
-            <Stat>
-              <HStack>
+            <Stat textAlign={{ base: "center", md: "start" }}>
+              <HStack justifyContent={{ base: "center", md: "start" }}>
                 <SiRuby color="red" />
                 <StatLabel>Plenties Awarded</StatLabel>
               </HStack>
               <StatNumber>{roundNumber(profile.award_points)}</StatNumber>
             </Stat>
-            <Stat>
-              <HStack>
+            <Stat textAlign={{ base: "center", md: "start" }}>
+              <HStack justifyContent={{ base: "center", md: "start" }}>
                 <HiOutlineStar color="#ffd700" />
                 <StatLabel>Volunteer Rating</StatLabel>
               </HStack>
