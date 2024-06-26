@@ -62,9 +62,8 @@ export default function WorkshopForm({ user }: {user: User}) {
    * @param formData - form field data
    */
   async function onSubmit() {
-    setLoading(true);
-
     if (validateForm()) {
+      setLoading(true);
       const createdBy = user?.id;
 
       if (createdBy) {
@@ -92,6 +91,7 @@ export default function WorkshopForm({ user }: {user: User}) {
         }
       }
     }
+    setLoading(false);
   }
 
 
