@@ -16,7 +16,7 @@ export default function LandingHeading() {
           lineHeight={{ base: "35px", sm: "50px" }}
           pb={{ base: "5", sm: "5" }}
         >
-          Voluntree is a knowledge-sharing platform with a difference.
+          Voluntree is a skill and knowledge-sharing platform with a difference.
         </Heading>
         <Text fontSize={"md"} pb={{ base: "5", sm: "0" }}>
           Totally <b>transparent</b> and <b>free</b> to use, Voluntree will

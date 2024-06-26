@@ -91,7 +91,6 @@ export default function WorkshopForm({ user }: {user: User}) {
         }
       }
     }
-    setLoading(false);
   }
 
 
