@@ -143,9 +143,7 @@ export default function WorkshopForm({ user }: {user: User}) {
                   Category is required, please select one
                 </FormErrorMessage>
               ) : (
-                <FormHelperText>
-                  Please select a category
-                </FormHelperText>
+                <FormHelperText>Please select a category</FormHelperText>
               )}
             </FormControl>
 
@@ -157,6 +155,7 @@ export default function WorkshopForm({ user }: {user: User}) {
                 Description
               </FormLabel>
               <Textarea
+                minH={"18em"}
                 isRequired={true}
                 onChange={(e) => setDescription(e.target.value)}
               />
