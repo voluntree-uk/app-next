@@ -55,7 +55,7 @@ export default async function Page() {
     } catch (error: any) {
       return {
         success: false,
-        error: error?.message,
+        error: "username_taken",
       };
     }
   };

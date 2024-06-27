@@ -34,6 +34,7 @@ export default function SetupProfilePage({ setupProfile }: IProps) {
   const [lastName, setLastName] = useState<string | null>(null);
   const [dob, setDOB] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
+  const [usernameTaken, setUsernameTaken] = useState<boolean>(false);
 
   const showToast = (
     title: any,
@@ -88,7 +89,9 @@ export default function SetupProfilePage({ setupProfile }: IProps) {
         showToast("Successfully updated profile");
         router.push("/");
       }
-      if (error) {
+      if (error == "username_taken") {
+        setUsernameTaken(true);
+      } else if (error) {
         showToast("Failed to setup profile", error, false);
       }
     }
@@ -171,7 +174,7 @@ export default function SetupProfilePage({ setupProfile }: IProps) {
                 ))}
             </FormControl>
             {/* Username */}
-            <FormControl isInvalid={username === ""}>
+            <FormControl isInvalid={username === "" || usernameTaken}>
               <FormLabel htmlFor="username" fontSize={"md"}>
                 Username
               </FormLabel>
@@ -180,11 +183,14 @@ export default function SetupProfilePage({ setupProfile }: IProps) {
                 type="text"
                 isRequired={true}
                 placeholder="Username"
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => {
+                  setUsernameTaken(false)
+                  setUsername(e.target.value)
+                }}
                 p="4"
               />
-              {username === "" && (
-                <FormErrorMessage>Username is required</FormErrorMessage>
+              {(username === "" || usernameTaken) && (
+                <FormErrorMessage>{ usernameTaken ? "A user with that username already exists" : "Username is required" }</FormErrorMessage>
               )}
             </FormControl>
           </Stack>
