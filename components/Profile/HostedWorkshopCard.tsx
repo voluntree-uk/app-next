@@ -20,7 +20,7 @@ export default function HostedWorkshopCard({ workshop, navigate }: IProps) {
       <CardBody>
         <VStack>
           <Img
-            src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${workshop.category}.png`}
+            src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${workshop.category}_sm.png`}
             alt={workshop.category}
             rounded={"lg"}
             mx="1em"
