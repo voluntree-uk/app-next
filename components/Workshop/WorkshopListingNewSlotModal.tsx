@@ -63,7 +63,7 @@ export function WorkshopListingNewSlotModal({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>New Slot for {workshop.name}</ModalHeader>
+        <ModalHeader>New Slot</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Stack spacing="3">
