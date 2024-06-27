@@ -21,7 +21,7 @@ export default function WorkshopListingDescription({ workshop }: IProps) {
         <Heading as="h2" size="md" pb="0.5em">
           Description
         </Heading>
-        <Text color={"gray.600"} fontSize={"14px"} lineHeight="6">
+        <Text whiteSpace={"pre-wrap"} color={"gray.600"} fontSize={"14px"} lineHeight="6">
           {workshop.description}
         </Text>
       </Stack>
