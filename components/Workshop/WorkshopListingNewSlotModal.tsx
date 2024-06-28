@@ -17,7 +17,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Workshop, Slot } from "@schemas";
-import { endOfNextWeekAsISOString } from "@util/dates";
+import { dateAsISOString, endOfNextWeekAsISOString } from "@util/dates";
 
 interface IProps {
   workshop: Workshop;
@@ -77,6 +77,7 @@ export function WorkshopListingNewSlotModal({
                 placeholder="Date"
                 type="date"
                 defaultValue={date}
+                min={dateAsISOString()}
                 onChange={(e) => setDate(e.target.value)}
               />
               <FormErrorMessage>Date is required</FormErrorMessage>
@@ -120,7 +121,9 @@ export function WorkshopListingNewSlotModal({
                 type="number"
                 defaultValue={capacity}
                 onChange={(e) =>
-                  e.target.value ? setCapacity(Number.parseInt(e.target.value)) : setCapacity(0)
+                  e.target.value
+                    ? setCapacity(Number.parseInt(e.target.value))
+                    : setCapacity(0)
                 }
               />
               <FormErrorMessage>Capacity is required</FormErrorMessage>
