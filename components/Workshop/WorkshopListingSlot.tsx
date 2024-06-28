@@ -151,8 +151,9 @@ export function WorkshopListingSlot({
         <Show showIf={!isUserHost()}>
           <Button
             rounded="full"
-            colorScheme="green"
-            variant={availableSpaces == 0 ? "outline" : "solid"}
+            colorScheme={availableSpaces == 0 ? "blackAlpha" : "green"}
+            isDisabled={availableSpaces == 0}
+            variant={"solid"}
             onClick={() => {
               if (user) {
                 onOpen();
