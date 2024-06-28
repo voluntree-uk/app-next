@@ -77,7 +77,7 @@ export default async function Login() {
   const supabase = createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (user) redirect("/workshops") 
+  if (user) redirect("/me")
 
   return <AuthenticationForm signUp={signUp} signIn={signIn} resetPassword={resetPassword} />;
 }

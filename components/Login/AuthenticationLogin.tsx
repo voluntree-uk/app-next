@@ -63,6 +63,7 @@ export default function AuthenticationLogin({ signIn, resetPassword }: IProps) {
       if (error) showToast("Login Unsuccessful", error, false);
       if (success) {
         showToast("Login Successful");
+        router.back();
         router.refresh();
       }
     } else {

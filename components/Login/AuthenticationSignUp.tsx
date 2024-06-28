@@ -47,7 +47,7 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
 
       if (success) {
         showToast("Success", "Verify your email to continue");
-        router.push("/me");
+        router.push("/");
       } else {
         showToast("Sign Up Unsuccessful");
       }
