@@ -13,7 +13,8 @@ import {
   startOfThisWeekendAsISOString,
   endOfThisWeekendAsISOString,
   startOfNextWeekAsISOString,
-  endOfNextWeekAsISOString
+  endOfNextWeekAsISOString,
+  isBeforeNow
 } from "@util/dates";
 import { api } from "@infra/aws";
 import { ActionTrigger } from "@infra/api";
@@ -168,7 +169,7 @@ class SupabaseDataAccessor implements DataAccessor {
     for (let i = 0; i < slots.length; i++) {
       const slot = slots[i]
       if (slot.id) {
-        const success = await this.cancelSlot(slot.id)
+        const success = await this.cancelSlot(slot)
         if (!success) {
           console.error(`Failed to cancel workshop slots`)
           return false
@@ -236,10 +237,7 @@ class SupabaseDataAccessor implements DataAccessor {
       for (let i = 0; i < data.length; i++) {
         const slot: Slot = data[i]
         console.log(`Scheduling event post processing for: ${JSON.stringify(slot)}`)
-        const success = await api.scheduleSlotPostProcessing(data[i].id!, `${slot.date}T${slot.end_time}`)
-        if (!success) {
-          return false
-        }
+        await api.scheduleSlotPostProcessing(data[i].id!, `${slot.date}T${slot.end_time}`)
       }
     } else {
       console.log(`Created zero slots`)
@@ -296,7 +294,9 @@ class SupabaseDataAccessor implements DataAccessor {
     return false;
   }
 
-  async cancelSlot(slot_id: string): Promise<boolean> {
+  async cancelSlot(slot: Slot): Promise<boolean> {
+    if (!slot.id) return false
+
     const { data: bookings, error: error } = await this.client
       .from("booking")
       .select(`
@@ -304,7 +304,7 @@ class SupabaseDataAccessor implements DataAccessor {
         workshop:workshop_id(name,user_id),
         slot:slot_id(date, start_time, end_time)
       `)
-      .eq(`slot_id`, slot_id);
+      .eq(`slot_id`, slot.id);
 
     if (error) {
       console.error(`Failed to get slot bookings: ${error.message}`)
@@ -326,14 +326,16 @@ class SupabaseDataAccessor implements DataAccessor {
     const { error: err } = await this.client
       .from("slot")
       .delete()
-      .eq("id", slot_id)
+      .eq("id", slot.id)
 
     if (err) {
       console.log(`Error deleting slot: ${error}`)
       return false
     }
 
-    await api.cancelSlotPostProcessing(slot_id)
+    if (!isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))) {
+      await api.cancelSlotPostProcessing(slot.id)
+    }
 
     return true
   }

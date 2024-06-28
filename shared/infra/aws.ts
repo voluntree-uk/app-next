@@ -1,8 +1,8 @@
 import { ActionTrigger, InfrastructureAPI } from "./api";
 import { clientData } from "../data/supabase";
 import { Profile, Slot } from "../schemas";
-import axios, { AxiosResponse } from "axios";
-import { dateToReadable } from "@util/dates";
+import axios from "axios";
+import { dateToReadable, isBeforeNow } from "@util/dates";
 
 /**
  * An AWS API gateway implementation of the InfrastructureAPI
@@ -112,18 +112,21 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
   }
 
   async scheduleSlotPostProcessing(slot_id: string, slot_end_timestamp: string): Promise<boolean> {
-    const data = {
-      slot_id: slot_id,
-      slot_end_timestamp: slot_end_timestamp
+    if (!isBeforeNow(new Date(slot_end_timestamp))) {
+      const data = {
+        slot_id: slot_id,
+        slot_end_timestamp: slot_end_timestamp
+      }
+      console.log(JSON.stringify(data))
+      return this.axios_instance.post(this.scheduleSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
+        console.log(`Response ${response.status}: ${response.data}`)
+        return (response.status == 200) ? true : false
+      }).catch((err) => {
+        console.log("Failed to execute schedule slot post processing request")
+        return false
+      })
     }
-    console.log(JSON.stringify(data))
-    return this.axios_instance.post(this.scheduleSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
-      console.log(`Response ${response.status}: ${response.data}`)
-      return (response.status == 200) ? true : false
-    }).catch((err) => {
-      console.log("Failed to execute schedule slot post processing request")
-      return false
-    })
+    return false
   }
 
   async cancelSlotPostProcessing(slot_id: string): Promise<boolean> {

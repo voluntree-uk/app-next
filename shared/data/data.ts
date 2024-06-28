@@ -102,11 +102,11 @@ export interface DataAccessor {
   createSlots(slots: Slot[]): Promise<boolean>
 
   /**
-   * Cancells a slot with the given id
-   * @param slot_id An id of the slot to be cancelled
+   * Cancels a slot
+   * @param slot A slot to be cancelled
    * @return A boolean representing the success of the method
    */
-  cancelSlot(slot_id: string): Promise<boolean>
+  cancelSlot(slot: Slot): Promise<boolean>
 
   /**
    * Returns all bookings a user has made

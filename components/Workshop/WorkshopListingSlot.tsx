@@ -76,7 +76,7 @@ export function WorkshopListingSlot({
     setLoading(true);
     try {
       if (slot.id) {
-        const success = await clientData.cancelSlot(slot.id);
+        const success = await clientData.cancelSlot(slot);
         // Redirect if slot created successfully
         if (success) {
           router.refresh();
