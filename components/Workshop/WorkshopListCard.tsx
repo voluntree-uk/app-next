@@ -20,6 +20,7 @@ export default function WorkshopCard({ workshop, navigate }: IProps) {
       bg="white"
       onClick={() => navigate(workshop)}
       py={{ base: "2", md: "4" }}
+      px={"1em"}
       _hover={{
         background: "gray.50",
       }}
@@ -29,9 +30,9 @@ export default function WorkshopCard({ workshop, navigate }: IProps) {
           <Img
             src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${workshop.category}_sm.png`}
             rounded={"lg"}
-            mx="1em"
-            height={{ base: "50px", md: "100px" }}
-            width={{ base: "75px", md: "150px" }}
+            mr="1em"
+            height={"100px"}
+            width={"150px"}
           />
         </Box>
         <Box
@@ -50,16 +51,21 @@ export default function WorkshopCard({ workshop, navigate }: IProps) {
               {workshop.category}
             </Text>
             <Text
-              fontSize={"16px"}
+              fontSize={{ md: "16px", base: "18px" }}
               fontWeight="semibold"
-              noOfLines={1}
               color="gray.600"
             >
               {workshop.name}
             </Text>
-            <Text color={"gray.600"} fontSize={"14px"} noOfLines={2}>
-              {workshop.description}
-            </Text>
+            <Box display={{ md: "inline", base: "none" }}>
+              <Text
+                color={"gray.600"}
+                fontSize={"14px"}
+                noOfLines={{ md: 2, base: 1 }}
+              >
+                {workshop.description}
+              </Text>
+            </Box>
           </Box>
         </Box>
       </HStack>
