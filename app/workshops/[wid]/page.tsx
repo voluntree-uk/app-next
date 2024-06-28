@@ -3,8 +3,31 @@
 import WorkshopListing from "@components/Workshop/WorkshopListing";
 import { SupabaseDataAccessor } from "@data/supabase";
 import { createClient } from "@util/supabase/server";
+import { Metadata, ResolvingMetadata } from "next";
 
-export default async function Page({ params }: { params: any }) {
+type Props = {
+  params: { wid: string }
+}
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const supabase = createClient();
+  const data = new SupabaseDataAccessor(supabase);
+
+  const id = params.wid;
+  const workshop = await data.getWorkshop(id);
+
+  return {
+    title: `${workshop.name} | Voluntreee`,
+    openGraph: {
+      images: [`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${workshop.category}_sm.png`],
+    },
+  };
+}
+
+export default async function Page({ params }: Props) {
   const supabase = createClient();
   const data = new SupabaseDataAccessor(supabase);
 
