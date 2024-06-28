@@ -18,7 +18,6 @@ export default function WorkshopListFilter({ onFilterChange }: IProps) {
 
   React.useEffect(() => {
     const subscription = watch((data) => {
-      console.log("Filter change!");
       onFilterChange(data);
     });
 

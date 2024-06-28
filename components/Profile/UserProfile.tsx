@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Box, Button, Container, Flex, Heading, HStack, Stat, StatGroup, StatLabel, StatNumber, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Heading, HStack, Stat, StatGroup, StatLabel, StatNumber, Text, useDisclosure, useToast } from "@chakra-ui/react";
 import { HiUserGroup, HiOutlineStar, HiOutlineMail } from "react-icons/hi";
 import { SiRuby } from "react-icons/si";
 import { clientData } from "@data/supabase";
@@ -21,6 +21,8 @@ interface IProps {
 export default function UserProfile({ profile, isMe }: IProps) {
   const [loading, setLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const toast = useToast();
 
   const {
     setValue,
@@ -43,7 +45,14 @@ export default function UserProfile({ profile, isMe }: IProps) {
 
       await clientData.updateProfile(updates);
     } catch (error: any) {
-      alert(`Error updating profile: ${error.message}`);
+      console.error(`Error updating profile: ${error.message}`);
+      toast({
+        title: "Failed to update profile",
+        description: "Please try again later",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -62,7 +71,14 @@ export default function UserProfile({ profile, isMe }: IProps) {
 
       await clientData.updateProfile(updates);
     } catch (error: any) {
-      alert(`Error updating profile: ${error.message}`);
+      console.error(`Error updating profile: ${error.message}`);
+      toast({
+        title: "Failed to update profile",
+        description: "Please try again later",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }

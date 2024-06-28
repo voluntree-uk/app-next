@@ -19,6 +19,8 @@ export default function WorkshopListCard({ workshop, navigate }: IProps) {
   useEffect(() => {
     clientData.getWorkshopSlots(workshop.id!).then((slots) => {
       setSlots(slots.filter((slot) => !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))))
+    }).catch((err) => {
+      setSlots([])
     })
   }, [])
 

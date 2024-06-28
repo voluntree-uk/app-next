@@ -75,19 +75,30 @@ export default function WorkshopForm({ user }: {user: User}) {
           virtual: true,
         };
 
-        const createdWorkshop = await clientData.createWorkshop(newWorkshop);
-
-        if (createdWorkshop.id) {
-          router.push(`/workshops/${createdWorkshop.id}`);
-        } else {
+        try {
+          const createdWorkshop = await clientData.createWorkshop(newWorkshop);
+          if (createdWorkshop.id) {
+            router.push(`/workshops/${createdWorkshop.id}`);
+          } else {
+            toast({
+              title: "Failed to create workshop",
+              description: "Please try again",
+              status: "error",
+              duration: 4000,
+              isClosable: true,
+            });
+            setLoading(false);
+          }
+        } catch (error) {
           toast({
             title: "Failed to create workshop",
-            description: "Please try again",
+            description: "Please finish setting up your profile",
             status: "error",
             duration: 4000,
             isClosable: true,
           });
-          setLoading(false)
+          router.push("/me");
+          setLoading(false);
         }
       }
     }

@@ -23,9 +23,14 @@ export default function WorkshopList() {
   const filterWorkshops = useCallback(async (filters: FilterProps) => {
     setLoadingMessage("Searching for workshops");
     setLoading(true);
-    const foundWorkshops = await clientData.filterAvailableWorkshops(filters);
-    setWorkshops(foundWorkshops);
-    setLoading(false);
+    try {
+      const foundWorkshops = await clientData.filterAvailableWorkshops(filters);
+      setWorkshops(foundWorkshops);
+    } catch (error) {
+      setWorkshops([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {

@@ -29,7 +29,8 @@ export default function UserPage({
       .then(setProfile);
     clientData
       .getUserWorkshops(user_id)
-      .then(setWorkshops);
+      .then(setWorkshops)
+      .catch((err) => setWorkshops([]));
   }, []);
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import {
   Box,
   FormLabel,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { clientData } from "@data/supabase";
 
@@ -19,6 +20,8 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
+  const toast = useToast();
+
   useEffect(() => {
     if (url) downloadImage(url);
   }, [url]);
@@ -28,7 +31,7 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
       const url = await clientData.getAvatarUrl(path);
       setAvatarUrl(url ? url : null);
     } catch (error: any) {
-      console.log("Error downloading image: ", error.message);
+      console.error("Error downloading profile image: ", error.message);
     }
   }
 
@@ -37,7 +40,13 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
       setUploading(true);
 
       if (!event.target.files || event.target.files.length === 0) {
-        throw new Error("You must select an image to upload.");
+        toast({
+          title: "Failed to upload avatar",
+          description: "You must select an image to upload",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+        });
       }
 
       const file = event.target.files[0];
@@ -48,8 +57,14 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
       const success = await clientData.uploadAvatar(filePath, file);
       if (success) onUpload(filePath);
     } catch (error: any) {
-      console.log(error);
-      alert(error.message);
+      console.error(`Failed to upload avatar ${error.message}`);
+      toast({
+        title: "Failed to upload avatar",
+        description: "Please try again later",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
     } finally {
       setUploading(false);
     }

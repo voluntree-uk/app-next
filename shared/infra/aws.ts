@@ -35,6 +35,8 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
   });
 
   async sendWorkshopCreationConfirmation(host_user_id: string, workshop_name: string): Promise<void> {
+    const hasProfile = await clientData.hasProfile(host_user_id)
+    if (!hasProfile) return
     const host: Profile = await clientData.getProfile(host_user_id)
     if (host) {
       const data = {
@@ -46,18 +48,20 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           name: workshop_name
         }
       }
-      console.log(JSON.stringify(data))
       this.axios_instance.post(this.workshopCreationConfirmationEndpoint, JSON.stringify(data)).catch((err) => {
-        console.log("Failed to send workshop creation confirmation email")
+        console.error(`Failed to send workshop creation confirmation email: ${err}`)
       })
     }
     return
   }
 
   async sendBookingConfirmations(host_user_id: string, attendee_user_id: string, workshop_name: string, slot: Slot, join_link: string | undefined): Promise<void> {
-    const host: Profile = await clientData.getProfile(host_user_id)
-    const attendee: Profile = await clientData.getProfile(attendee_user_id)
-    if (host && attendee) {
+    const hostHasProfile = await clientData.hasProfile(host_user_id)
+    const attendeeHasProfile = await clientData.hasProfile(host_user_id)
+    if (hostHasProfile && attendeeHasProfile) {
+      const host: Profile = await clientData.getProfile(host_user_id)
+      const attendee: Profile = await clientData.getProfile(attendee_user_id)
+
       const data = {
         host: {
           name: host.name,
@@ -74,18 +78,19 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           join_link: join_link
         }
       }
-      console.log(JSON.stringify(data))
       this.axios_instance.post(this.bookingConfirmationEndpoint, JSON.stringify(data)).catch((err) => {
-        console.log("Failed to send booking confirmation emails")
+        console.error(`Failed to send booking confirmation emails: ${err}`)
       })
     }
     return
   }
 
   async sendBookingCancellations(host_user_id: string, attendee_user_id: string, workshop_name: string, slot: Slot, triggered_by: ActionTrigger): Promise<void> {
-    const host: Profile = await clientData.getProfile(host_user_id)
-    const attendee: Profile = await clientData.getProfile(attendee_user_id)
-    if (host && attendee) {
+    const hostHasProfile = await clientData.hasProfile(host_user_id)
+    const attendeeHasProfile = await clientData.hasProfile(host_user_id)
+    if (hostHasProfile && attendeeHasProfile) {
+      const host: Profile = await clientData.getProfile(host_user_id)
+      const attendee: Profile = await clientData.getProfile(attendee_user_id)
       const data = {
         host: {
           name: host.name,
@@ -103,9 +108,8 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           time: slot.start_time
         }
       }
-      console.log(JSON.stringify(data))
       this.axios_instance.post(this.bookingCancellationEndpoint, JSON.stringify(data)).catch((err) => {
-        console.log("Failed to send booking cancellation emails")
+        console.error(`Failed to send booking cancellation emails: ${err}`)
       })
     }
     return
@@ -117,12 +121,10 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
         slot_id: slot_id,
         slot_end_timestamp: slot_end_timestamp
       }
-      console.log(JSON.stringify(data))
       return this.axios_instance.post(this.scheduleSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
-        console.log(`Response ${response.status}: ${response.data}`)
         return (response.status == 200) ? true : false
       }).catch((err) => {
-        console.log("Failed to execute schedule slot post processing request")
+        console.error(`Failed to execute schedule slot post processing request: ${err}`)
         return false
       })
     }
@@ -133,12 +135,10 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     const data = {
       schedule_name: `Slot-${slot_id}`
     }
-    console.log(JSON.stringify(data))
     return this.axios_instance.post(this.cancelSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
-      console.log(`Response ${response.status}: ${response.data}`)
       return (response.status == 200) ? true : false
     }).catch((err) => {
-      console.log("Failed to execute cancel slot post processing request")
+      console.error(`Failed to execute cancel slot post processing request: ${err}`)
       return false
     })
   }
@@ -147,12 +147,10 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     const data = {
       name: meeting_name
     }
-    console.log(JSON.stringify(data))
     return this.axios_instance.post(this.generateMeetingEndpoint, JSON.stringify(data)).then((response) => {
-      console.log(`Response ${response.status}: ${JSON.stringify(response.data)}`)
       return (response.status == 200) ? response.data["message"] : null
     }).catch((err) => {
-      console.log("Failed to generate an online meeting link", err)
+      console.error(`Failed to generate an online meeting link: ${err}`)
       return null
     })
   }

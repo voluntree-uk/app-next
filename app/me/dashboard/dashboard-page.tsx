@@ -24,21 +24,28 @@ export default function DashboardPage({ user }: { user: User }) {
   useEffect(() => {
     clientData
       .getUserWorkshops(user.id)
-      .then((workshops) => setWorkshops(workshops));
+      .then(setWorkshops)
+      .catch((err) => setWorkshops([]));
     clientData
       .getUserBookings(user.id)
       .then((bookings) => {
         setPastBookings(
           bookings.filter((booking) =>
-            isBeforeNow(new Date(`${booking.slot.date}T${booking.slot.end_time}`))
-          )
-        )
-        setUpcomingBookings(
-          bookings.filter((booking) =>
-            !isBeforeNow(new Date(`${booking.slot.date}T${booking.slot.end_time}`))
+            isBeforeNow(
+              new Date(`${booking.slot.date}T${booking.slot.end_time}`)
+            )
           )
         );
-      });
+        setUpcomingBookings(
+          bookings.filter(
+            (booking) =>
+              !isBeforeNow(
+                new Date(`${booking.slot.date}T${booking.slot.end_time}`)
+              )
+          )
+        );
+      })
+      .catch();
   },[])
 
   useEffect(() => {

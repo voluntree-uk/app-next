@@ -59,9 +59,7 @@ class SupabaseDataAccessor implements DataAccessor {
     const { data, error } = await this.client.rpc('has_user_profile', {
       p_user_id: id
     })
-    if (error) throw error;
-
-    return data ? true : false;
+    return data && !error ? true : false;
   }
 
   async getProfile(id: string): Promise<Profile> {
@@ -164,30 +162,34 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async cancelWorkshop(workshop_id: string): Promise<boolean> {
-    const slots = await this.getWorkshopSlots(workshop_id)
+    try {
+      const slots = await this.getWorkshopSlots(workshop_id)
 
-    for (let i = 0; i < slots.length; i++) {
-      const slot = slots[i]
-      if (slot.id) {
-        const success = await this.cancelSlot(slot)
-        if (!success) {
-          console.error(`Failed to cancel workshop slots`)
-          return false
+      for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i]
+        if (slot.id) {
+          const success = await this.cancelSlot(slot)
+          if (!success) {
+            console.error(`Failed to cancel workshop slots`)
+            return false
+          }
         }
       }
-    }
 
-    const { error } = await this.client
-      .from("workshop")
-      .delete()
-      .eq("id", workshop_id)
+      const { error } = await this.client
+        .from("workshop")
+        .delete()
+        .eq("id", workshop_id)
 
-    if (error) {
-      console.log(`Error deleting workshop: ${error}`)
+      if (error) {
+        console.error(`Failed to delete a workshop: ${error.message}`)
+        return false
+      }
+
+      return true
+    } catch (err) {
       return false
     }
-
-    return true
   }
 
   async getWorkshopSlots(id: string): Promise<Slot[]> {
@@ -229,19 +231,15 @@ class SupabaseDataAccessor implements DataAccessor {
       .select();
     
     if (error) {
-      console.log(`Failed to create slots: ${JSON.stringify(error)}`)
+      console.error(`Failed to create slots: ${error.message}`)
       return false
     }
 
     if (data) {
       for (let i = 0; i < data.length; i++) {
         const slot: Slot = data[i]
-        console.log(`Scheduling event post processing for: ${JSON.stringify(slot)}`)
         await api.scheduleSlotPostProcessing(data[i].id!, `${slot.date}T${slot.end_time}`)
       }
-    } else {
-      console.log(`Created zero slots`)
-      return false
     }
 
     return true;
@@ -271,14 +269,12 @@ class SupabaseDataAccessor implements DataAccessor {
       p_user_id: user_id
     })
     if (error) {
-      // Invalidate booking link
-      throw error;
+      return false;
     }
 
     if (data && data[0]) {
       if (!data[0].success) {
-        // Invalidate booking link
-        throw Error(data[0].message)
+        return false;
       } else {
         await api.sendBookingConfirmations(
           workshop.user_id.toString(),
@@ -314,7 +310,6 @@ class SupabaseDataAccessor implements DataAccessor {
     if (bookings) {
       for (let i = 0; i < bookings.length; i++) {
         const booking: BookingDetails = bookings[i]
-        console.log(`Cancelling booking: ${JSON.stringify(booking)}`)
         const success = await this.cancelBooking(booking, ActionTrigger.Host)
         if (!success) {
           console.error(`Failed to cancel slot bookings`)
@@ -329,7 +324,7 @@ class SupabaseDataAccessor implements DataAccessor {
       .eq("id", slot.id)
 
     if (err) {
-      console.log(`Error deleting slot: ${error}`)
+      console.error(`Error deleting slot: ${error.message}`)
       return false
     }
 
@@ -364,7 +359,7 @@ class SupabaseDataAccessor implements DataAccessor {
       .eq('id', booking_id)
 
     if (b_error) {
-      console.log(`Failed to submit a booking review: ${JSON.stringify(b_error)}`)
+      console.error(`Failed to submit a booking review: ${b_error.message}`)
       return false
     }
 
@@ -373,7 +368,7 @@ class SupabaseDataAccessor implements DataAccessor {
     })
 
     if (r_error) {
-      console.log(`Failed to update user rating: ${JSON.stringify(r_error)}`)
+      console.error(`Failed to update user rating: ${r_error.message}`)
       return false
     }
 
