@@ -55,6 +55,15 @@ export function WorkshopListingSlot({
         // Redirect if booking created successfully
         if (success) {
           router.refresh();
+        } else {
+          toast({
+            title: "Problem creating booking",
+            description: "Please finish setting up your profile",
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          });
+          router.push("/auth/setup-profile")
         }
       }
     } catch (error) {
