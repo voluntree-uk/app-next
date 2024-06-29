@@ -120,7 +120,7 @@ export default function WorkshopListingUserBooking({
                   rightIcon={<MdStart />}
                   size={{ base: "xs", sm: "md" }}
                 >
-                  Join
+                  Enter
                 </Button>
               </Link>
               <Button
