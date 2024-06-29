@@ -20,7 +20,7 @@ export default function LandingHowItWorksCard({
   description,
 }: IProps) {
   return (
-    <Stack spacing={"1em"} maxHeight={"24em"}>
+    <Stack spacing={"1em"}>
       <Heading
         textAlign={{ base: "center", lg: "start" }}
         fontWeight={"bold"}
