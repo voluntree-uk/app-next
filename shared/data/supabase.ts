@@ -324,7 +324,7 @@ class SupabaseDataAccessor implements DataAccessor {
       .eq("id", slot.id)
 
     if (err) {
-      console.error(`Error deleting slot: ${error.message}`)
+      console.error(`Error deleting slot: ${err?.message}`)
       return false
     }
 
