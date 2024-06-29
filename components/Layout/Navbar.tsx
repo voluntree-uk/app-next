@@ -50,10 +50,7 @@ const NavLink = ({
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
-      display={{
-        base: "block",
-        md: "block",
-      }}
+      display={"block"}
       href={href}
       onClick={onClick}
     >
@@ -146,11 +143,37 @@ export default function Navbar({ user }: { user: User|null }) {
                     />
                   </MenuButton>
                   <MenuList>
-                    <Link as={NextLink} href={`/user/${currentUser?.id}`}>
-                      <MenuItem>View profile</MenuItem>
+                    <Link
+                      _hover={{
+                        textDecoration: "none",
+                      }}
+                      as={NextLink}
+                      href={`/user/${currentUser?.id}`}
+                    >
+                      <MenuItem
+                        _hover={{
+                          background: useColorModeValue("gray.200", "gray.700"),
+                        }}
+                        background={"white"}
+                      >
+                        Profile
+                      </MenuItem>
                     </Link>
-                    <Link as={NextLink} href="/me/dashboard">
-                      <MenuItem>Dashboard</MenuItem>
+                    <Link
+                      _hover={{
+                        textDecoration: "none",
+                      }}
+                      as={NextLink}
+                      href="/me/dashboard"
+                    >
+                      <MenuItem
+                        _hover={{
+                          background: useColorModeValue("gray.200", "gray.700"),
+                        }}
+                        background={"white"}
+                      >
+                        Dashboard
+                      </MenuItem>
                     </Link>
                     <Divider />
                     <MenuItem
@@ -158,6 +181,11 @@ export default function Navbar({ user }: { user: User|null }) {
                         await createClient().auth.signOut();
                         router.refresh();
                       }}
+                      _hover={{
+                        textDecoration: "none",
+                        background: useColorModeValue("gray.200", "gray.700"),
+                      }}
+                      background={"white"}
                     >
                       Log out
                     </MenuItem>
