@@ -1,6 +1,5 @@
 "use server"
 
-import { headers } from "next/headers";
 import { createClient } from "@util/supabase/server";
 import AuthenticationForm from "@components/Login/AuthenticationForm";
 import { redirect } from "next/navigation";
@@ -15,13 +14,11 @@ export default async function Login() {
     
     const supabase = createClient();
 
-    const origin = headers().get("origin");
-
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: `${origin}/auth/callback`,
+        emailRedirectTo: `/auth/callback`,
       },
     });
 
@@ -60,11 +57,9 @@ export default async function Login() {
 
     const supabase = createClient();
     
-    const origin = headers().get("origin");
-
     const { error } = await supabase.auth.resetPasswordForEmail(
       email,
-      { redirectTo: `${origin}/auth/update-password` }
+      { redirectTo: `/auth/update-password` }
     );
 
     return {
