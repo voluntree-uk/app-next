@@ -12,7 +12,7 @@ export default function WorkshopListHeading({ workshops }: IProps) {
   return (
     <Box p="4">
       <Heading pb="1" size={"md"} color={"gray.700"}>
-        {`Your hosted workshops (${workshops.length})`}
+        {`Hosted workshops (${workshops.length})`}
       </Heading>
       <Text fontSize={"sm"} color="gray.500">
         {`Workshops that you are hosting`}

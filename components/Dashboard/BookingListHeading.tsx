@@ -14,9 +14,9 @@ export default function BookingListHeading({ bookings, type }: IProps) {
   function title(): string {
     switch (type) {
       case Type.Upcoming:
-        return `Your upcoming bookings (${bookings.length})`;
+        return `Upcoming bookings (${bookings.length})`;
       case Type.Past:
-        return `Your past bookings (${bookings.length})`;
+        return `Past bookings (${bookings.length})`;
     }
   }
 
