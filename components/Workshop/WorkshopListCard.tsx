@@ -39,7 +39,7 @@ export default function WorkshopCard({ workshop, navigate }: IProps) {
           display={"flex"}
           flexDir="column"
           justifyContent={"space-between"}
-          width={"100%"}
+          width={"70%"}
         >
           <Box>
             <Text
