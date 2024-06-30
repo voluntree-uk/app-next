@@ -58,7 +58,7 @@ export default async function Login() {
     const supabase = createClient();
     
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/update-password`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/callback`,
     });
 
     return {

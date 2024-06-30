@@ -7,12 +7,18 @@ export async function GET(request: Request) {
   // https://supabase.com/docs/guides/auth/server-side/nextjs
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
+  const type = requestUrl.searchParams.get("type");
 
   if (code) {
     const supabase = createClient();
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/setup-profile`);
+  if (type == "signup") {
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/setup-profile`);
+  } else if (type == "recovery") {
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/update-password`);
+  } else {
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/`);
+  }
 }
