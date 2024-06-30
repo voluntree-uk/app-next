@@ -18,7 +18,7 @@ export default async function Login() {
       email,
       password,
       options: {
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/callback`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/callback?type=signup`,
       },
     });
 
@@ -58,7 +58,7 @@ export default async function Login() {
     const supabase = createClient();
     
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/callback`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/callback?type=recovery`,
     });
 
     return {
