@@ -16,7 +16,7 @@ export default async function Page() {
 
   const hasProfile = await data.hasProfile(user.id);
 
-  if (hasProfile) redirect("/");
+  if (hasProfile) redirect("/me");
 
   const setupProfile = async (
     firstName: string,

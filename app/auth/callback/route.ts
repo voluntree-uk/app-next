@@ -7,7 +7,6 @@ export async function GET(request: Request) {
   // https://supabase.com/docs/guides/auth/server-side/nextjs
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const origin = requestUrl.origin;
 
   if (code) {
     const supabase = createClient();
@@ -15,5 +14,5 @@ export async function GET(request: Request) {
   }
 
   // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/setup-profile`);
+  return NextResponse.redirect(`/auth/setup-profile`);
 }
