@@ -15,5 +15,5 @@ export async function GET(request: Request) {
   }
 
   // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${process.env.SERVER_HOST}/auth/setup-profile`);
+  return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/setup-profile`);
 }
