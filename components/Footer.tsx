@@ -161,7 +161,7 @@ export default function Footer({
             </SocialButton>
             <SocialButton
               label={"Instagram"}
-              href={"https://www.instagram.com/voluntree2024/"}
+              href={"https://www.instagram.com/voluntree_community/"}
             >
               <FaInstagram />
             </SocialButton>
