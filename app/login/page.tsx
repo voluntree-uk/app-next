@@ -18,7 +18,7 @@ export default async function Login() {
       email,
       password,
       options: {
-        emailRedirectTo: `/auth/callback`,
+        emailRedirectTo: `${process.env.SERVER_HOST}/auth/callback`,
       },
     });
 
@@ -57,10 +57,9 @@ export default async function Login() {
 
     const supabase = createClient();
     
-    const { error } = await supabase.auth.resetPasswordForEmail(
-      email,
-      { redirectTo: `/auth/update-password` }
-    );
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${process.env.SERVER_HOST}/auth/update-password`,
+    });
 
     return {
       success: error ? false : true,
