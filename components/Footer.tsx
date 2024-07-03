@@ -148,14 +148,8 @@ export default function Footer({
           </Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton
-              label={"Twitter"}
-              href={"https://x.com/voluntree2024"}
-            >
-              <FaXTwitter />
-            </SocialButton>
-            <SocialButton
               label={"Linkedin"}
-              href={"https://www.linkedin.com/company/voluntree2024/about/"}
+              href={"https://www.linkedin.com/company/voluntreecommunity/"}
             >
               <FaLinkedin />
             </SocialButton>
@@ -164,6 +158,12 @@ export default function Footer({
               href={"https://www.instagram.com/voluntree_community/"}
             >
               <FaInstagram />
+            </SocialButton>
+            <SocialButton
+              label={"Twitter"}
+              href={"https://x.com/voluntree2024"}
+            >
+              <FaXTwitter />
             </SocialButton>
           </Stack>
           <Text>
