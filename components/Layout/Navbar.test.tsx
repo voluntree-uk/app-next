@@ -1,98 +1,144 @@
 import "@testing-library/jest-dom";
 import { RecoilRoot } from "recoil";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { RouterContext } from "next/dist/shared/lib/router-context";
 import Navbar from "@components/Layout/Navbar";
-import { createMockRouter } from "@test-util/createMockRouter";
+import { User } from "@supabase/supabase-js";
 
-jest.mock("next/router");
-
-jest.mock("@util/hooks", () => ({
-  useSession: jest.fn(() => ({ user: null })),
+const routerPushMock = jest.fn();
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(() => {
+    return {
+      push: routerPushMock,
+      refresh: jest.fn(),
+    };
+  })
 }));
 
-jest.mock("@auth/supabase", () => ({
-  auth: {
-    signOut: jest.fn(),
-  },
+var actualUser: User | null = null
+
+const signOutMock = jest.fn();
+jest.mock("@util/supabase/client", () => ({
+  createClient: jest.fn(() => {
+    return {
+      auth: {
+        getUser: jest.fn(() => {
+          return {
+            data: {
+              user: actualUser,
+            },
+          };
+        }),
+        signOut: signOutMock,
+      },
+    };
+  }),
 }));
 
-jest.mock("../AuthenticationModal", () => ({
-  __esModule: true,
-  default: () => <div>AuthenticationModal</div>,
-}));
+describe("Without a user", () => {
 
-const MockNavbar = () => (
-  <RecoilRoot>
-    <Navbar />
-  </RecoilRoot>
-);
-
-describe("Navbar", () => {
-  test("renders navbar links", () => {
-    render(<MockNavbar />);
-
-    const findWorkshopsLink = screen.getByRole("link", {
-      name: "Find workshops",
-    });
-    const createWorkshopLink = screen.queryByRole("link", {
-      name: "Create workshop",
-    });
-
-    expect(findWorkshopsLink).toBeInTheDocument();
-    expect(createWorkshopLink).toBeInTheDocument();
-  });
-
-  test("renders login button when user is not authenticated", () => {
-    render(<MockNavbar />);
-
-    const loginButton = screen.getByRole("button", { name: "Log in" });
-
-    expect(loginButton).toBeInTheDocument();
-  });
-
-  test("opens authentication modal when login button is clicked", () => {
-    render(<MockNavbar />);
-
-    const loginButton = screen.getByRole("button", { name: "Log in" });
-    expect(loginButton).toBeInTheDocument();
-
-    // const formElement = screen.queryByRole("form");
-    // expect(formElement).toBeInTheDocument();
-  });
-
-  test("renders create workshop button when user is authenticated", () => {
-    // Mocking authenticated user
-    jest.mock("@util/hooks", () => ({
-      useSession: jest.fn(() => ({ user: { name: "John Doe" } })),
-    }));
-
-    render(<MockNavbar />);
-
-    const createWorkshopButton = screen.getByRole("link", {
-      name: "Create workshop",
-    });
-
-    expect(createWorkshopButton).toBeInTheDocument();
-  });
-
-  test("redirects to create workshop page when create workshop button is clicked", () => {
-    const router = createMockRouter({
-      pathname: "/workshops/new",
-    });
-
+  beforeEach(() => {
     render(
-      <RouterContext.Provider value={router}>
-        <MockNavbar />
-      </RouterContext.Provider>
+      <RecoilRoot>
+        <Navbar user={actualUser} />
+      </RecoilRoot>
     );
+  })
 
-    const createWorkshopButton = screen.getByRole("link", {
-      name: "Create workshop",
-    });
-    fireEvent.click(createWorkshopButton);
+  test("renders navbar links and login button", () => {
+    const findWorkshopsLink = screen.getByText("Find workshops");
+    expect(findWorkshopsLink).toBeInTheDocument();
+    expect(findWorkshopsLink.getAttribute("href")).toEqual("/workshops");
 
-    // Check if the router's push function was called with the correct path
-    expect(router.push).toHaveBeenCalled();
+    const createWorkshopLink = screen.getByText("Create workshop");
+    expect(createWorkshopLink).toBeInTheDocument();
+    expect(createWorkshopLink.getAttribute("href")).toEqual("/workshops/new");
+
+    const loginButton = screen.getByRole("button", { name: "Log in" });
+    expect(loginButton).toBeInTheDocument();
   });
+
+  test("dousen't render user avatar", () => {
+    const avatar = screen.queryByRole("img", { name: "avatar" });
+    expect(avatar).not.toBeInTheDocument();
+  });
+
+  test("doesn't render user controls dropdown", () => {
+    const profileLink = screen.queryByText("Profile");
+    expect(profileLink).not.toBeInTheDocument();
+
+    const dashboardLink = screen.queryByText("Dashboard");
+    expect(dashboardLink).not.toBeInTheDocument();
+
+    const logoutLink = screen.queryByText("Log out");
+    expect(logoutLink).not.toBeInTheDocument();
+  });
+
+  test("navigates to login page when login button is clicked", () => {
+    const loginButton = screen.getByRole("button", { name: "Log in" });
+    expect(loginButton).toBeInTheDocument();
+
+    fireEvent.click(loginButton);
+    expect(routerPushMock).toHaveBeenCalled();
+    expect(routerPushMock.mock.calls).toHaveLength(1);
+    expect(routerPushMock.mock.calls[0][0]).toBe("/login");
+  });
+
 });
+
+describe("With a user", () => {
+
+  beforeEach(() => {
+    actualUser = {
+      id: "test-id",
+      app_metadata: {},
+      user_metadata: {},
+      aud: "test",
+      created_at: "2024-01-01T00:00:00"
+    }
+    render(
+      <RecoilRoot>
+        <Navbar user={actualUser} />
+      </RecoilRoot>
+    );
+  });
+
+  test("renders navbar links", () => {
+    const findWorkshopsLink = screen.getByText("Find workshops");
+    expect(findWorkshopsLink).toBeInTheDocument();
+    expect(findWorkshopsLink.getAttribute("href")).toEqual("/workshops");
+
+    const createWorkshopLink = screen.getByText("Create workshop");
+    expect(createWorkshopLink).toBeInTheDocument();
+    expect(createWorkshopLink.getAttribute("href")).toEqual("/workshops/new");
+  });
+
+  test("doesn't render login button", () => {
+    const loginButton = screen.queryByRole("button", { name: "Log in" });
+    expect(loginButton).not.toBeInTheDocument();
+  });
+
+  test("renders user avatar", () => {
+    const avatar = screen.queryByRole("img", { name: "avatar" });
+    expect(avatar).toBeInTheDocument();
+  });
+
+  test("renders user controls dropdown", () => {
+    const profileLink = screen.getByText("Profile");
+    expect(profileLink).toBeInTheDocument();
+    expect(profileLink.parentElement?.getAttribute("href")).toEqual("/user/test-id");
+
+    const dashboardLink = screen.getByText("Dashboard");
+    expect(dashboardLink).toBeInTheDocument();
+    expect(dashboardLink.parentElement?.getAttribute("href")).toEqual("/me/dashboard");
+
+    const logoutLink = screen.getByText("Log out");
+    expect(logoutLink).toBeInTheDocument();
+  });
+
+  test("logs user out when log out button is clicked", () => {
+    const logoutLink = screen.getByText("Log out");
+    
+    fireEvent.click(logoutLink);
+    expect(signOutMock).toHaveBeenCalled();
+  });  
+})
