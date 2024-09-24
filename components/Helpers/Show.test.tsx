@@ -20,7 +20,7 @@ describe("Home", () => {
   });
 
   it("renders nothing if there is no children", () => {
-    render(<Show showIf={false} />);
+    render(<Show showIf={true} />);
 
     const heading = screen.queryByText(/Welcome to Next.js!/i);
 
