@@ -32,6 +32,20 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
   const router = useRouter();
   const toast = useToast();
 
+  const showToast = (
+    title: any,
+    description: any = null,
+    success: boolean = true
+  ) => {
+    toast({
+      title: title,
+      description: description,
+      status: success ? "success" : "error",
+      duration: 4000,
+      isClosable: true,
+    });
+  };
+
   const submit = async (formData: any) => {
     setIsLoading(true);
 
@@ -56,20 +70,6 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
     }
 
     setIsLoading(false);
-  };
-
-  const showToast = (
-    title: any,
-    description: any = null,
-    success: boolean = true
-  ) => {
-    toast({
-      title: title,
-      description: description,
-      status: success ? "success" : "error",
-      duration: 4000,
-      isClosable: true,
-    });
   };
 
   const makeFormField = (
@@ -132,7 +132,9 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
                   <Link
                     as={NextLink}
                     color={"blue.500"}
-                    href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
+                    href={
+                      process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL || "/"
+                    }
                     target="_blank"
                   >
                     Terms & Conditions

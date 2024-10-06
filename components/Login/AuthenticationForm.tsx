@@ -20,7 +20,11 @@ interface IProps {
   ): Promise<{ success: boolean; error: string | undefined }>;
 }
 
-export default function AuthenticationForm({ signUp, signIn, resetPassword }: IProps) {
+export default function AuthenticationForm({
+  signUp,
+  signIn,
+  resetPassword,
+}: IProps) {
   return (
     <Container
       maxW="lg"
@@ -34,7 +38,10 @@ export default function AuthenticationForm({ signUp, signIn, resetPassword }: IP
         </TabList>
         <TabPanels>
           <TabPanel>
-            <AuthenticationLogin signIn={signIn} resetPassword={resetPassword} />
+            <AuthenticationLogin
+              signIn={signIn}
+              resetPassword={resetPassword}
+            />
           </TabPanel>
           <TabPanel>
             <AuthenticationSignUp signUp={signUp} />
