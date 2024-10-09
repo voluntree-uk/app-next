@@ -1,0 +1,27 @@
+name: "Publish Docker Image & Deploy to AppRunner"
+on:
+  push:
+    branches: [ feature/cicd ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_DEPLOY_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_DEPLOY_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEPLOY_REGION }}
+      # Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      # Publish docker image to ECR
+      - name: Publish docker image to ECR
+        run: make publish
+      # Trigger manual deploy of AppRunner service
+      - name: Trigger manual deploy of AppRunner service 
+        env: 
+          SERVICE_ARN: ${{ secrets.AWS_APPLICATION_SERVICE_ARN }}
+        run: aws apprunner start-deployment --service-arn $SERVICE_ARN
