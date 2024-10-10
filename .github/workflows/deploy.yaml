@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Development
+      url: https://wpswhvhexf.eu-west-1.awsapprunner.com
     steps:
       # Configure AWS credentials
       - name: Configure AWS credentials
