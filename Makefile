@@ -37,6 +37,7 @@ publish: image
 	@docker tag ${NAME}:latest ${REPO}:latest
 	@echo Publishing ${REPO}:${TAG} ...
 	@docker push ${REPO}:${TAG}
+	@docker push ${REPO}:latest
 	@echo Done.
 
 clean:
