@@ -29,11 +29,11 @@ jobs:
           echo NEXT_PUBLIC_AWS_GATEWAY_BASE_URL="${{ secrets.INFRA_API_BASE_URL }}" >> .env
           echo NEXT_PUBLIC_SUPABASE_URL="${{ secrets.SUPABASE_URL }}" >> .env
           echo NEXT_PUBLIC_SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY }}" >> .env
-          echo NEXT_PUBLIC_SERVER_HOST="${{ env.SERVER_HOST }}" >> .env
-          echo NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL="${{ env.STATIC_RESOURCES_BASE_URL }}" >> .env
-          echo NEXT_PUBLIC_PRIVACY_POLICY_URL="${{ env.PRIVACY_POLICY_URL }}" >> .env
-          echo NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL="${{ env.TERMS_AND_CONDITIONS_URL }}" >> .env
-          echo NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID="${{ env.GOOGLE_ANALYTICS_MEASUREMENT_ID }}" >> .env
+          echo NEXT_PUBLIC_SERVER_HOST="${{ vars.SERVER_HOST }}" >> .env
+          echo NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL="${{ vars.STATIC_RESOURCES_BASE_URL }}" >> .env
+          echo NEXT_PUBLIC_PRIVACY_POLICY_URL="${{ vars.PRIVACY_POLICY_URL }}" >> .env
+          echo NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL="${{ vars.TERMS_AND_CONDITIONS_URL }}" >> .env
+          echo NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID="${{ vars.GOOGLE_ANALYTICS_MEASUREMENT_ID }}" >> .env
       # Publish docker image to ECR
       - name: Publish docker image to ECR
         run: make publish
