@@ -34,6 +34,7 @@ run:
 publish: image
 	@echo Tagging ${NAME}:${TAG} ...
 	@docker tag ${NAME}:${TAG} ${REPO}:${TAG}
+	@docker tag ${NAME}:latest ${REPO}:latest
 	@echo Publishing ${REPO}:${TAG} ...
 	@docker push ${REPO}:${TAG}
 	@echo Done.
