@@ -45,6 +45,13 @@ export interface DataAccessor {
   createWorkshop(workshop: Workshop): Promise<Workshop>
 
   /**
+   * Updates given workshop
+   * @param workshop A workshop to update
+   * @return An updated workshop
+   */
+  updateWorkshop(workshop: Workshop): Promise<Workshop>
+
+  /**
    * Cancels a workshop with a given id
    * @param workshop_id An id of the workshop to cancel
    * @return A boolean representing the success of the method

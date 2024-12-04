@@ -97,6 +97,18 @@ class SupabaseDataAccessor implements DataAccessor {
     }
   }
 
+  async updateWorkshop(workshop: Workshop): Promise<Workshop> {
+    const { data, error } = await this.client.from("workshop")
+      .upsert([workshop])
+      .select();
+    if (error) throw error;
+    if (data) {
+      return data[0] as Workshop;
+    } else {
+      throw Error(`Failed to update a workshop: ${JSON.stringify(workshop)}`);
+    }
+  }
+
   async filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]> {
     const query = this.client
       .from("workshop")
