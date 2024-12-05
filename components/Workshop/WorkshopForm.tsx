@@ -78,6 +78,13 @@ export default function WorkshopForm({ user }: {user: User}) {
         try {
           const createdWorkshop = await clientData.createWorkshop(newWorkshop);
           if (createdWorkshop.id) {
+            toast({
+              title: "Workshop created successfully",
+              description: "You can now schedule the workshop",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+            });
             router.push(`/workshops/${createdWorkshop.id}`);
           } else {
             toast({
