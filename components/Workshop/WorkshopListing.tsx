@@ -1,10 +1,11 @@
 "use client";
 
-import { Stack } from "@chakra-ui/react";
+import { Stack, Box } from "@chakra-ui/react";
 import React from "react";
 import { Booking, Profile, Slot, User, Workshop } from "@schemas";
 import WorkshopListingHeading from "@components/Workshop/WorkshopListingHeading";
 import WorkshopListingSlotList from "@components/Workshop/WorkshopListingSlotList";
+import WorkshopListingPastSlotList from "@components/Workshop/WorkshopListingPastSlotList";
 import WorkshopListingLocation from "@components/Workshop/WorkshopListingLocation";
 import WorkshopListingDescription from "@components/Workshop/WorkshopListingDescription";
 import WorkshopListingShare from "@components/Workshop/WorkshopListingShare";
@@ -33,6 +34,9 @@ export default function WorkshopListing({
     );
   });
 
+  const pastSlots = slots.filter((slot) => isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)));
+  const futureSlots = slots.filter((slot) => !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)));
+  
   return (
     <Stack>
       <WorkshopListingHeading workshop={workshop} host={host} user={user} />
@@ -46,12 +50,18 @@ export default function WorkshopListing({
           user_booking={userBooking}
         />
       ) : (
-        <WorkshopListingSlotList
-          workshop={workshop}
-          slots={slots}
-          bookings={bookings}
-          user={user}
-        />
+        <Box>
+          <WorkshopListingSlotList
+            workshop={workshop}
+            slots={futureSlots}
+            bookings={bookings}
+            user={user}
+          />
+          <WorkshopListingPastSlotList
+            slots={pastSlots}
+            bookings={bookings}
+          />
+        </Box>
       )}
       <WorkshopListingShare workshop={workshop} />
     </Stack>
