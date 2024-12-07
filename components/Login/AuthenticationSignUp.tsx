@@ -38,25 +38,43 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
     const password = formData.signupPassword;
     const confirmedPassword = formData.signupConfirmedPassword;
 
-    if (password === confirmedPassword) {
-      const { success, error } = await signUp(formData.signupEmail, password);
-
-      if (error) {
-        showToast("Sign Up Unsuccessful", error, false);
-      }
-
-      if (success) {
-        showToast("Success", "Verify your email to continue");
-        router.push("/");
-      } else {
-        showToast("Sign Up Unsuccessful");
-      }
-    } else {
+    if (password !== confirmedPassword) {
       showToast("Passwords must match", null, false);
+    }
+    else {
+      const isPasswordStrong:boolean = checkIfPasswordIsStrong(password);
+      
+      if(!isPasswordStrong)
+      {
+        const passwordStrengthMessage = "Password must be at least 8 characters long, "
+            + "include an uppercase letter, a lowercase letter, a number, and a special character.";
+        showToast("Password is weak", passwordStrengthMessage, false);
+      }
+      else{
+        const { success, error } = await signUp(formData.signupEmail, password);
+
+        if (error) {
+          showToast("Sign Up Unsuccessful", error, false);
+        }
+  
+        if (success) {
+          showToast("Success", "Verify your email to continue");
+          router.push("/");
+        } else {
+          showToast("Sign Up Unsuccessful");
+        }    
+      }
     }
 
     setIsLoading(false);
   };
+
+  function checkIfPasswordIsStrong(password: string): boolean  {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  
+    return passwordRegex.test(password);
+  }
+  
 
   const showToast = (
     title: any,
