@@ -80,7 +80,7 @@ export default function WorkshopForm({ user }: {user: User}) {
           if (createdWorkshop.id) {
             toast({
               title: "Workshop created successfully",
-              description: "You can now schedule the workshop",
+              description: "Add date and time slots to make your workshop live",
               status: "success",
               duration: 5000,
               isClosable: true,
