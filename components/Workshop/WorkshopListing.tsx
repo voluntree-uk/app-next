@@ -3,7 +3,7 @@
 import { Stack, Box } from "@chakra-ui/react";
 import { Button, Heading, Tabs, TabList, TabPanels, 
   Tab, TabPanel, useToast, useDisclosure} from "@chakra-ui/react";
-import React from "react";
+import React, { ReactElement } from "react";
 import { useRouter } from "next/navigation";
 import { Booking, Profile, Slot, User, Workshop } from "@schemas";
 import { MdAdd } from "react-icons/md";
@@ -75,6 +75,19 @@ export default function WorkshopListing({
     }
   }
 
+  const makeTab = (
+    title: string
+  ) : ReactElement => {
+    return (
+      <Tab color={"gray"} fontStyle={"italic"}
+           _selected={{fontWeight:"bold", color:"black", 
+                       borderBottomColor:"gray.400 !important",
+                       fontStyle:"normal", borderBottom:"4px"}}>
+        {title}
+      </Tab>
+    );
+  }
+
   return (
     <Stack>
       <WorkshopListingHeading workshop={workshop} host={host} user={user} />
@@ -125,18 +138,8 @@ export default function WorkshopListing({
         </Box>
         <Tabs variant={"line"} colorScheme={"gray.400"} defaultIndex={1}>
           <TabList>
-            <Tab color={"gray"} fontStyle={"italic"}
-                _selected={{fontWeight:"bold", color:"black", 
-                            borderBottomColor:"gray.400 !important",
-                            fontStyle:"normal", borderBottom:"4px"}}>
-                Past sessions
-            </Tab>
-            <Tab color={"gray"} fontStyle={"italic"}
-                _selected={{fontWeight:"bold", color:"black", 
-                            borderBottomColor:"gray.400 !important",
-                            fontStyle:"normal", borderBottom:"4px"}}>
-                Upcoming sessions
-            </Tab>
+            {makeTab("Past sessions")}
+            {makeTab("Upcoming sessions")}
           </TabList>
           <TabPanels>
               <TabPanel>
