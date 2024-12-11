@@ -40,14 +40,15 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
   return (
     <>
     {editModeOn ? (
-      <Box display="flex" justifyContent="space-between" px={{base:"6", md:"16"}}>
+      <Box display="flex" justifyContent="space-between" px={{base:"6", md:"16"}} p="6"
+           borderBottomWidth="1px" borderBottomColor="gray.200" rounded="md">
         <FormControl
           isInvalid={description == null || description.length < 200}>
-          <FormLabel htmlFor="description" fontSize="md">
+          <Heading as="h2" size="md" pb="0.5em">
             Description
-          </FormLabel>
+          </Heading>
           <Flex direction={{ base: "column", sm: "row" }} justifyContent="space-between">
-            <Box w="100%" me="4">
+            <Box w="100%" me="4" pt="2">
               <Textarea
                 value = {description}
                 minH={"18em"}
@@ -101,28 +102,32 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
       borderBottomColor="gray.200"
       p="6"
       rounded="md"
-      px={{ base: "6", md: "16" }}
+      px={{ base: "6", md: "16" }} 
       >
-      <Heading as="h2" size="md" pb="0.5em">
-          Description
-      </Heading>
-      <Box display="flex" justifyContent="space-between">
+      <Flex justifyContent={"space-between"} alignItems={"center"}>
+        <Heading as="h2" size="md" pb="0.5em">
+            Description
+        </Heading>
+        {isUserHost && 
+          <Button
+            rounded="full"
+            colorScheme="blackAlpha"
+            variant="outline"
+            rightIcon={<MdOutlineEdit />}
+            onClick={() => onEdit()}
+            size={{ base: "sm", sm: "md" }}
+            mr="3"
+            >
+            Edit
+          </Button>
+        }
+      </Flex>
+     
+      <Box display="flex" justifyContent="space-between" pt="2">
         <Text whiteSpace={"pre-wrap"} color={"gray.600"} fontSize={"14px"} lineHeight="6" w="100%">
           {workshop.description}
         </Text>
-        {isUserHost && 
-        <Button
-          rounded="full"
-          colorScheme="blackAlpha"
-          variant="outline"
-          rightIcon={<MdOutlineEdit />}
-          onClick={() => onEdit()}
-          size={{ base: "sm", sm: "md" }}
-          mr="3"
-          >
-          Edit
-        </Button>
-        }
+       
       </Box>
     </Box> )}
   </>
