@@ -18,9 +18,8 @@ export function WorkshopListingPastSlot({
   return (
     <Box
       py="5"
-      px="2"
-      borderTop={"1px"}
-      borderTopColor="gray.200"
+      borderBottom={"1px"}
+      borderBottomColor="gray.200"
     >
       <Box fontSize={"sm"}>
         <Text>{dateToReadable(slot.date)}</Text>

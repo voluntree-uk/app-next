@@ -1,15 +1,22 @@
 "use client";
 
 import { Stack, Box } from "@chakra-ui/react";
+import { Button, Heading, Tabs, TabList, TabPanels, 
+  Tab, TabPanel, useToast, useDisclosure} from "@chakra-ui/react";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Booking, Profile, Slot, User, Workshop } from "@schemas";
+import { MdAdd } from "react-icons/md";
+import { clientData } from "@data/supabase";
 import WorkshopListingHeading from "@components/Workshop/WorkshopListingHeading";
-import WorkshopListingSlotList from "@components/Workshop/WorkshopListingSlotList";
+import WorkshopListingUpcomingSlotList from "@components/Workshop/WorkshopListingUpcomingSlotList";
 import WorkshopListingPastSlotList from "@components/Workshop/WorkshopListingPastSlotList";
 import WorkshopListingLocation from "@components/Workshop/WorkshopListingLocation";
 import WorkshopListingDescription from "@components/Workshop/WorkshopListingDescription";
 import WorkshopListingShare from "@components/Workshop/WorkshopListingShare";
 import WorkshopListingUserBooking from "@components/Workshop/WorkshopListingUserBooking";
+import { WorkshopListingNewSlotModal } from "@components/Workshop/WorkshopListingNewSlotModal";
+import Show from "@components/Helpers/Show";
 import { isBeforeNow } from "@util/dates";
 
 interface IProps {
@@ -34,9 +41,40 @@ export default function WorkshopListing({
     );
   });
 
+  const isUserHost = () => user?.id == workshop.user_id;
+  const router = useRouter();
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+
   const pastSlots = slots.filter((slot) => isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)));
   const futureSlots = slots.filter((slot) => !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)));
-  
+
+
+  async function addNewSlot(slot: Slot): Promise<void> {
+    try {
+      if (slot) {
+        const success = await clientData.createSlots([slot]);
+        // Redirect if slot created successfully
+        if (success) {
+          router.refresh();
+        }
+      }
+    } catch (error) {
+      const message = (error as any).message;
+
+      toast({
+        title: "Problem creating a new session",
+        description: message,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    } finally {
+      onClose();
+    }
+  }
+
   return (
     <Stack>
       <WorkshopListingHeading workshop={workshop} host={host} user={user} />
@@ -50,18 +88,75 @@ export default function WorkshopListing({
           user_booking={userBooking}
         />
       ) : (
-        <Box>
-          <WorkshopListingSlotList
-            workshop={workshop}
-            slots={futureSlots}
-            bookings={bookings}
-            user={user}
-          />
-          <WorkshopListingPastSlotList
-            slots={pastSlots}
-            bookings={bookings}
-          />
+      <Box
+        borderBottomWidth={"1px"}
+        borderBottomColor="gray.200"
+       
+        rounded="md"
+        px={{ base: "6", md: "16" }}
+      >
+        <Box 
+         py="6"
+         display="flex"
+         justifyContent={"space-between"}
+         alignItems={"center"}
+         >
+          <Heading as="h2" size="md" pb="0.5em">
+            Availability
+          </Heading>
+          <Show showIf={isUserHost()}>
+            <Button
+              variant="solid"
+              colorScheme="teal"
+              rightIcon={<MdAdd />}
+              onClick={onOpen}
+              mx="4"
+              >
+                New Session
+            </Button>
+          
+            <WorkshopListingNewSlotModal
+              workshop={workshop}
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={addNewSlot}
+            />
+          </Show>
         </Box>
+        <Tabs variant={"line"} colorScheme={"gray.400"} defaultIndex={1}>
+          <TabList>
+            <Tab color={"gray"} fontStyle={"italic"}
+                _selected={{fontWeight:"bold", color:"black", 
+                            borderBottomColor:"gray.400 !important",
+                            fontStyle:"normal", borderBottom:"4px"}}>
+                Past sessions
+            </Tab>
+            <Tab color={"gray"} fontStyle={"italic"}
+                _selected={{fontWeight:"bold", color:"black", 
+                            borderBottomColor:"gray.400 !important",
+                            fontStyle:"normal", borderBottom:"4px"}}>
+                Upcoming sessions
+            </Tab>
+          </TabList>
+          <TabPanels>
+              <TabPanel>
+                <WorkshopListingPastSlotList
+                slots={pastSlots}
+                bookings={bookings}
+                />    
+              </TabPanel>
+              <TabPanel>
+                <WorkshopListingUpcomingSlotList
+                workshop={workshop}
+                slots={futureSlots}
+                bookings={bookings}
+                user={user}
+                />    
+              </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box>
+
       )}
       <WorkshopListingShare workshop={workshop} />
     </Stack>

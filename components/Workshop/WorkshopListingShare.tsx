@@ -41,7 +41,7 @@ export default function WorkshopListingDescription({ workshop }: IProps) {
           Share
         </Heading>
       </Flex>
-      <Grid templateColumns="repeat(4, 1fr)" gap={"1em"}>
+      <Grid templateColumns="repeat(4, 1fr)" gap={"1em"} px="4">
         <FacebookShareButton url={shareUrl}>
           <FacebookIcon size={32} round />
         </FacebookShareButton>
