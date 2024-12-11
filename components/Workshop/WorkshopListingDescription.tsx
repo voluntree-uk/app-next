@@ -2,6 +2,7 @@
 
 import React, {useState} from "react";
 import { Box, 
+         Flex,
          Heading, 
          Text, 
          FormControl, 
@@ -39,14 +40,14 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
   return (
     <>
     {editModeOn ? (
-      <Box display="flex" justifyContent="space-between" p="16">
+      <Box display="flex" justifyContent="space-between" px={{base:"6", md:"16"}}>
         <FormControl
           isInvalid={description == null || description.length < 200}>
           <FormLabel htmlFor="description" fontSize="md">
             Description
           </FormLabel>
-          <Box display="flex" justifyContent="space-between">
-            <Box w="100%">
+          <Flex direction={{ base: "column", sm: "row" }} justifyContent="space-between">
+            <Box w="100%" me="4">
               <Textarea
                 value = {description}
                 minH={"18em"}
@@ -59,12 +60,12 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
                 {`${200 - description.length}`} characters remaining
               </FormErrorMessage>
               ) : (
-              <FormHelperText>
+              <FormHelperText pb={{base:"2", sm:"0"}}>
                 Provide as much detail as possible
               </FormHelperText>
               )}
             </Box>
-            <Box w="auto" display="flex" flexDir="column">
+            <Flex direction={{base:"row", sm:"column"}} gap={{ base: "2", md: "4" }}>
               <Button
                 colorScheme="green"
                 rounded="full"
@@ -72,8 +73,9 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
                 type="submit"
                 onClick={() => onSave()}
                 rightIcon={<MdOutlineSave />}
-                size={{ base: "xs", sm: "md" }}
-                mx="3" mb="3"
+                size={{ base: "sm", sm: "md" }}
+                w={{ base: "100%", sm: "auto" }}
+                mx="2"
               >
                 Save
               </Button>
@@ -83,13 +85,14 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
                 variant="outline"
                 onClick={onCancel}
                 rightIcon={<MdOutlineCancel />}
-                size={{ base: "xs", sm: "md" }}
-                mx="3"
+                size={{ base: "sm", sm: "md" }}
+                w={{ base: "100%", sm: "auto" }}
+                mx="2"
                 >
                   Cancel
               </Button>
-            </Box>
-          </Box>
+            </Flex>
+          </Flex>
         </FormControl>
       </Box>
     ) : (
@@ -114,7 +117,7 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
           variant="outline"
           rightIcon={<MdOutlineEdit />}
           onClick={() => onEdit()}
-          size={{ base: "xs", sm: "md" }}
+          size={{ base: "sm", sm: "md" }}
           mr="3"
           >
           Edit
