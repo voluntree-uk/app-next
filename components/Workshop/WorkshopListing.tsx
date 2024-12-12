@@ -92,7 +92,7 @@ export default function WorkshopListing({
     <Stack>
       <WorkshopListingHeading workshop={workshop} host={host} user={user} />
       <WorkshopListingLocation workshop={workshop} />
-      <WorkshopListingDescription workshop={workshop} />
+      <WorkshopListingDescription workshop={workshop} user={user} />
       {userBooking ? (
         <WorkshopListingUserBooking
           workshop={workshop}
