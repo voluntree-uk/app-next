@@ -87,7 +87,7 @@ export default function WorkshopListingHeading({
             <AlertIcon />
             <AlertTitle>Thank you for hosting this workshop!</AlertTitle>
             <AlertDescription>
-              Below you can edit the available slots.
+              Below you can edit the available sessions.
             </AlertDescription>
           </Alert>
         </Show>
@@ -123,12 +123,12 @@ export default function WorkshopListingHeading({
             <Flex alignItems={"center"}>
               <Button
                 rounded="full"
-                colorScheme="blackAlpha"
-                variant={"outline"}
+                colorScheme="red"
+                variant={"solid"}
                 onClick={onOpen}
                 rightIcon={<MdOutlineCancel />}
-                size={{ base: "xs", sm: "md" }}
-                mr="3"
+                size={{ base: "sm", sm: "md" }}
+                mr="5"
               >
                 Cancel
               </Button>

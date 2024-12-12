@@ -35,7 +35,7 @@ export default function LandingHowItWorksCard({
         href={btn.target}
         target={btn.inNewTab ? "_blank" : "_self"}
       >
-        <Button width={"100%"} colorScheme={btn.colorScheme}>
+        <Button width={"100%"} colorScheme={btn.colorScheme} color={"white"}>
           {btn.text}
         </Button>
       </Link>

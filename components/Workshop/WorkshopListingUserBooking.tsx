@@ -69,7 +69,7 @@ export default function WorkshopListingUserBooking({
     } catch (error) {
       const message = (error as any).message;
       toast({
-        title: "Problem canceling a slot",
+        title: "Problem canceling a session",
         description: message,
         status: "error",
         duration: 4000,
@@ -111,14 +111,15 @@ export default function WorkshopListingUserBooking({
             </Badge>
           </Box>
           <Flex alignItems={"center"}>
-            <ButtonGroup gap={{ base: "0", md: "2" }}>
+            <Flex direction={{ base: "column", sm: "row" }} gap={{ base: "2", md: "4" }}>
               <Link as={NextLink} href={workshop.meeting_link} target="_blank">
                 <Button
                   rounded="full"
                   colorScheme="linkedin"
                   variant="solid"
                   rightIcon={<MdStart />}
-                  size={{ base: "xs", sm: "md" }}
+                  size={{ base: "sm", sm: "md" }}
+                  w={{ base: "100%", sm: "auto" }}
                 >
                   Enter
                 </Button>
@@ -129,11 +130,12 @@ export default function WorkshopListingUserBooking({
                 variant="solid"
                 onClick={onOpen}
                 rightIcon={<MdOutlineCancel />}
-                size={{ base: "xs", sm: "md" }}
+                size={{ base: "sm", sm: "md" }}
+                w={{ base: "100%", sm: "auto" }}
               >
                 Cancel
               </Button>
-            </ButtonGroup>
+            </Flex>
             <ConfirmActionDialog
               title="Cancel Booking"
               message="Are you sure you want to cancel your booking? This action cannot be undone."

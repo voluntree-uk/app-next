@@ -28,7 +28,7 @@ interface IProps {
   user: User | null;
 }
 
-export function WorkshopListingSlot({
+export function WorkshopListingUpcomingSlot({
   workshop,
   slot,
   slotBookings,
@@ -94,7 +94,7 @@ export function WorkshopListingSlot({
     } catch (error) {
       const message = (error as any).message;
       toast({
-        title: "Problem canceling a slot",
+        title: "Problem canceling a session",
         description: message,
         status: "error",
         duration: 4000,
@@ -109,9 +109,8 @@ export function WorkshopListingSlot({
   return (
     <Box
       py="5"
-      px="2"
-      borderTop={"1px"}
-      borderTopColor="gray.200"
+      borderBottom={"1px"}
+      borderBottomColor="gray.200"
       display="flex"
       justifyContent={"space-between"}
     >
@@ -126,36 +125,39 @@ export function WorkshopListingSlot({
       </Box>
       <Flex alignItems={"center"}>
         <Show showIf={isUserHost()}>
-          <ButtonGroup gap={{ base: "0", md: "2" }}>
-            <Link as={NextLink} href={workshop.meeting_link} target="_blank">
-              <Button
-                rounded="full"
-                colorScheme="linkedin"
-                variant="solid"
-                rightIcon={<MdStart />}
-                size={{ base: "xs", sm: "md" }}
-              >
-                Enter
+          <Flex direction={{ base: "column", sm: "row" }} gap={{ base: "2", md: "4" }} >
+              <Link as={NextLink} href={workshop.meeting_link} target="_blank">
+                <Button
+                  rounded="full"
+                  colorScheme="linkedin"
+                  variant="solid"
+                  rightIcon={<MdStart />}
+                  size={{ base: "sm", sm: "md" }}        
+                  w={{ base: "100%", sm: "auto" }}
+                >
+                  Enter
+                </Button>
+              </Link>
+                <Button
+                  rounded="full"
+                  colorScheme="red"
+                  variant="solid"
+                  onClick={onOpen}
+                  rightIcon={<MdOutlineCancel />}
+                  size={{ base: "sm", sm: "md" }}
+                  w={{ base: "100%", sm: "auto" }}
+                >
+                Cancel
               </Button>
-            </Link>
-            <Button
-              rounded="full"
-              colorScheme="red"
-              variant="solid"
-              onClick={onOpen}
-              rightIcon={<MdOutlineCancel />}
-              size={{ base: "xs", sm: "md" }}
-            >
-              Cancel
-            </Button>
-          </ButtonGroup>
+          </Flex>
           <ConfirmActionDialog
-            title="Cancel Slot"
-            message="Are you sure you want to cancel this slot? This action cannot be undone."
+            title="Cancel Session"
+            message="Are you sure you want to cancel this session? This action cannot be undone."
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={cancelSlot}
           />
+          
         </Show>
         <Show showIf={!isUserHost()}>
           <Button
@@ -171,7 +173,7 @@ export function WorkshopListingSlot({
               }
             }}
             rightIcon={<MdKeyboardArrowRight />}
-            size={{ base: "xs", sm: "md" }}
+            size={{ base: "sm", sm: "md" }}
           >
             Book
           </Button>
