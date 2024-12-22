@@ -37,6 +37,21 @@ export default function CookieConsent({
     }
   }, [consent]);
 
+
+  useEffect(() => {
+    if (
+      process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID &&
+      getCookie(analyticsConsent) == "true"
+    ) {
+      import("react-facebook-pixel")
+        .then((x) => x.default)
+        .then((ReactPixel) => {
+          ReactPixel.init(process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID!);
+          ReactPixel.pageView();
+        });
+    }
+  }, []);
+
   const acceptConsent = () => {
     setCookie(analyticsConsent, "true");
     onClose();
