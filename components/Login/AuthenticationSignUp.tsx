@@ -166,7 +166,7 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
                   isLoading={isLoading}
                   boxShadow="lg"
                 >
-                  Sign up
+                  Join
                 </Button>
               </Stack>
             </Stack>
