@@ -15,13 +15,13 @@ export default function VolunteerGuideHero() {
         color="black"
         px={{base:"2", md:"4"}}
       >
-        <Heading as="h1" fontSize={{ base: "2xl", sm: "4xl", md: "5xl", lg: "7xl", xl:"8xl" }} fontWeight="bold">
+        <Heading as="h1" fontSize={{ base: "2xl", sm: "4xl", md: "5xl", lg: "7xl"}} fontWeight="bold">
             Share Your Skills
         </Heading>
         
       </Box>
       <Text 
-          fontSize={{ base: "md", md: "lg" }} 
+          fontSize={{base:"lg", md:"xl", lg:"2xl"}}
           mt="4" 
           p="4" 
           color="white" 

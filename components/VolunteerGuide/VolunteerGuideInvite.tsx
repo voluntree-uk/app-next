@@ -7,7 +7,7 @@ export default function VolunteerGuideInvite(){
       <Box 
         mt="16" 
         p="1em" 
-        backgroundColor={"teal"} 
+        backgroundColor={"#335593"} 
         textColor="white" 
         borderRadius="5"
         ps={{base:"6", md:"10", lg:"20"}}
@@ -16,7 +16,7 @@ export default function VolunteerGuideInvite(){
             fontWeight={"bold"} 
             textAlign={"start"} 
             mt="10" 
-            fontSize={{base:"lg", md:"2xl"}} 
+            fontSize={{base:"xl", md:"2xl", lg:"3xl"}} 
             fontStyle="italic"
           >
             Be the Spark That Changes Someone’s Life!

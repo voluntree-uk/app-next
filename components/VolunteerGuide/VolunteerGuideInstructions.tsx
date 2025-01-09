@@ -15,16 +15,17 @@ export default function VolunteerGuideInstructions(){
         return (
         <Box 
           w={{base:"80%", sm:"70%", md:"55%", lg:"32%"}} 
-          mx={{base:"auto", lg:"0"}}>
+          mx={{base:"auto", lg:"0"}}
+          my="4">
             <Flex flexDirection={"row"} alignItems={"center"}>
               <Text as="h1" 
                 p="2" 
                 fontSize={{base:"5xl", sm:"6xl", md:"8xl"}} 
-                color="rgba(0, 0, 0, 0.7)"
+                color="rgba(0, 0, 0, 0.2)"
                 >
                   {number}
               </Text>
-              <Text p="2" fontSize={"lg"}>
+              <Text p="2" fontSize={{base:"lg", sm:"xl", md:"2xl"}} fontStyle="italic">
                 {text}
               </Text>
             </Flex>

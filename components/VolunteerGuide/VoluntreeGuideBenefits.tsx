@@ -8,7 +8,7 @@ export default function VolunteerGuideBenefits(){
         text:string
       ) : ReactElement => {
         return (
-          <Card boxShadow={"md"} mx={{base:"auto", lg:"0"}} my="3" p="3" w={{base:"60%", lg:"22%"}}  backgroundColor={"#78DDCF"} textColor="white">
+          <Card boxShadow={"md"} mx={{base:"auto", lg:"0"}} my="3" p="3" w={{base:"70%", lg:"22%"}}  backgroundColor={"#335593"} textColor="white">
             <Text fontSize={{base:"md", md:"lg"}} fontWeight={"bold"}>{heading}</Text>
             <Text fontSize={{base:"sm", md:"md"}} p="3" mt="3" backgroundColor={"white"} textColor={"black"} borderRadius={"5"} fontStyle={"italic"} h="100%">
                 {text}
