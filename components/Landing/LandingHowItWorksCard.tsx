@@ -1,6 +1,6 @@
 "use client";
 
-import { Text, Link, Stack, Heading, Button } from "@chakra-ui/react";
+import { Text, Link, Heading, Button, Flex, Box } from "@chakra-ui/react";
 import NextLink from "next/link";
 
 interface IProps {
@@ -8,7 +8,8 @@ interface IProps {
     target: string;
     inNewTab: boolean
     text: string;
-    colorScheme: string;
+    background: string;
+    hoverColor: string;
   };
   title: string;
   description: string;
@@ -20,25 +21,36 @@ export default function LandingHowItWorksCard({
   description,
 }: IProps) {
   return (
-    <Stack spacing={"1em"}>
-      <Heading
-        textAlign={{ base: "center", lg: "start" }}
-        fontWeight={"bold"}
-        size="lg"
-        pb="3"
-      >
-        {title}
-      </Heading>
-      <Text>{description}</Text>
-      <Link
-        as={NextLink}
-        href={btn.target}
-        target={btn.inNewTab ? "_blank" : "_self"}
-      >
-        <Button width={"100%"} colorScheme={btn.colorScheme} color={"white"}>
-          {btn.text}
-        </Button>
-      </Link>
-    </Stack>
+    <Flex
+      direction="column"
+      justify="space-betwen"
+      align="stretch">
+      <Box mb="4">
+        <Heading
+          textAlign={{ base: "center", lg: "start" }}
+          fontWeight={"bold"}
+          size="lg"
+          pb="3"
+        >
+          {title}
+        </Heading>
+        <Text textAlign={"justify"}>{description}</Text>
+      </Box>
+        <Link
+          as={NextLink}
+          href={btn.target}
+          target={btn.inNewTab ? "_blank" : "_self"}
+          mt="auto"
+        >
+          <Button 
+            width={"100%"} 
+            background={btn.background} 
+            color={"white"} 
+            _hover={{background: btn.hoverColor }}
+          >
+            {btn.text}
+          </Button>
+        </Link>
+    </Flex>
   );
 }

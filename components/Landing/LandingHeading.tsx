@@ -5,8 +5,8 @@ import { Flex, Box, Heading, Img, Text } from "@chakra-ui/react";
 export default function LandingHeading() {
   return (
     <Flex
-      flexDir={{ base: "column", md: "row" }}
-      justifyContent={"space-around"}
+      flexDir={{ base: "column", lg: "row" }}
+      justifyContent={"space-between"}
       alignItems="center"
     >
       <Box w={{ base: "100%", lg: "550px" }}>
@@ -18,7 +18,7 @@ export default function LandingHeading() {
         >
           Voluntree is a skill and knowledge sharing platform with a difference.
         </Heading>
-        <Text fontSize={"md"} pb={{ base: "5", sm: "0" }}>
+        <Text fontSize={"md"} pb={{ base: "5", sm: "0" }} textAlign={"justify"}>
           Totally <b>transparent</b> and <b>free</b> to use, Voluntree will
           enable you to help your community, build your reputation and learn
           some brand new skills! Built on a commitment to the idea that social

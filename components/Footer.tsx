@@ -65,7 +65,7 @@ export default function Footer({
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
     >
-      <Container as={Stack} maxW={"6xl"} py={5}>
+      <Container as={Stack} maxW={"7xl"} py={5}>
         <SimpleGrid
           columns={2}
           spacing={8}
@@ -102,10 +102,10 @@ export default function Footer({
               </Link>
             </Stack>
           </Stack>
-          <Stack align={"flex-start"}>
+          <Stack align={"flex-end"}>
             <ListHeader>Legal</ListHeader>
             <Stack
-              align={"flex-start"}
+              align={"flex-end"}
               direction={{ base: "column", md: "row" }}
               spacing={{ base: 0, md: 10 }}
             >

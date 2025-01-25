@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import LandingHowItWorksCard from "@components/Landing/LandingHowItWorksCard";
 
 const howItWorksCardContent = [
@@ -18,7 +18,8 @@ const howItWorksCardContent = [
       text: "Create workshop",
       target: "/workshops/new",
       inNewTab: false,
-      colorScheme: "green",
+      background: "#6884CD",
+      hoverColor:"#7C9EF5"
     },
   },
   {
@@ -34,7 +35,8 @@ const howItWorksCardContent = [
       text: "Browse workshops",
       target: "/workshops",
       inNewTab: false,
-      colorScheme: "cyan",
+      background: "#E3C46D",
+      hoverColor:"#F4D376"
     },
   },
   {
@@ -48,25 +50,16 @@ const howItWorksCardContent = [
       text: "Finances page",
       target: "https://voluntree.net/finances",
       inNewTab: true,
-      colorScheme: "yellow",
+      background: "#9CC7AA",
+      hoverColor:"#B5D1C5"
     },
   },
 ];
 
 export default function LandingHowItWorks() {
   return (
-    <Flex
-      p={{ base: "0", sm: "5" }}
-      flexDir={"column"}
-      alignItems="center"
-      gap={25}
-    >
-      <Flex alignItems={"center"} flexDir={"column"}>
-        <Heading fontWeight={"bold"} size="lg" pb="3">
-          How Voluntree works
-        </Heading>
-      </Flex>
-      <Flex flexDir={{ base: "column", lg: "row" }} gap={{ base: "10" }}>
+    
+    <Flex flexDir={{ base: "column", lg: "row" }} gap={{ base: "10" }} alignItems={"stretch"}> 
         {howItWorksCardContent.map(({ title, description, btn }) => (
           <LandingHowItWorksCard
             key={title}
@@ -75,7 +68,6 @@ export default function LandingHowItWorks() {
             btn={btn}
           />
         ))}
-      </Flex>
     </Flex>
   );
 }
