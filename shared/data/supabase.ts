@@ -18,7 +18,7 @@ import {
 } from "@util/dates";
 import { api } from "@infra/aws";
 import { ActionTrigger } from "@infra/api";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient, User } from "@supabase/supabase-js";
 import { createClient } from "@util/supabase/client";
 
 /**
@@ -29,6 +29,11 @@ class SupabaseDataAccessor implements DataAccessor {
 
   constructor(client: SupabaseClient) {
     this.client = client;
+  }
+
+  async getJWT(): Promise<string | undefined> {
+    const { data } = await this.client.auth.getSession()
+    return data.session?.access_token
   }
 
   async createProfile(profile: Profile): Promise<Profile> {
@@ -82,7 +87,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
   async createWorkshop(workshop: Workshop): Promise<Workshop> {
     if (workshop.virtual) {
-      workshop.meeting_link = await api.generateMeetingLink(workshop.name)
+      workshop.meeting_link = await api.generateMeetingLink(workshop)
     }
     const { data, error } = await this.client.from("workshop")
       .insert([workshop])
@@ -90,7 +95,7 @@ class SupabaseDataAccessor implements DataAccessor {
     if (error) throw error;
     if (data) {
       await this.client.rpc('increment_hosted_workshops', { id: workshop.user_id });
-      await api.sendWorkshopCreationConfirmation(workshop.user_id, workshop.name);
+      await api.workshopConfirmation(workshop);
       return data[0] as Workshop;
     } else {
       throw Error(`Failed to create a workshop: ${JSON.stringify(workshop)}`);
@@ -249,8 +254,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
     if (data) {
       for (let i = 0; i < data.length; i++) {
-        const slot: Slot = data[i]
-        await api.scheduleSlotPostProcessing(data[i].id!, `${slot.date}T${slot.end_time}`)
+        await api.scheduleSlotPostProcessing(data[i])
       }
     }
 
@@ -274,7 +278,6 @@ class SupabaseDataAccessor implements DataAccessor {
   }
 
   async bookSlot(workshop: Workshop, slot: Slot, user_id: string): Promise<boolean> {
-    // Generate booking link first
     const { data, error } = await this.client.rpc('book_slot', {
       p_workshop_id: workshop.id?.toString(),
       p_slot_id: slot.id?.toString(),
@@ -288,13 +291,19 @@ class SupabaseDataAccessor implements DataAccessor {
       if (!data[0].success) {
         return false;
       } else {
-        await api.sendBookingConfirmations(
-          workshop.user_id.toString(),
-          user_id,
-          workshop.name,
-          slot,
-          workshop.meeting_link
-        )
+        const { data: bookings } = await this.client
+          .from("booking")
+          .select(`
+            *,
+            workshop:workshop_id(name,user_id,meeting_link),
+            slot:slot_id(date,start_time,end_time)
+          `)
+          .eq(`slot_id`, slot.id)
+          .eq(`workshop_id`, workshop.id)
+          .eq(`user_id`, user_id);
+        if (bookings && bookings.length == 1) {
+          await api.bookingConfirmation(bookings[0])
+        }
         return true;
       }
     }
@@ -341,7 +350,7 @@ class SupabaseDataAccessor implements DataAccessor {
     }
 
     if (!isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))) {
-      await api.cancelSlotPostProcessing(slot.id)
+      await api.cancelSlotPostProcessing(slot)
     }
 
     return true
@@ -354,7 +363,7 @@ class SupabaseDataAccessor implements DataAccessor {
     if (error) throw error;
 
     if (data) {
-      api.sendBookingCancellations(booking.workshop.user_id, booking.user_id, booking.workshop.name, booking.slot, triggered_by)
+      api.bookingCancellation(booking, triggered_by)
       return true
     } else {
       return false

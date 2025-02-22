@@ -38,6 +38,12 @@ export interface DataAccessor {
   getProfile(id: string): Promise<Profile>
 
   /**
+   * Gets a JWT token for the currently logged in user
+   * @return A JWT token if a user is logged in
+   */
+  getJWT(): Promise<string|undefined>
+
+  /**
    * Creates given workshop
    * @param workshop A workshop to create
    * @return A created workshop
