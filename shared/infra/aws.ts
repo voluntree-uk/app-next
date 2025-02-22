@@ -1,6 +1,6 @@
 import { ActionTrigger, InfrastructureAPI } from "./api";
 import { clientData } from "../data/supabase";
-import { Profile, Slot } from "../schemas";
+import { BookingDetails, Profile, Slot, Workshop } from "../schemas";
 import axios from "axios";
 import { dateToReadable, isBeforeNow } from "@util/dates";
 
@@ -9,150 +9,198 @@ import { dateToReadable, isBeforeNow } from "@util/dates";
  */
 class AWSInfrastructureAPI implements InfrastructureAPI {
 
-  private workshopCreationConfirmationEndpoint: string;
-  private bookingConfirmationEndpoint: string;
-  private bookingCancellationEndpoint: string;
-  private scheduleSlotPostProcessingEndpoint: string;
-  private cancelSlotPostProcessingEndpoint: string;
-  private generateMeetingEndpoint: string;
-  
   constructor(apiGatewayBaseUrl: string) {
     if (apiGatewayBaseUrl === "") {
       throw Error("Failed to initialise AWSAPIGateway, apiGatewayBaseUrl cannot be empty")
     }
-    this.workshopCreationConfirmationEndpoint = `${apiGatewayBaseUrl}/workshopCreationConfirmation`
-    this.bookingConfirmationEndpoint = `${apiGatewayBaseUrl}/bookingConfirmation`
-    this.bookingCancellationEndpoint = `${apiGatewayBaseUrl}/bookingCancellation`
-    this.scheduleSlotPostProcessingEndpoint = `${apiGatewayBaseUrl}/scheduleSlotPostProcessing`
-    this.cancelSlotPostProcessingEndpoint = `${apiGatewayBaseUrl}/cancelSlotPostProcessing`
-    this.generateMeetingEndpoint = `${apiGatewayBaseUrl}/generateOnlineMeeting`
   }
 
   private axios_instance = axios.create({
     headers: {
-      'X-Voluntree-Auth': '*'
+      'Content-Type': 'application/json'
     }
   });
 
-  async sendWorkshopCreationConfirmation(host_user_id: string, workshop_name: string): Promise<void> {
-    const hasProfile = await clientData.hasProfile(host_user_id)
-    if (!hasProfile) return
-    const host: Profile = await clientData.getProfile(host_user_id)
-    if (host) {
-      const data = {
-        host: {
-          name: host.name,
-          email: host.email
-        },
-        event: {
-          name: workshop_name
+  async workshopConfirmation(workshop: Workshop): Promise<void> {
+    const jwt = await clientData.getJWT()
+    if (jwt) {
+      const hasProfile = await clientData.hasProfile(workshop.user_id)
+      if (!hasProfile) return
+      const host: Profile = await clientData.getProfile(workshop.user_id)
+      if (host) {
+        const data = {
+          host: {
+            name: host.name,
+            email: host.email
+          },
+          event: {
+            name: workshop.name
+          }
         }
+        this.axios_instance.post(
+          `${apiGatewayBaseUrl}/workshop/confirm`,
+          JSON.stringify(data),
+          { headers: { "Authorization": `Bearer ${jwt}` } }
+        ).catch((err) => {
+          console.error(`Failed to send workshop creation confirmation email: ${err}`)
+        })
       }
-      this.axios_instance.post(this.workshopCreationConfirmationEndpoint, JSON.stringify(data)).catch((err) => {
-        console.error(`Failed to send workshop creation confirmation email: ${err}`)
-      })
     }
     return
   }
 
-  async sendBookingConfirmations(host_user_id: string, attendee_user_id: string, workshop_name: string, slot: Slot, join_link: string | undefined): Promise<void> {
-    const hostHasProfile = await clientData.hasProfile(host_user_id)
-    const attendeeHasProfile = await clientData.hasProfile(host_user_id)
-    if (hostHasProfile && attendeeHasProfile) {
-      const host: Profile = await clientData.getProfile(host_user_id)
-      const attendee: Profile = await clientData.getProfile(attendee_user_id)
+  async bookingConfirmation(booking: BookingDetails): Promise<void> {
+    const jwt = await clientData.getJWT()
+    if (jwt) {
+      const host_user_id = booking.workshop.user_id
+      const attendee_user_id = booking.user_id
+      const booking_slot = booking.slot
 
-      const data = {
-        host: {
-          name: host.name,
-          email: host.email
-        },
-        user: {
-          name: attendee.name,
-          email: attendee.email
-        },
-        event: {
-          name: workshop_name,
-          date: dateToReadable(slot.date),
-          time: slot.start_time,
-          join_link: join_link
+      const hostHasProfile = await clientData.hasProfile(host_user_id)
+      const attendeeHasProfile = await clientData.hasProfile(attendee_user_id)
+      if (hostHasProfile && attendeeHasProfile) {
+        const host: Profile = await clientData.getProfile(host_user_id)
+        const attendee: Profile = await clientData.getProfile(attendee_user_id)
+
+        const data = {
+          host: {
+            name: host.name,
+            email: host.email
+          },
+          user: {
+            name: attendee.name,
+            email: attendee.email
+          },
+          event: {
+            name: booking.workshop.name,
+            date: dateToReadable(booking_slot.date),
+            time: booking_slot.start_time,
+            join_link: booking.workshop.meeting_link
+          }
         }
+        this.axios_instance.post(
+          `${apiGatewayBaseUrl}/booking/confirm`,
+          JSON.stringify(data),
+          { headers: { "Authorization": `Bearer ${jwt}` } }
+        ).catch((err) => {
+          console.error(`Failed to send booking confirmation emails: ${err}`)
+        })
       }
-      this.axios_instance.post(this.bookingConfirmationEndpoint, JSON.stringify(data)).catch((err) => {
-        console.error(`Failed to send booking confirmation emails: ${err}`)
-      })
+    } else {
+      console.error(`Failed to obtain a JWT token`)
     }
-    return
   }
 
-  async sendBookingCancellations(host_user_id: string, attendee_user_id: string, workshop_name: string, slot: Slot, triggered_by: ActionTrigger): Promise<void> {
-    const hostHasProfile = await clientData.hasProfile(host_user_id)
-    const attendeeHasProfile = await clientData.hasProfile(host_user_id)
-    if (hostHasProfile && attendeeHasProfile) {
-      const host: Profile = await clientData.getProfile(host_user_id)
-      const attendee: Profile = await clientData.getProfile(attendee_user_id)
-      const data = {
-        host: {
-          name: host.name,
-          email: host.email,
-          didCancel: triggered_by === ActionTrigger.Host
-        },
-        user: {
-          name: attendee.name,
-          email: attendee.email,
-          didCancel: triggered_by === ActionTrigger.Attendee
-        },
-        event: {
-          name: workshop_name,
-          date: dateToReadable(slot.date),
-          time: slot.start_time
+  async bookingCancellation(booking: BookingDetails, triggered_by: ActionTrigger): Promise<void> {
+    const jwt = await clientData.getJWT()
+    if (jwt) {
+      const host_user_id = booking.workshop.user_id
+      const attendee_user_id = booking.user_id
+      const booking_slot = booking.slot
+
+      const hostHasProfile = await clientData.hasProfile(host_user_id)
+      const attendeeHasProfile = await clientData.hasProfile(attendee_user_id)
+      if (hostHasProfile && attendeeHasProfile) {
+        const host: Profile = await clientData.getProfile(host_user_id)
+        const attendee: Profile = await clientData.getProfile(attendee_user_id)
+        const data = {
+          host: {
+            name: host.name,
+            email: host.email,
+            didCancel: triggered_by === ActionTrigger.Host
+          },
+          user: {
+            name: attendee.name,
+            email: attendee.email,
+            didCancel: triggered_by === ActionTrigger.Attendee
+          },
+          event: {
+            name: booking.workshop.name,
+            date: dateToReadable(booking_slot.date),
+            time: booking_slot.start_time
+          }
         }
+        this.axios_instance.post(
+          `${apiGatewayBaseUrl}/booking/cancel`,
+          JSON.stringify(data),
+          { headers: { "Authorization": `Bearer ${jwt}` } }
+        ).catch((err) => {
+          console.error(`Failed to send booking cancellation emails: ${err}`)
+        })
       }
-      this.axios_instance.post(this.bookingCancellationEndpoint, JSON.stringify(data)).catch((err) => {
-        console.error(`Failed to send booking cancellation emails: ${err}`)
-      })
+    } else {
+      console.error(`Failed to obtain a JWT token`)
     }
-    return
   }
 
-  async scheduleSlotPostProcessing(slot_id: string, slot_end_timestamp: string): Promise<boolean> {
-    if (!isBeforeNow(new Date(slot_end_timestamp))) {
-      const data = {
-        slot_id: slot_id,
-        slot_end_timestamp: slot_end_timestamp
+  async scheduleSlotPostProcessing(slot: Slot): Promise<boolean> {
+    const jwt = await clientData.getJWT()
+    if (jwt) {
+      const slot_end_timestamp = `${slot.date}T${slot.end_time}`
+      if (!isBeforeNow(new Date(slot_end_timestamp))) {
+        const data = {
+          slot_id: slot.id,
+          slot_end_timestamp: slot_end_timestamp
+        }
+        return this.axios_instance.post(
+          `${apiGatewayBaseUrl}/session/post-process/schedule`,
+          JSON.stringify(data),
+          { headers: { "Authorization": `Bearer ${jwt}` } }
+        ).then((response) => {
+          return (response.status == 200) ? true : false
+        }).catch((err) => {
+          console.error(`Failed to execute schedule slot post processing request: ${err}`)
+          return false
+        })
       }
-      return this.axios_instance.post(this.scheduleSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
+      return false
+    } else {
+      console.error(`Failed to obtain a JWT token`)
+      return false
+    }
+  }
+
+  async cancelSlotPostProcessing(slot: Slot): Promise<boolean> {
+    const jwt = await clientData.getJWT()
+    if (jwt) {
+      const data = {
+        schedule_name: `Slot-${slot.id}`
+      }
+      return this.axios_instance.post(
+        `${apiGatewayBaseUrl}/session/post-process/cancel`,
+        JSON.stringify(data),
+        { headers: { "Authorization": `Bearer ${jwt}` } }
+      ).then((response) => {
         return (response.status == 200) ? true : false
       }).catch((err) => {
-        console.error(`Failed to execute schedule slot post processing request: ${err}`)
+        console.error(`Failed to execute cancel slot post processing request: ${err}`)
         return false
       })
-    }
-    return false
-  }
-
-  async cancelSlotPostProcessing(slot_id: string): Promise<boolean> {
-    const data = {
-      schedule_name: `Slot-${slot_id}`
-    }
-    return this.axios_instance.post(this.cancelSlotPostProcessingEndpoint, JSON.stringify(data)).then((response) => {
-      return (response.status == 200) ? true : false
-    }).catch((err) => {
-      console.error(`Failed to execute cancel slot post processing request: ${err}`)
+    } else {
+      console.error(`Failed to obtain a JWT token`)
       return false
-    })
+    }
   }
 
-  async generateMeetingLink(meeting_name: string): Promise<string> {
-    const data = {
-      name: meeting_name
+  async generateMeetingLink(workshop: Workshop): Promise<string> {
+    const jwt = await clientData.getJWT()
+    if (jwt) {
+      const data = {
+        name: workshop.name
+      }
+      return this.axios_instance.post(
+        `${apiGatewayBaseUrl}/meeting-room/create`,
+        JSON.stringify(data),
+        { headers: { "Authorization": `Bearer ${jwt}` } }
+      ).then((response) => {
+        return (response.status == 200) ? response.data["message"] : null
+      }).catch((err) => {
+        console.error(`Failed to generate an online meeting link: ${err}`)
+        return null
+      })
+    } else {
+      throw new Error("Failed to obtain a JWT token")
     }
-    return this.axios_instance.post(this.generateMeetingEndpoint, JSON.stringify(data)).then((response) => {
-      return (response.status == 200) ? response.data["message"] : null
-    }).catch((err) => {
-      console.error(`Failed to generate an online meeting link: ${err}`)
-      return null
-    })
   }
 }
 
