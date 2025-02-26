@@ -74,7 +74,8 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           event: {
             name: booking.workshop.name,
             date: dateToReadable(booking_slot.date),
-            time: booking_slot.start_time,
+            start_time: booking_slot.start_time,
+            end_time: booking_slot.end_time,
             join_link: booking.workshop.meeting_link
           }
         }
