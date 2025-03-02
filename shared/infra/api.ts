@@ -21,18 +21,18 @@ export interface InfrastructureAPI {
   bookingCancellation(booking: BookingDetails, triggered_by: ActionTrigger): Promise<void>
 
   /**
-   * Schedule a slot post processing event
-   * @param slot A slot for which the post processing is to be scheduled
+   * Schedule a slot reminder and post processing events
+   * @param slot A slot for which the events are to be scheduled
    * @returns A boolean representing the operation success
    */
-  scheduleSlotPostProcessing(slot: Slot): Promise<boolean>
+  scheduleSlot(slot: Slot): Promise<boolean>
 
   /**
-   * Cancel a slot post processing event
-   * @param slot A slot for which the post processing is to be cancelled
+   * Cancel a slot reminder and post processing events
+   * @param slot A slot for which the events are to be cancelled
    * @returns A boolean representing the operation success
    */
-  cancelSlotPostProcessing(slot: Slot): Promise<boolean>
+  cancelSlot(slot: Slot): Promise<boolean>
 
   /**
    * Generates a URL for an online meeting

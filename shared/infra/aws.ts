@@ -134,7 +134,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     }
   }
 
-  async scheduleSlotPostProcessing(slot: Slot): Promise<boolean> {
+  async scheduleSlot(slot: Slot): Promise<boolean> {
     const jwt = await clientData.getJWT()
     if (jwt) {
       const slot_end_timestamp = `${slot.date}T${slot.end_time}`
@@ -144,13 +144,13 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           slot_end_timestamp: slot_end_timestamp
         }
         return this.axios_instance.post(
-          `${apiGatewayBaseUrl}/session/post-process/schedule`,
+          `${apiGatewayBaseUrl}/session/events/schedule`,
           JSON.stringify(data),
           { headers: { "Authorization": `Bearer ${jwt}` } }
         ).then((response) => {
           return (response.status == 200) ? true : false
         }).catch((err) => {
-          console.error(`Failed to execute schedule slot post processing request: ${err}`)
+          console.error(`Failed to execute schedule slot events request: ${err}`)
           return false
         })
       }
@@ -161,20 +161,20 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     }
   }
 
-  async cancelSlotPostProcessing(slot: Slot): Promise<boolean> {
+  async cancelSlot(slot: Slot): Promise<boolean> {
     const jwt = await clientData.getJWT()
     if (jwt) {
       const data = {
-        schedule_name: `Slot-${slot.id}`
+        slot_id: slot.id
       }
       return this.axios_instance.post(
-        `${apiGatewayBaseUrl}/session/post-process/cancel`,
+        `${apiGatewayBaseUrl}/session/events/cancel`,
         JSON.stringify(data),
         { headers: { "Authorization": `Bearer ${jwt}` } }
       ).then((response) => {
         return (response.status == 200) ? true : false
       }).catch((err) => {
-        console.error(`Failed to execute cancel slot post processing request: ${err}`)
+        console.error(`Failed to execute cancel slot events request: ${err}`)
         return false
       })
     } else {
