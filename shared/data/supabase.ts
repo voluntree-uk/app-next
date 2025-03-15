@@ -254,7 +254,7 @@ class SupabaseDataAccessor implements DataAccessor {
 
     if (data) {
       for (let i = 0; i < data.length; i++) {
-        await api.scheduleSlotPostProcessing(data[i])
+        await api.scheduleSlot(data[i])
       }
     }
 
@@ -350,7 +350,7 @@ class SupabaseDataAccessor implements DataAccessor {
     }
 
     if (!isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))) {
-      await api.cancelSlotPostProcessing(slot)
+      await api.cancelSlot(slot)
     }
 
     return true
