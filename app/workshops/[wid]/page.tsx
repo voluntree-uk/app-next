@@ -17,14 +17,19 @@ export async function generateMetadata(
   const data = new SupabaseDataAccessor(supabase);
 
   const id = params.wid;
-  const workshop = await data.getWorkshop(id);
-
-  return {
-    title: `${workshop.name} | Voluntreee`,
-    openGraph: {
-      images: [`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${workshop.category}_sm.png`],
-    },
-  };
+  try {
+    const workshop = await data.getWorkshop(id);
+    return {
+      title: `${workshop.name} | Voluntreee`,
+      openGraph: {
+        images: [`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${workshop.category}_sm.png`],
+      },
+    };
+  } catch (err) {
+    return {
+      title: `Voluntreee`
+    };
+  }
 }
 
 export default async function Page({ params }: Props) {
