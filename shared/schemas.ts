@@ -54,6 +54,11 @@ export interface Slot {
   capacity: number;
 }
 
+export interface WorkshopInterest {
+  workshop_id: string;
+  user_id: string;
+}
+
 export interface User {
   id: string
   email?: string
