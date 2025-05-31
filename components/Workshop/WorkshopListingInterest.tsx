@@ -12,9 +12,9 @@ import {
 import { Workshop, User, WorkshopInterest } from "@schemas";
 import { useRouter } from "next/navigation";
 import { clientData } from "@data/supabase";
-import { BsEmojiHeartEyes } from "react-icons/bs";
-import { GiConfirmed } from "react-icons/gi";
-import WorkshopListingInterestModal from "@components/Workshop/WorkshopListingInterestModal";
+import { FaBell } from "react-icons/fa";
+import { FaCheckSquare  } from "react-icons/fa";
+import {ConfirmActionDialog} from "@components/Helpers/ConfirmActionDialog";
 
 interface IProps {
   workshop: Workshop;
@@ -38,6 +38,9 @@ export default function WorkshopListingDescription({
     numberOfInterestedUsers == 1
       ? `1 user expressed interest.`
       : `${numberOfInterestedUsers} users expressed interest.`;
+
+  const showInterestMessage:string = "Let the host know you’re interested! " +
+"When you show interest, we notify the host that there’s demand. That might inspire them to schedule more sessions.";
 
   async function expressInterest(): Promise<void> {
     try {
@@ -89,7 +92,7 @@ export default function WorkshopListingDescription({
               rounded="full"
               colorScheme="green"
               variant="outline"
-              rightIcon={<GiConfirmed />}
+              rightIcon={<FaCheckSquare />}
               size={{ base: "sm", sm: "md" }}
               m="3"
               isDisabled
@@ -108,17 +111,18 @@ export default function WorkshopListingDescription({
               colorScheme="blue"
               variant="outline"
               onClick={onOpen}
-              rightIcon={<BsEmojiHeartEyes />}
+              rightIcon={<FaBell  />}
               size={{ base: "sm", sm: "md" }}
               m="3"
             >
               Show interest
             </Button>
-            <WorkshopListingInterestModal
-              isOpen={isOpen}
-              onClose={onClose}
-              onSubmit={expressInterest}
-            />
+            <ConfirmActionDialog
+                        title="Show interest"
+                        message={showInterestMessage}
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        onSubmit={expressInterest} />
           </Flex>
         ))}
       <Text

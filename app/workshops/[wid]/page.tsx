@@ -47,7 +47,7 @@ export default async function Page({ params }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isCurrentUserInterested = user ? await data.checkUserInterestInWorkshop(id, user.id) : false;
+  const isCurrentUserInterested = user ? await data.isUserInterestedInWorkshop(id, user.id) : false;
   const numberOfInterestedUsers = await data.getWorkshopInterestCount(id);
 
   return (

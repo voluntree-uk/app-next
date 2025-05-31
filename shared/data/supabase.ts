@@ -145,7 +145,7 @@ class SupabaseDataAccessor implements DataAccessor {
     return count ?? 0;
   }
 
-  async checkUserInterestInWorkshop(
+  async isUserInterestedInWorkshop(
     workshop_id: string,
     user_id: string
   ): Promise<boolean> {
