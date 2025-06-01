@@ -198,8 +198,6 @@ class SupabaseDataAccessor implements DataAccessor {
         default:
           break;
       }
-    } else {
-      query.gte("slot.date", dateAsISOString());
     }
 
     const { data: filteredData, error: error } = await query;
