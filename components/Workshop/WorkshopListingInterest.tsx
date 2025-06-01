@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { clientData } from "@data/supabase";
 import { FaBell } from "react-icons/fa";
 import { FaCheckSquare  } from "react-icons/fa";
-import {ConfirmActionDialog} from "@components/Helpers/ConfirmActionDialog";
+import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
 
 interface IProps {
   workshop: Workshop;
@@ -38,9 +38,6 @@ export default function WorkshopListingDescription({
     numberOfInterestedUsers == 1
       ? `1 user expressed interest.`
       : `${numberOfInterestedUsers} users expressed interest.`;
-
-  const showInterestMessage:string = "Let the host know you’re interested! " +
-"When you show interest, we notify the host that there’s demand. That might inspire them to schedule more sessions.";
 
   async function expressInterest(): Promise<void> {
     try {
@@ -118,11 +115,11 @@ export default function WorkshopListingDescription({
               Show interest
             </Button>
             <ConfirmActionDialog
-                        title="Show interest"
-                        message={showInterestMessage}
-                        isOpen={isOpen}
-                        onClose={onClose}
-                        onSubmit={expressInterest} />
+              title="Show interest"
+              message="When you show interest, we notify the host that there's demand. That might inspire them to schedule more sessions."
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={expressInterest} />
           </Flex>
         ))}
       <Text
