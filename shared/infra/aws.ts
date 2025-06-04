@@ -203,6 +203,32 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
       throw new Error("Failed to obtain a JWT token")
     }
   }
+
+  async showWorkshopInterest(workshop: Workshop): Promise<void> {
+    const jwt = await clientData.getJWT()
+    if (jwt) {
+      const host: Profile = await clientData.getProfile(workshop.user_id)
+      if (host) {
+        const data = {
+          host: {
+            name: host.name,
+            email: host.email
+          },
+          event: {
+            name: workshop.name
+          }
+        }
+        this.axios_instance.post(
+          `${apiGatewayBaseUrl}/workshop/show-interest`,
+          JSON.stringify(data),
+          { headers: { "Authorization": `Bearer ${jwt}` } }
+        ).catch((err) => {
+          console.error(`Failed to send workshop show interest email: ${err}`)
+        })
+      }
+    }
+    return
+  }
 }
 
 const apiGatewayBaseUrl: string = process.env.NEXT_PUBLIC_AWS_GATEWAY_BASE_URL || "";

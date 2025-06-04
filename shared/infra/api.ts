@@ -40,6 +40,12 @@ export interface InfrastructureAPI {
    * @returns A join URL
    */
   generateMeetingLink(workshop: Workshop): Promise<string>
+
+  /**
+   * Sends a workshop interest email to the host
+   * @param workshop The workshop for which to show interest
+   */
+  showWorkshopInterest(workshop: Workshop): Promise<void>
 }
 
 export enum ActionTrigger {

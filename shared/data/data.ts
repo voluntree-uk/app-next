@@ -2,6 +2,7 @@ import { ActionTrigger } from "@infra/api";
 import {
   Profile,
   Workshop,
+  WorkshopInterest,
   Slot,
   Booking,
   BookingDetails,
@@ -63,6 +64,14 @@ export interface DataAccessor {
    * @return A boolean representing the success of the method
    */
   cancelWorkshop(workshop_id: string): Promise<boolean>
+
+  /**
+   * Adds a workshop interest
+   * @param workshop_interest A workshop interest
+   * @param workshop A workshop of interest
+   * @return A boolean representing the success of the method
+   */
+  expressInterestInWorkshop(workshop_interest: WorkshopInterest, workshop: Workshop): Promise<boolean>
 
   /**
    * Returns all workshops that have available slots at any point in the future,

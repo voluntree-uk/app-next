@@ -50,7 +50,7 @@ export default function WorkshopListingDescription({
           workshop_id: workshop.id,
           user_id: user.id,
         };
-        const success = await clientData.expressInterestInWorkshop(interest);
+        const success = await clientData.expressInterestInWorkshop(interest, workshop);
 
         if (success) {
           toast({

@@ -115,15 +115,14 @@ class SupabaseDataAccessor implements DataAccessor {
     }
   }
 
-  async expressInterestInWorkshop(
-    workshop_interest: WorkshopInterest
-  ): Promise<boolean> {
+  async expressInterestInWorkshop(workshop_interest: WorkshopInterest, workshop: Workshop): Promise<boolean> {
     const { data, error } = await this.client
       .from("workshop_interest")
       .insert([workshop_interest])
       .select();
     if (error) throw error;
     if (data) {
+      api.showWorkshopInterest(workshop)
       return true;
     } else {
       throw Error(
