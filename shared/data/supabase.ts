@@ -198,13 +198,15 @@ class SupabaseDataAccessor implements DataAccessor {
         default:
           break;
       }
+    } else {
+      query.gte("slot.date", dateAsISOString())
     }
 
     const { data: filteredData, error: error } = await query;
 
     if (error) throw error;
 
-    return filteredData ? filteredData : [];
+    return filteredData ? filteredData.sort((a, b) => b.slot.length - a.slot.length) : [];
   }
 
   async getWorkshopsByCategory(category: string): Promise<Workshop[]> {
