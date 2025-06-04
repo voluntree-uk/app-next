@@ -47,6 +47,9 @@ export default async function Page({ params }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const isCurrentUserInterested = user ? await data.isUserInterestedInWorkshop(id, user.id) : false;
+  const numberOfInterestedUsers = await data.getWorkshopInterestCount(id);
+
   return (
     <WorkshopListing
       workshop={workshop}
@@ -54,6 +57,8 @@ export default async function Page({ params }: Props) {
       slots={slots}
       bookings={bookings}
       user={user}
+      isUserInterested={isCurrentUserInterested}
+      numberOfInterestedUsers={numberOfInterestedUsers}
     />
   );
 }

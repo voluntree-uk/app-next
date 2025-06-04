@@ -25,6 +25,8 @@ interface IProps {
   slots: Slot[];
   bookings: Booking[];
   user: User | null;
+  isUserInterested: boolean;
+  numberOfInterestedUsers: number;
 }
 
 export default function WorkshopListing({
@@ -33,6 +35,8 @@ export default function WorkshopListing({
   slots,
   bookings,
   user,
+  isUserInterested,
+  numberOfInterestedUsers
 }: IProps) {
   const userBooking = bookings.find((booking) => {
     const bookingSlot = slots.find((slot) => slot.id == booking.slot_id);
@@ -154,6 +158,8 @@ export default function WorkshopListing({
                 slots={futureSlots}
                 bookings={bookings}
                 user={user}
+                isUserInterested={isUserInterested}
+                numberOfInterestedUsers={numberOfInterestedUsers}
                 />    
               </TabPanel>
           </TabPanels>

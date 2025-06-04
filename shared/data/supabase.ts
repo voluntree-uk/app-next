@@ -1,6 +1,7 @@
 import { DataAccessor } from "@data/data";
 import {
   Workshop,
+  WorkshopInterest,
   Slot,
   BookingDetails,
   Profile,
@@ -114,44 +115,98 @@ class SupabaseDataAccessor implements DataAccessor {
     }
   }
 
+  async expressInterestInWorkshop(
+    workshop_interest: WorkshopInterest
+  ): Promise<boolean> {
+    const { data, error } = await this.client
+      .from("workshop_interest")
+      .insert([workshop_interest])
+      .select();
+    if (error) throw error;
+    if (data) {
+      return true;
+    } else {
+      throw Error(
+        `Failed to express interest in a workshop: ${workshop_interest.workshop_id}`
+      );
+    }
+  }
+
+  async getWorkshopInterestCount(workshop_id: string): Promise<number> {
+    const { count, error } = await this.client
+      .from("workshop_interest")
+      .select("*", { count: "exact", head: true })
+      .eq("workshop_id", workshop_id);
+
+    if (error) {
+      throw new Error(`Failed to get interest count: ${error.message}`);
+    }
+
+    return count ?? 0;
+  }
+
+  async isUserInterestedInWorkshop(
+    workshop_id: string,
+    user_id: string
+  ): Promise<boolean> {
+    const { data, error } = await this.client
+      .from("workshop_interest")
+      .select("*")
+      .eq("workshop_id", workshop_id)
+      .eq("user_id", user_id);
+
+    if (error) throw error;
+
+    return data.length > 0;
+  }
+
   async filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]> {
+    const isTimeFilterSelected = filters.time !== TimeFilter.ANY_TIME;
+
+    const slotJoin = isTimeFilterSelected
+      ? "slot!inner(date, at_capacity)"
+      : "slot(date, at_capacity)";
+
     const query = this.client
       .from("workshop")
-      .select('*, slot!inner(date, at_capacity)')
-      .eq('slot.at_capacity', false)
-      .order('created_at', { ascending: false });
+      .select(`*, ${slotJoin}`)
+      .order("created_at", { ascending: false });
 
-    if (filters.category !== '') {
+    if (filters.category !== "") {
       query.eq("category", filters.category);
     }
 
-    if (filters.text !== '') {
+    if (filters.text !== "") {
       query.ilike("name", `%${filters.text}%`);
     }
 
-    switch (filters.time) {
-      case TimeFilter.THIS_WEEK:
-        query.gte('slot.date', dateAsISOString())
-        query.lte('slot.date', endOfThisWeekAsISOString())
-        break;
-      case TimeFilter.THIS_WEEKEND:
-        query.gte('slot.date', startOfThisWeekendAsISOString())
-        query.lte('slot.date', endOfThisWeekendAsISOString())
-        break;
-      case TimeFilter.NEXT_WEEK:
-        query.gte('slot.date', startOfNextWeekAsISOString())
-        query.lte('slot.date', endOfNextWeekAsISOString())
-        break;
-      default:
-        query.gte('slot.date', dateAsISOString())
-        break;
+    if (isTimeFilterSelected) {
+      query.eq("slot.at_capacity", false);
+      switch (filters.time) {
+        case TimeFilter.THIS_WEEK:
+          query.gte("slot.date", dateAsISOString());
+          query.lte("slot.date", endOfThisWeekAsISOString());
+          break;
+        case TimeFilter.THIS_WEEKEND:
+          query.gte("slot.date", startOfThisWeekendAsISOString());
+          query.lte("slot.date", endOfThisWeekendAsISOString());
+          break;
+        case TimeFilter.NEXT_WEEK:
+          query.gte("slot.date", startOfNextWeekAsISOString());
+          query.lte("slot.date", endOfNextWeekAsISOString());
+          break;
+        default:
+          break;
+      }
+    } else {
+      query.gte("slot.date", dateAsISOString())
     }
 
     const { data: filteredData, error: error } = await query;
 
     if (error) throw error;
 
-    return filteredData ? filteredData : [];
+    return filteredData ? filteredData.sort((a, b) => b.slot.length - a.slot.length) : [];
   }
 
   async getWorkshopsByCategory(category: string): Promise<Workshop[]> {
