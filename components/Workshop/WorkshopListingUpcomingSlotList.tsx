@@ -49,12 +49,12 @@ export default function WorkshopListingUpcomingSlotList({
         ))}
         <Show showIf={slots.length === 0}>
           <NoResults message="Currently No Dates Available" />
-                <WorkshopListingInterest 
-                    workshop={workshop} 
-                    user={user} 
-                    isUserInterested={isUserInterested} 
-                    numberOfInterestedUsers={numberOfInterestedUsers}>
-                </WorkshopListingInterest>
+          <WorkshopListingInterest
+            workshop={workshop}
+            user={user}
+            isUserInterested={isUserInterested}
+            numberOfInterestedUsers={numberOfInterestedUsers}
+          />
         </Show>
       </Stack>
     </Box>
