@@ -1,6 +1,7 @@
 import { DataAccessor } from "@data/data";
 import {
   Workshop,
+  WorkshopInterest,
   Slot,
   BookingDetails,
   Profile,
@@ -20,7 +21,6 @@ import { api } from "@infra/aws";
 import { ActionTrigger } from "@infra/api";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { createClient } from "@util/supabase/client";
-import { WorkshopInterest } from "@schemas";
 
 /**
  * A supabase implementation of the DataAccessor interface
