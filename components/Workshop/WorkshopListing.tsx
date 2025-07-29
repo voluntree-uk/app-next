@@ -1,8 +1,17 @@
 "use client";
 
 import { Stack, Box } from "@chakra-ui/react";
-import { Button, Heading, Tabs, TabList, TabPanels, 
-  Tab, TabPanel, useToast, useDisclosure} from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  useToast,
+  useDisclosure,
+} from "@chakra-ui/react";
 import React, { ReactElement } from "react";
 import { useRouter } from "next/navigation";
 import { Booking, Profile, Slot, User, Workshop } from "@schemas";
@@ -36,12 +45,14 @@ export default function WorkshopListing({
   bookings,
   user,
   isUserInterested,
-  numberOfInterestedUsers
+  numberOfInterestedUsers,
 }: IProps) {
   const userBooking = bookings.find((booking) => {
     const bookingSlot = slots.find((slot) => slot.id == booking.slot_id);
     return (
-      booking.user_id == user?.id && bookingSlot && !isBeforeNow(new Date(`${bookingSlot.date}T${bookingSlot.end_time}`))
+      booking.user_id == user?.id &&
+      bookingSlot &&
+      !isBeforeNow(new Date(`${bookingSlot.date}T${bookingSlot.end_time}`))
     );
   });
 
@@ -50,10 +61,22 @@ export default function WorkshopListing({
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-
-  const pastSlots = slots.filter((slot) => isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)));
-  const futureSlots = slots.filter((slot) => !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)));
-
+  const pastSlots = slots
+    .filter((slot) => isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)))
+    .sort(
+      (a, b) =>
+        new Date(`${b.date}T${b.end_time}`).getTime() -
+        new Date(`${a.date}T${a.end_time}`).getTime()
+    )
+    .slice(0, 5);
+  const futureSlots = slots
+    .filter((slot) => !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)))
+    .sort(
+      (a, b) =>
+        new Date(`${a.date}T${a.end_time}`).getTime() -
+        new Date(`${b.date}T${b.end_time}`).getTime()
+    )
+    .slice(0, 5);
 
   async function addNewSlot(slot: Slot): Promise<void> {
     try {
@@ -79,18 +102,23 @@ export default function WorkshopListing({
     }
   }
 
-  const makeTab = (
-    title: string
-  ) : ReactElement => {
+  const makeTab = (title: string): ReactElement => {
     return (
-      <Tab color={"gray"} fontStyle={"italic"}
-           _selected={{fontWeight:"bold", color:"black", 
-                       borderBottomColor:"gray.400 !important",
-                       fontStyle:"normal", borderBottom:"4px"}}>
+      <Tab
+        color={"gray"}
+        fontStyle={"italic"}
+        _selected={{
+          fontWeight: "bold",
+          color: "black",
+          borderBottomColor: "gray.400 !important",
+          fontStyle: "normal",
+          borderBottom: "4px",
+        }}
+      >
         {title}
       </Tab>
     );
-  }
+  };
 
   return (
     <Stack>
@@ -105,67 +133,65 @@ export default function WorkshopListing({
           user_booking={userBooking}
         />
       ) : (
-      <Box
-        borderBottomWidth={"1px"}
-        borderBottomColor="gray.200"
-       
-        rounded="md"
-        px={{ base: "6", md: "16" }}
-      >
-        <Box 
-         py="6"
-         display="flex"
-         justifyContent={"space-between"}
-         alignItems={"center"}
-         >
-          <Heading as="h2" size="md" pb="0.5em">
-            Availability
-          </Heading>
-          <Show showIf={isUserHost()}>
-            <Button
-              variant="solid"
-              colorScheme="teal"
-              rightIcon={<MdAdd />}
-              onClick={onOpen}
-              mx="4"
+        <Box
+          borderBottomWidth={"1px"}
+          borderBottomColor="gray.200"
+          rounded="md"
+          px={{ base: "6", md: "16" }}
+        >
+          <Box
+            py="6"
+            display="flex"
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <Heading as="h2" size="md" pb="0.5em">
+              Availability
+            </Heading>
+            <Show showIf={isUserHost()}>
+              <Button
+                variant="solid"
+                colorScheme="teal"
+                rightIcon={<MdAdd />}
+                onClick={onOpen}
+                mx="4"
               >
                 New Session
-            </Button>
-          
-            <WorkshopListingNewSlotModal
-              workshop={workshop}
-              isOpen={isOpen}
-              onClose={onClose}
-              onSubmit={addNewSlot}
-            />
-          </Show>
-        </Box>
-        <Tabs variant={"line"} colorScheme={"gray.400"} defaultIndex={1}>
-          <TabList>
-            {makeTab("Past sessions")}
-            {makeTab("Upcoming sessions")}
-          </TabList>
-          <TabPanels>
+              </Button>
+
+              <WorkshopListingNewSlotModal
+                workshop={workshop}
+                isOpen={isOpen}
+                onClose={onClose}
+                onSubmit={addNewSlot}
+              />
+            </Show>
+          </Box>
+          <Tabs variant={"line"} colorScheme={"gray.400"} defaultIndex={1}>
+            <TabList>
+              {makeTab("Past sessions")}
+              {makeTab("Upcoming sessions")}
+            </TabList>
+            <TabPanels>
               <TabPanel>
                 <WorkshopListingPastSlotList
-                slots={pastSlots}
-                bookings={bookings}
-                />    
+                  slots={pastSlots}
+                  bookings={bookings}
+                />
               </TabPanel>
               <TabPanel>
                 <WorkshopListingUpcomingSlotList
-                workshop={workshop}
-                slots={futureSlots}
-                bookings={bookings}
-                user={user}
-                isUserInterested={isUserInterested}
-                numberOfInterestedUsers={numberOfInterestedUsers}
-                />    
+                  workshop={workshop}
+                  slots={futureSlots}
+                  bookings={bookings}
+                  user={user}
+                  isUserInterested={isUserInterested}
+                  numberOfInterestedUsers={numberOfInterestedUsers}
+                />
               </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
-
+            </TabPanels>
+          </Tabs>
+        </Box>
       )}
       <WorkshopListingShare workshop={workshop} />
     </Stack>

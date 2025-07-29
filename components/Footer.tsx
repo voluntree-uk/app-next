@@ -55,7 +55,7 @@ const SocialButton = ({
 };
 
 export default function Footer({
-  openCookieConsent
+  openCookieConsent,
 }: {
   openCookieConsent: () => void;
 }) {
@@ -136,16 +136,14 @@ export default function Footer({
       >
         <Container
           as={Stack}
-          maxW={"6xl"}
-          py={4}
+          maxW={"7xl"}
+          py={5}
           direction={{ base: "column", md: "row" }}
           spacing={4}
           justify={{ md: "space-between" }}
           align={"center"}
         >
-          <Text align={"center"}>
-            © 2024 Voluntree Community Interest Company
-          </Text>
+          <Text>© 2024 Voluntree Community Interest Company</Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton
               label={"Linkedin"}
