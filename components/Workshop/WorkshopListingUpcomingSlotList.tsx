@@ -1,15 +1,11 @@
 "use client";
 
-import {
-  Box,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 import { Booking, Slot, User, Workshop } from "@schemas";
 import { WorkshopListingUpcomingSlot } from "@components/Workshop/WorkshopListingUpcomingSlot";
 import Show from "@components/Helpers/Show";
 import NoResults from "@components/NoResults";
 import WorkshopListingInterest from "@components/Workshop/WorkshopListingInterest";
-
 
 interface IProps {
   workshop: Workshop;
@@ -26,17 +22,14 @@ export default function WorkshopListingUpcomingSlotList({
   bookings,
   user,
   isUserInterested,
-  numberOfInterestedUsers
+  numberOfInterestedUsers,
 }: IProps) {
-
   const getActiveBookingsForSlot = (slot: Slot): Booking[] => {
     return bookings.filter((b) => b.slot_id === slot.id);
   };
-  
+
   return (
-    <Box borderBottomWidth={"1px"}
-         borderBottomColor="gray.200"
-         rounded="md" >
+    <Box rounded="md">
       <Stack>
         {slots.map((slot) => (
           <WorkshopListingUpcomingSlot

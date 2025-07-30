@@ -128,7 +128,7 @@ export default function WorkshopListingHeading({
                 onClick={onOpen}
                 rightIcon={<MdOutlineCancel />}
                 size={{ base: "sm", sm: "md" }}
-                mr="5"
+                mr="3"
               >
                 Cancel
               </Button>

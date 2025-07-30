@@ -1,13 +1,8 @@
-import { AbsoluteCenter, Box, Divider } from "@chakra-ui/react";
+import { AbsoluteCenter, Box } from "@chakra-ui/react";
 
-export default function NoResults({
-  message
-}: {
-  message: string;
-}) {
+export default function NoResults({ message }: { message: string }) {
   return (
     <Box textColor="gray.600" position="relative" py={"1.5em"}>
-      <Divider />
       <AbsoluteCenter bg="white" textAlign={"center"}>
         {message}
       </AbsoluteCenter>

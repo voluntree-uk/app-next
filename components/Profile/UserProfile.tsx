@@ -1,8 +1,22 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Box, Button, Container, Flex, Heading, HStack, Stat, StatGroup, StatLabel, StatNumber, Text, useDisclosure, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Heading,
+  HStack,
+  Stat,
+  StatGroup,
+  StatLabel,
+  StatNumber,
+  Text,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { HiUserGroup, HiOutlineStar, HiOutlineMail } from "react-icons/hi";
 import { SiRuby } from "react-icons/si";
 import { clientData } from "@data/supabase";
@@ -31,12 +45,14 @@ export default function UserProfile({ profile, isMe }: IProps) {
   } = useForm();
 
   const avatar_url: string = watch("avatar_url");
-  const full_name: string | undefined = profile.share_full_name_consent ? `${profile.name} ${profile.surname}` : profile.name
+  const full_name: string | undefined = profile.share_full_name_consent
+    ? `${profile.name} ${profile.surname}`
+    : profile.name;
 
   async function updateAvatar({ avatar_url }: any) {
     try {
       setLoading(true);
-      
+
       const updates = {
         user_id: profile.user_id,
         email: profile.email,
@@ -92,14 +108,13 @@ export default function UserProfile({ profile, isMe }: IProps) {
   }
 
   useEffect(() => {
-    setValue("avatar_url", profile.avatar_url)
+    setValue("avatar_url", profile.avatar_url);
   }, [profile]);
 
   return (
-    <Container maxW="container.lg">
+    <Container maxW="100%">
       <Box>
         <Flex
-          px={5}
           pt={5}
           pb={3}
           bg="white"
@@ -108,6 +123,8 @@ export default function UserProfile({ profile, isMe }: IProps) {
             md: "row",
           }}
           gap={5}
+          justify={{ md: "space-between" }}
+          alignItems={{ md: "stretch" }}
         >
           <AccountAvatar
             url={avatar_url}
@@ -163,6 +180,7 @@ export default function UserProfile({ profile, isMe }: IProps) {
                 colorScheme="linkedin"
                 leftIcon={<MdSettings />}
                 onClick={onOpen}
+                my="3"
               >
                 Settings
               </Button>
@@ -174,16 +192,20 @@ export default function UserProfile({ profile, isMe }: IProps) {
               />
             </Show>
           </Flex>
-          <StatGroup alignContent={"center"} minWidth={"40%"}>
-            <Stat textAlign={{ base: "center", md: "start" }}>
-              <HStack justifyContent={{ base: "center", md: "start" }}>
+          <StatGroup
+            alignContent={"center"}
+            minWidth={"40%"}
+            alignItems={"end"}
+          >
+            <Stat textAlign={{ base: "center", md: "end" }} alignItems={"end"}>
+              <HStack justifyContent={{ base: "center", md: "end" }}>
                 <SiRuby color="red" />
                 <StatLabel>Plenties Awarded</StatLabel>
               </HStack>
               <StatNumber>{roundNumber(profile.award_points)}</StatNumber>
             </Stat>
-            <Stat textAlign={{ base: "center", md: "start" }}>
-              <HStack justifyContent={{ base: "center", md: "start" }}>
+            <Stat textAlign={{ base: "center", md: "end" }} alignItems={"end"}>
+              <HStack justifyContent={{ base: "center", md: "end" }}>
                 <HiOutlineStar color="#ffd700" />
                 <StatLabel>Volunteer Rating</StatLabel>
               </HStack>
