@@ -6,7 +6,10 @@ import {
   BookingDetails,
   Profile,
   FilterProps,
-  TimeFilter
+  TimeFilter,
+  UpcomingSession,
+  PlatformStats,
+  FeaturedReview
 } from "@schemas";
 import {
   dateAsISOString,
@@ -467,6 +470,170 @@ class SupabaseDataAccessor implements DataAccessor {
       .upload(path, file);
     if (error) throw error;
     return true;
+  }
+
+  async getUpcomingSessions(limit: number = 6): Promise<UpcomingSession[]> {
+    try {
+      // Get upcoming slots that are not at capacity, with workshop data
+      // Use at_capacity field to filter directly in the query (maintained by book_slot RPC)
+      const today = dateAsISOString();
+      const { data: slotsData, error: slotsError } = await this.client
+        .from("slot")
+        .select(`
+          *,
+          workshop:workshop_id(*)
+        `)
+        .gte("date", today)
+        .eq("at_capacity", false)
+        .order("date", { ascending: true })
+        .limit(limit);
+
+      if (slotsError) throw slotsError;
+      if (!slotsData || slotsData.length === 0) return [];
+
+      // Filter out past slots (by end_time) and collect user IDs
+      const validSlots: Array<{ slot: any; workshop: Workshop }> = [];
+      const userIds = new Set<string>();
+
+      for (const slotItem of slotsData) {
+        const slot = slotItem as any;
+        const workshop = slot.workshop as Workshop;
+        if (workshop?.user_id) {
+          userIds.add(workshop.user_id);
+          validSlots.push({ slot, workshop });
+        }
+      }
+
+      if (validSlots.length === 0) return [];
+
+      // Fetch all profiles in one query
+      const profileMap = new Map<string, Profile>();
+      const { data: profiles, error: profilesError } = await this.client
+        .from("profile")
+        .select("*")
+        .in("user_id", Array.from(userIds));
+
+      if (profilesError) {
+        console.error(`Failed to fetch profiles: ${profilesError.message}`);
+        return [];
+      }
+
+      if (profiles) {
+        for (const profile of profiles) {
+          profileMap.set(profile.user_id, profile as Profile);
+        }
+      }
+
+      // Get booking counts for all slots in parallel
+      const bookingCountPromises = validSlots.map(({ slot }) =>
+        this.client
+          .from("booking")
+          .select("*", { count: "exact", head: true })
+          .eq("slot_id", slot.id)
+      );
+
+      const bookingCountResults = await Promise.all(bookingCountPromises);
+
+      // Build upcoming sessions
+      const upcomingSessions: UpcomingSession[] = [];
+      for (let i = 0; i < validSlots.length && upcomingSessions.length < limit; i++) {
+        const { slot, workshop } = validSlots[i];
+        const bookingCount = bookingCountResults[i].count || 0;
+        const availableSpots = slot.capacity - bookingCount;
+
+        // Double-check availability (at_capacity might be slightly out of sync)
+        if (availableSpots > 0) {
+          const host = profileMap.get(workshop.user_id);
+          if (host) {
+            upcomingSessions.push({
+              workshop,
+              slot: slot as Slot,
+              host,
+              bookingCount,
+              availableSpots
+            });
+          }
+        }
+      }
+
+      return upcomingSessions;
+    } catch (error) {
+      console.error(`Failed to get upcoming sessions: ${error}`);
+      return [];
+    }
+  }
+
+  async getPlatformStats(): Promise<PlatformStats> {
+    try {
+      const [workshopsResult, usersResult, slotsResult, bookingsResult] = await Promise.all([
+        this.client.from("workshop").select("*", { count: "exact", head: true }),
+        this.client.from("profile").select("*", { count: "exact", head: true }),
+        this.client.from("slot").select("*", { count: "exact", head: true }),
+        this.client.from("booking").select("*", { count: "exact", head: true })
+      ]);
+
+      return {
+        totalWorkshops: workshopsResult.count || 0,
+        totalUsers: usersResult.count || 0,
+        totalSessions: slotsResult.count || 0,
+        totalBookings: bookingsResult.count || 0
+      };
+    } catch (error) {
+      console.error(`Failed to get platform stats: ${error}`);
+      return {
+        totalWorkshops: 0,
+        totalUsers: 0,
+        totalSessions: 0,
+        totalBookings: 0
+      };
+    }
+  }
+
+  async getFeaturedReviews(limit: number = 4): Promise<FeaturedReview[]> {
+    try {
+      const { data: bookingsData, error } = await this.client
+        .from("booking")
+        .select(`
+          review_rating,
+          review_comment,
+          created_at,
+          workshop:workshop_id(name),
+          profile:user_id(name, surname, username, share_full_name_consent)
+        `)
+        .not("review_rating", "is", null)
+        .not("review_comment", "is", null)
+        .neq("review_comment", "")
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      if (!bookingsData || bookingsData.length === 0) return [];
+
+      const featuredReviews: FeaturedReview[] = [];
+
+      for (const booking of bookingsData) {
+        const bookingItem = booking as any;
+        const workshop = bookingItem.workshop as Workshop;
+        const profile = bookingItem.profile as Profile;
+
+        if (!workshop || !profile) continue;
+
+        featuredReviews.push({
+          review_rating: bookingItem.review_rating as number,
+          review_comment: bookingItem.review_comment as string,
+          user_name: profile.name ? profile.name : null,
+          workshop_name: workshop.name,
+          created_at: bookingItem.created_at as number
+        });
+
+        if (featuredReviews.length >= limit) break;
+      }
+
+      return featuredReviews;
+    } catch (error) {
+      console.error(`Failed to get featured reviews: ${error}`);
+      return [];
+    }
   }
 }
 
