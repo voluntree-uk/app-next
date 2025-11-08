@@ -621,7 +621,7 @@ class SupabaseDataAccessor implements DataAccessor {
         featuredReviews.push({
           review_rating: bookingItem.review_rating as number,
           review_comment: bookingItem.review_comment as string,
-          user_name: profile.name ? profile.name : null,
+          user_name: profile.name || profile.username || "Anonymous",
           workshop_name: workshop.name,
           created_at: bookingItem.created_at as number
         });
