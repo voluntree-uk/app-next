@@ -10,7 +10,7 @@ const benefits = [
   },
   {
     title: "Fits around real life",
-    description: "Choose the topics, dates, and format that work for your schedule—online or in person, one-off or recurring.",
+    description: "Choose the topics, dates, and format that work for your schedule, online or in person, one-off or recurring.",
     icon: BiTimeFive,
     accent: "blue",
   },
@@ -28,7 +28,7 @@ const benefits = [
   },
 ];
 
-const missionStatement = `Voluntree is a UK-wide community where people swap skills, stories, and support. Our mission is to make sharing effortless—because when everyone feels welcome to contribute, we build stronger, more confident communities together.`;
+const missionStatement = `Voluntree is a UK-wide community where people swap skills, stories, and support. Our mission is to make sharing effortless, because when everyone feels welcome to contribute, we build stronger, more confident communities together.`;
 
 export default function LandingBenefits() {
   return (

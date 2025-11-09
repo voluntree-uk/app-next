@@ -54,7 +54,7 @@ const hostSteps = [
     number: 4,
     title: "Host and inspire",
     description: "Share your skill or knowledge, meet new people, and help the community grow.",
-    duration: "Ongoing",
+    duration: "as long as it suits you",
   },
 ];
 
