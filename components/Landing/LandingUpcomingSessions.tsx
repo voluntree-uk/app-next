@@ -26,6 +26,7 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
   const cardsPerView = useBreakpointValue({ base: 1, md: 2, lg: 3 }) ?? 1;
   const scrollRef = useRef<HTMLDivElement>(null);
   const showControls = sessions.length > cardsPerView;
+  const cardWidth = 97 / cardsPerView;
 
   const scrollCarousel = (direction: "left" | "right") => {
     const container = scrollRef.current;
@@ -91,19 +92,48 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
               },
             }}
             scrollSnapType="x mandatory"
-            px="0.5"
             py="2"
           >
             {sessions.map((session) => (
               <Box
                 key={session.slot.id}
-                flex={`0 0 ${100 / cardsPerView}%`}
-                minW={{ base: "100%", md: `${100 / cardsPerView}%` }}
+                flex={`0 0 ${cardWidth}%`}
+                minW={{ base: "100%", md: `${cardWidth}%` }}
                 scrollSnapAlign="start"
               >
                 <LandingUpcomingSessionCard session={session} />
               </Box>
             ))}
+            <Box
+              flex={`0 0 ${cardWidth}%`}
+              minW={{ base: "100%", md: `${cardWidth}%` }}
+              scrollSnapAlign="start"
+            >
+              <Flex
+                direction="column"
+                justify="center"
+                align="center"
+                h="100%"
+                borderWidth="1px"
+                borderColor="gray.200"
+                borderRadius="lg"
+                bg="gray.100"
+                p={{ base: "6", md: "8" }}
+                textAlign="center"
+              >
+                <Heading fontSize={{ base: "lg", md: "xl" }} mb={3} color="gray.700">
+                  Explore the full schedule
+                </Heading>
+                <Text color="gray.600" fontSize="sm" mb={4}>
+                  Discover every workshop that's available right now. Find the next session that fits you.
+                </Text>
+                <Link as={NextLink} href="/workshops" w={{ base: "100%", sm: "auto" }}>
+                  <Button colorScheme="blue" w="100%">
+                    Browse all workshops
+                  </Button>
+                </Link>
+              </Flex>
+            </Box>
           </Flex>
         </Box>
       </Show>

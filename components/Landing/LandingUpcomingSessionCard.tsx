@@ -66,7 +66,7 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
         <Flex
           direction={{ base: "column-reverse", md: "row" }}
           align="stretch"
-          gap={{ base: "3", md: "4" }}
+          gap={{ base: "4", md: "4" }}
           flex="1"
         >
           {/* Session Details */}
@@ -123,12 +123,13 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
             display="flex"
             justifyContent="center"
             alignItems="center"
+            w={{ base: "100%", md: "auto" }}
           >
             <Img
               src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${workshop.category}_sm.png`}
               rounded="lg"
-              height={{ base: "90px", md: "110px" }}
-              width={{ base: "130px", md: "160px" }}
+              height={{ base: "160px", md: "110px" }}
+              width={{ base: "220px", md: "160px" }}
               objectFit="cover"
             />
           </Box>
