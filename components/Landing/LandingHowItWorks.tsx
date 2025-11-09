@@ -1,73 +1,138 @@
 "use client";
 
-import { Flex } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, SimpleGrid, Stack } from "@chakra-ui/react";
+import NextLink from "next/link";
 import LandingHowItWorksCard from "@components/Landing/LandingHowItWorksCard";
 
-const howItWorksCardContent = [
+const learnerSteps = [
   {
-    title: "Host",
-    description: `Create and share your expertise with the Voluntree community by
-      hosting your own workshop. Design a session tailored to your skills
-      and interests, covering topics that resonate with you. Engage
-      participants with live sessions, interactive discussions, and
-      hands-on learning experiences. Whether you've got a skill to teach,
-      knowledge to share, or a community to grow, Voluntree offers a
-      platform for you to make a meaningful impact and contribute to
-      collective learning and growth.`,
-    btn: {
-      text: "Create workshop",
-      target: "/workshops/new",
-      inNewTab: false,
-      background: "#6884CD",
-      hoverColor:"#7C9EF5"
-    },
+    number: 1,
+    title: "Browse workshops",
+    description: "Filter by category or date to find a workshop that matches your interests and schedule.",
+    duration: "2 minutes",
   },
   {
-    title: "Join",
-    description: `Browse through a diverse selection of workshops hosted by other
-      volunteers. When you find a workshop that interests you, simply join
-      to participate in live sessions, interactive discussions, and
-      hands-on learning activities. Whether you're looking to develop new
-      skills, expand your knowledge, or connect with like-minded
-      individuals, Voluntree provides a supportive environment for
-      learning and growth.`,
-    btn: {
-      text: "Browse workshops",
-      target: "/workshops",
-      inNewTab: false,
-      background: "#E3C46D",
-      hoverColor:"#F4D376"
-    },
+    number: 2,
+    title: "Book your spot",
+    description: "Reserve a seat in a live session and receive reminders leading up to the event.",
+    duration: "1 minute",
   },
   {
-    title: "Support",
-    description: `Your donation, even as little as £1, helps sustain this project 
-    and fosters community growth. At Voluntree, every team member is a volunteer,
-    and we pride ourselves on full financial transparency. We believe it's
-    essential for our donors to know exactly how their contributions are used.
-    Visit our finances page to learn more and consider making a donation today.`,
-    btn: {
-      text: "Finances page",
-      target: "https://voluntree.net/finances",
-      inNewTab: true,
-      background: "#9CC7AA",
-      hoverColor:"#B5D1C5"
-    },
+    number: 3,
+    title: "Join and learn",
+    description: "Attend the workshop, meet other volunteers, and gain practical skills together.",
+    duration: "1-3 hours",
+  },
+  {
+    number: 4,
+    title: "Share feedback",
+    description: "Leave a quick review to thank the host and help others discover great workshops.",
+    duration: "1 minute",
+  },
+];
+
+const hostSteps = [
+  {
+    number: 1,
+    title: "Create your profile",
+    description: "Tell the community who you are and what you're excited to share.",
+    duration: "2 minutes",
+  },
+  {
+    number: 2,
+    title: "Publish a workshop",
+    description: "Describe your workshop, choose a category, and add a short summary for learners.",
+    duration: "5 minutes",
+  },
+  {
+    number: 3,
+    title: "Schedule sessions",
+    description: "Pick dates and times that work for you. We'll manage bookings and reminders.",
+    duration: "2 minutes",
+  },
+  {
+    number: 4,
+    title: "Host and inspire",
+    description: "Share your skill or knowledge, meet new people, and help the community grow.",
+    duration: "as long as it suits you",
   },
 ];
 
 export default function LandingHowItWorks() {
   return (
-    
-    <Flex flexDir={{ base: "column", lg: "row" }} gap={{ base: "10" }} alignItems={"stretch"}> 
-        {howItWorksCardContent.map(({ title, description, btn }) => (
-          <LandingHowItWorksCard
-            key={title}
-            title={title}
-            description={description}
-            btn={btn}
-          />
-        ))}
-    </Flex>
+    <Box>
+      <Heading fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" textAlign="left" mb={{ base: 6, md: 8 }}>
+        How Voluntree Works
+      </Heading>
+
+      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 8, lg: 10 }}>
+        <Box
+          bg="gray.100"
+          borderRadius="lg"
+          p={{ base: 6, md: 8 }}
+          boxShadow="sm"
+          borderWidth="1px"
+          borderColor="gray.200"
+          display="flex"
+          flexDirection="column"
+          gap={6}
+        >
+          <Heading fontSize={{ base: "xl", md: "2xl" }} mb={0}>
+            Learn
+          </Heading>
+          <Text color="gray.600">
+            Discover workshops led by local volunteers and attend sessions that fit your goals.
+          </Text>
+          <Stack spacing={{ base: 6, md: 8 }} flex="1">
+            {learnerSteps.map((step) => (
+              <LandingHowItWorksCard key={step.number} {...step} />
+            ))}
+          </Stack>
+          <Button
+            as={NextLink}
+            href="/workshops"
+            colorScheme="blue"
+            size="md"
+            w="100%"
+          >
+            Browse workshops
+          </Button>
+        </Box>
+
+        <Box
+          bg="white"
+          borderRadius="lg"
+          p={{ base: 6, md: 8 }}
+          boxShadow="sm"
+          borderWidth="1px"
+          borderColor="gray.200"
+          display="flex"
+          flexDirection="column"
+          gap={6}
+        >
+          <Heading fontSize={{ base: "xl", md: "2xl" }} mb={0}>
+            Host
+          </Heading>
+          <Text color="gray.600">
+            Turn your passion into community-powered workshops and make an impact on your terms.
+          </Text>
+          <Stack spacing={{ base: 6, md: 8 }} flex="1">
+            {hostSteps.map((step) => (
+              <LandingHowItWorksCard key={step.number} {...step} variant="outline" />
+            ))}
+          </Stack>
+          <Button
+            as={NextLink}
+            href="/workshops/new"
+            variant="outline"
+            colorScheme="blue"
+            size="md"
+            w="100%"
+          >
+            Host a workshop
+          </Button>
+        </Box>
+      </SimpleGrid>
+    </Box>
   );
 }

@@ -89,3 +89,18 @@ export const DefaultFilterProps: FilterProps = {
   category: "",
   time: TimeFilter.ANY_TIME
 }
+
+export interface UpcomingSession {
+  workshop: Workshop;
+  slot: Slot;
+  host: Profile;
+  bookingCount: number;
+  availableSpots: number;
+}
+
+export interface PlatformStats {
+  totalWorkshops: number;
+  totalUsers: number;
+  totalSessions: number;
+  totalBookings: number;
+}
