@@ -485,6 +485,7 @@ class SupabaseDataAccessor implements DataAccessor {
         .gte("date", today)
         .eq("at_capacity", false)
         .order("date", { ascending: true })
+        .order("start_time", { ascending: true })
         .limit(limit);
 
       if (slotsError) throw slotsError;

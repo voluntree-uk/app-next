@@ -84,6 +84,11 @@ export default function WorkshopListing({
         const success = await clientData.createSlots([slot]);
         // Redirect if slot created successfully
         if (success) {
+          try {
+            await fetch("/api/revalidate-homepage", { method: "POST" });
+          } catch (err) {
+            console.error("Failed to revalidate homepage", err);
+          }
           router.refresh();
         }
       }
