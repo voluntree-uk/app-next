@@ -104,11 +104,3 @@ export interface PlatformStats {
   totalSessions: number;
   totalBookings: number;
 }
-
-export interface FeaturedReview {
-  review_rating: number;
-  review_comment: string;
-  user_name: string | null;
-  workshop_name: string;
-  created_at: number;
-}

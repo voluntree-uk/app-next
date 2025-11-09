@@ -7,18 +7,16 @@ import LandingStats from "@components/Landing/LandingStats";
 import LandingBenefits from "@components/Landing/LandingBenefits";
 import LandingHowItWorks from "@components/Landing/LandingHowItWorks";
 import LandingInvite from "@components/Landing/LandingInvite";
-import { UpcomingSession, PlatformStats, FeaturedReview } from "@schemas";
+import { UpcomingSession, PlatformStats } from "@schemas";
 
 interface LandingProps {
   upcomingSessions: UpcomingSession[];
   platformStats: PlatformStats;
-  featuredReviews: FeaturedReview[];
 }
 
 export default function Landing({
   upcomingSessions,
   platformStats,
-  featuredReviews
 }: LandingProps) {
   return (
     <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>

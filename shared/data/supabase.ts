@@ -9,7 +9,6 @@ import {
   TimeFilter,
   UpcomingSession,
   PlatformStats,
-  FeaturedReview
 } from "@schemas";
 import {
   dateAsISOString,
@@ -586,53 +585,6 @@ class SupabaseDataAccessor implements DataAccessor {
         totalSessions: 0,
         totalBookings: 0
       };
-    }
-  }
-
-  async getFeaturedReviews(limit: number = 4): Promise<FeaturedReview[]> {
-    try {
-      const { data: bookingsData, error } = await this.client
-        .from("booking")
-        .select(`
-          review_rating,
-          review_comment,
-          created_at,
-          workshop:workshop_id(name),
-          profile:user_id(name, surname, username, share_full_name_consent)
-        `)
-        .not("review_rating", "is", null)
-        .not("review_comment", "is", null)
-        .neq("review_comment", "")
-        .order("created_at", { ascending: false })
-        .limit(limit);
-
-      if (error) throw error;
-      if (!bookingsData || bookingsData.length === 0) return [];
-
-      const featuredReviews: FeaturedReview[] = [];
-
-      for (const booking of bookingsData) {
-        const bookingItem = booking as any;
-        const workshop = bookingItem.workshop as Workshop;
-        const profile = bookingItem.profile as Profile;
-
-        if (!workshop || !profile) continue;
-
-        featuredReviews.push({
-          review_rating: bookingItem.review_rating as number,
-          review_comment: bookingItem.review_comment as string,
-          user_name: profile.name || profile.username || "Anonymous",
-          workshop_name: workshop.name,
-          created_at: bookingItem.created_at as number
-        });
-
-        if (featuredReviews.length >= limit) break;
-      }
-
-      return featuredReviews;
-    } catch (error) {
-      console.error(`Failed to get featured reviews: ${error}`);
-      return [];
     }
   }
 }

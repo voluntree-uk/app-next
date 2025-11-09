@@ -9,7 +9,6 @@ import {
   FilterProps,
   UpcomingSession,
   PlatformStats,
-  FeaturedReview
 } from "@schemas";
 
 export interface DataAccessor {
@@ -193,11 +192,4 @@ export interface DataAccessor {
    * @return Platform statistics
    */
   getPlatformStats(): Promise<PlatformStats>
-
-  /**
-   * Returns featured reviews for testimonials
-   * @param limit Maximum number of reviews to return (default: 4)
-   * @return A list of featured reviews with rating, comment, user name, and workshop name
-   */
-  getFeaturedReviews(limit?: number): Promise<FeaturedReview[]>
 }
