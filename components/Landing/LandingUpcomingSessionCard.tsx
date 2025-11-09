@@ -30,11 +30,11 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
       bg="white"
       p={{ base: "4", md: "5" }}
       h="100%"
+      transition="all 0.2s ease"
       _hover={{
         borderColor: "blue.300",
-        boxShadow: "md",
-        transform: "translateY(-2px)",
-        transition: "all 0.2s"
+        boxShadow: "xl",
+        transform: "translateY(-4px)",
       }}
       onClick={handleClick}
     >

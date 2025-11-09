@@ -1,56 +1,43 @@
 "use client";
 
-import { Text, Link, Heading, Button, Flex, Box } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
-interface IProps {
-  btn: {
-    target: string;
-    inNewTab: boolean
-    text: string;
-    background: string;
-    hoverColor: string;
-  };
+interface StepProps {
+  number: number;
   title: string;
   description: string;
+  duration: string;
 }
 
-export default function LandingHowItWorksCard({
-  btn,
-  title,
-  description,
-}: IProps) {
+export default function LandingHowItWorksCard({ number, title, description, duration }: StepProps) {
   return (
-    <Flex
-      direction="column"
-      justify="space-betwen"
-      align="stretch">
-      <Box mb="4">
-        <Heading
-          textAlign={{ base: "center", lg: "start" }}
-          fontWeight={"bold"}
-          size="lg"
-          pb="3"
-        >
-          {title}
-        </Heading>
-        <Text textAlign={"justify"}>{description}</Text>
+    <Flex align="flex-start" gap={4}>
+      <Box
+        w="40px"
+        h="40px"
+        borderRadius="full"
+        bg="blue.500"
+        color="white"
+        fontWeight="bold"
+        fontSize="lg"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexShrink={0}
+      >
+        {number}
       </Box>
-        <Link
-          as={NextLink}
-          href={btn.target}
-          target={btn.inNewTab ? "_blank" : "_self"}
-          mt="auto"
-        >
-          <Button 
-            width={"100%"} 
-            background={btn.background} 
-            color={"white"} 
-            _hover={{background: btn.hoverColor }}
-          >
-            {btn.text}
-          </Button>
-        </Link>
+      <Box>
+        <Text fontWeight="semibold" fontSize={{ base: "md", md: "lg" }} mb={1}>
+          {title}
+        </Text>
+        <Text color="gray.600" fontSize={{ base: "sm", md: "md" }} mb={2}>
+          {description}
+        </Text>
+        <Text color="gray.500" fontSize="sm" fontStyle="italic">
+          Takes about {duration}
+        </Text>
+      </Box>
     </Flex>
   );
 }

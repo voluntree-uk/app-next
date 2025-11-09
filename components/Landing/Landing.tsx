@@ -4,7 +4,9 @@ import { Box, Container } from "@chakra-ui/react";
 import LandingHeading from "@components/Landing/LandingHeading";
 import LandingUpcomingSessions from "@components/Landing/LandingUpcomingSessions";
 import LandingStats from "@components/Landing/LandingStats";
+import LandingBenefits from "@components/Landing/LandingBenefits";
 import LandingHowItWorks from "@components/Landing/LandingHowItWorks";
+import LandingInvite from "@components/Landing/LandingInvite";
 import { UpcomingSession, PlatformStats, FeaturedReview } from "@schemas";
 
 interface LandingProps {
@@ -29,8 +31,14 @@ export default function Landing({
       <Box pb={{ base: "12", md: "16" }}>
         <LandingStats stats={platformStats} />
       </Box>
+      <Box pb={{ base: "12", md: "16" }}>
+        <LandingBenefits />
+      </Box>
       <Box pb={{ base: "16", sm: "10" }}>
         <LandingHowItWorks />
+      </Box>
+      <Box pb={{ base: "16", sm: "10" }}>
+        <LandingInvite />
       </Box>
     </Container>
   );

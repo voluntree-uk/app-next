@@ -78,6 +78,7 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
           <Flex
             ref={scrollRef}
             overflowX="auto"
+            overflowY="visible"
             gap="4"
             scrollBehavior="smooth"
             css={{
@@ -91,6 +92,7 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
             }}
             scrollSnapType="x mandatory"
             px="0.5"
+            py="2"
           >
             {sessions.map((session) => (
               <Box
@@ -103,14 +105,6 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
               </Box>
             ))}
           </Flex>
-        </Box>
-
-        <Box mt="6" textAlign="center">
-          <Link as={NextLink} href="/workshops">
-            <Button colorScheme="blue" variant="outline" size="md">
-              Browse All Workshops
-            </Button>
-          </Link>
         </Box>
       </Show>
 
