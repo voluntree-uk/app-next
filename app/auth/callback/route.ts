@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   }
 
   if (type == "signup") {
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/setup-profile`);
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/email-confirmed`);
   } else if (type == "recovery") {
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SERVER_HOST}/auth/update-password`);
   } else {
