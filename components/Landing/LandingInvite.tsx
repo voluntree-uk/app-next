@@ -12,7 +12,6 @@ export default function LandingInvite() {
       p={{ base: 6, md: 10 }}
       textAlign={{ base: "left", md: "left" }}
       w="100%"
-      mb={{ base: 12, md: 16 }}
     >
       <Stack spacing={{ base: 4, md: 5 }} maxW="5xl" mx="auto">
         <Text

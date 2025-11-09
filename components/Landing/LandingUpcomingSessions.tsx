@@ -39,7 +39,7 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
   };
 
   return (
-    <Box pb={{ base: "12", md: "16" }}>
+    <Box>
       <Flex direction={{ base: "column", md: "row" }} align="center" justify="space-between" mb="6">
         <Box textAlign={{ base: "left", md: "left" }}>
           <Heading

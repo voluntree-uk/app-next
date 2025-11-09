@@ -32,7 +32,7 @@ const missionStatement = `Voluntree is a UK-wide community where people swap ski
 
 export default function LandingBenefits() {
   return (
-    <Box bg="gray.50" borderRadius="lg" p={{ base: 6, md: 10 }} mb={{ base: 12, md: 16 }}>
+    <Box borderRadius="lg">
       <Stack spacing={{ base: 6, md: 8 }}>
         <Box>
           <Heading fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" mb={3}>

@@ -17,7 +17,7 @@ export default function LandingStats({ stats }: IProps) {
       color: "blue"
     },
     {
-      label: "Learners",
+      label: "Users",
       value: stats.totalUsers,
       icon: BiUser,
       color: "green"
@@ -38,15 +38,14 @@ export default function LandingStats({ stats }: IProps) {
 
   return (
     <Box
-      bg="gray.50"
+      bg="gray.100"
       borderRadius="lg"
       p={{ base: "6", md: "8" }}
-      mb={{ base: "12", md: "16" }}
     >
       <Heading
-        fontSize={{ base: "xl", md: "2xl" }}
+        fontSize={{ base: "2xl", md: "3xl" }}
         fontWeight="bold"
-        mb="6"
+        mb="12"
         textAlign="center"
         color="gray.700"
       >

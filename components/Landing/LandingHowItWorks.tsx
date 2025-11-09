@@ -61,22 +61,24 @@ const hostSteps = [
 export default function LandingHowItWorks() {
   return (
     <Box>
-      <Heading fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" textAlign="center" mb={{ base: 8, md: 12 }}>
+      <Heading fontSize={{ base: "2xl", md: "3xl" }} fontWeight="bold" textAlign="left" mb={{ base: 6, md: 8 }}>
         How Voluntree Works
       </Heading>
 
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={{ base: 8, lg: 10 }}>
         <Box
-          bg="gray.50"
+          bg="gray.100"
           borderRadius="lg"
           p={{ base: 6, md: 8 }}
           boxShadow="sm"
+          borderWidth="1px"
+          borderColor="gray.200"
           display="flex"
           flexDirection="column"
           gap={6}
         >
           <Heading fontSize={{ base: "xl", md: "2xl" }} mb={0}>
-            I want to learn
+            Learn
           </Heading>
           <Text color="gray.600">
             Discover workshops led by local volunteers and attend sessions that fit your goals.
@@ -103,20 +105,20 @@ export default function LandingHowItWorks() {
           p={{ base: 6, md: 8 }}
           boxShadow="sm"
           borderWidth="1px"
-          borderColor="gray.100"
+          borderColor="gray.200"
           display="flex"
           flexDirection="column"
           gap={6}
         >
           <Heading fontSize={{ base: "xl", md: "2xl" }} mb={0}>
-            I want to host
+            Host
           </Heading>
           <Text color="gray.600">
-            Turn your skills into community-powered workshops and make an impact on your terms.
+            Turn your passion into community-powered workshops and make an impact on your terms.
           </Text>
           <Stack spacing={{ base: 6, md: 8 }} flex="1">
             {hostSteps.map((step) => (
-              <LandingHowItWorksCard key={step.number} {...step} />
+              <LandingHowItWorksCard key={step.number} {...step} variant="outline" />
             ))}
           </Stack>
           <Button
