@@ -229,6 +229,26 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     }
     return
   }
+
+  async welcomeUser(profile: Profile): Promise<void> {
+    const jwt = await clientData.getJWT();
+    if (jwt && profile?.email) {
+      const data = {
+        user: {
+          name: profile.name,
+          email: profile.email,
+        }
+      };
+
+      this.axios_instance
+        .post(`${apiGatewayBaseUrl}/user/welcome`, JSON.stringify(data), {
+          headers: { Authorization: `Bearer ${jwt}` },
+        })
+        .catch((err) => {
+          console.error(`Failed to send welcome email: ${err}`);
+        });
+    }
+  }
 }
 
 const apiGatewayBaseUrl: string = process.env.NEXT_PUBLIC_AWS_GATEWAY_BASE_URL || "";

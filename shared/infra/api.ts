@@ -1,4 +1,4 @@
-import { BookingDetails, Slot, Workshop } from "@schemas"
+import { BookingDetails, Profile, Slot, Workshop } from "@schemas"
 
 export interface InfrastructureAPI {
   /**
@@ -46,6 +46,12 @@ export interface InfrastructureAPI {
    * @param workshop The workshop for which to show interest
    */
   showWorkshopInterest(workshop: Workshop): Promise<void>
+
+  /**
+   * Sends a welcome email to a newly onboarded user
+   * @param profile The user profile that was created
+   */
+  welcomeUser(profile: Profile): Promise<void>
 }
 
 export enum ActionTrigger {
