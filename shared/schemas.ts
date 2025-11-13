@@ -71,10 +71,17 @@ export interface Session {
   user: User | null
 }
 
+export enum SortOption {
+  SOONEST = "soonest",
+  NEWEST = "newest",
+  MOST_POPULAR = "most_popular"
+}
+
 export interface FilterProps {
   text: string;
   category: string;
   time: TimeFilter;
+  sort: SortOption;
 }
 
 export enum TimeFilter {
@@ -87,7 +94,8 @@ export enum TimeFilter {
 export const DefaultFilterProps: FilterProps = {
   text: "",
   category: "",
-  time: TimeFilter.ANY_TIME
+  time: TimeFilter.ANY_TIME,
+  sort: SortOption.SOONEST
 }
 
 export interface UpcomingSession {
@@ -103,4 +111,12 @@ export interface PlatformStats {
   totalUsers: number;
   totalSessions: number;
   totalBookings: number;
+}
+
+export interface WorkshopListItem {
+  workshop: Workshop;
+  host: Profile;
+  nextSession: Slot | null;
+  upcomingSessionCount: number;
+  totalAvailableSpots: number;
 }
