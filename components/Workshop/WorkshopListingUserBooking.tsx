@@ -114,7 +114,6 @@ export default function WorkshopListingUserBooking({
             <Flex direction={{ base: "column", sm: "row" }} gap={{ base: "2", md: "4" }}>
               <Link as={NextLink} href={workshop.meeting_link} target="_blank">
                 <Button
-                  rounded="full"
                   colorScheme="linkedin"
                   variant="solid"
                   rightIcon={<MdStart />}
@@ -125,7 +124,6 @@ export default function WorkshopListingUserBooking({
                 </Button>
               </Link>
               <Button
-                rounded="full"
                 colorScheme="red"
                 variant="solid"
                 onClick={onOpen}

@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Stack } from "@chakra-ui/react";
+import { Box, Stack, Heading, Flex, Button } from "@chakra-ui/react";
+import { MdAdd } from "react-icons/md";
 import { Booking, Slot, User, Workshop } from "@schemas";
 import { WorkshopListingUpcomingSlot } from "@components/Workshop/WorkshopListingUpcomingSlot";
 import Show from "@components/Helpers/Show";
@@ -14,6 +15,8 @@ interface IProps {
   user: User | null;
   isUserInterested: boolean;
   numberOfInterestedUsers: number;
+  isUserHost: boolean;
+  onAddSessionClick: () => void;
 }
 
 export default function WorkshopListingUpcomingSlotList({
@@ -23,25 +26,34 @@ export default function WorkshopListingUpcomingSlotList({
   user,
   isUserInterested,
   numberOfInterestedUsers,
+  isUserHost,
+  onAddSessionClick,
 }: IProps) {
   const getActiveBookingsForSlot = (slot: Slot): Booking[] => {
     return bookings.filter((b) => b.slot_id === slot.id);
   };
 
   return (
-    <Box rounded="md">
-      <Stack>
-        {slots.map((slot) => (
-          <WorkshopListingUpcomingSlot
-            workshop={workshop}
-            key={slot.id}
-            slot={slot}
-            slotBookings={getActiveBookingsForSlot(slot)}
-            user={user}
-          />
-        ))}
+      <Stack spacing={4}>
+        {slots.length > 0 && (
+          <>
+            <Heading as="h3" size="md" color="gray.700">
+              Upcoming Sessions
+            </Heading>
+            <Stack spacing={3}>
+              {slots.map((slot) => (
+                <WorkshopListingUpcomingSlot
+                  workshop={workshop}
+                  key={slot.id}
+                  slot={slot}
+                  slotBookings={getActiveBookingsForSlot(slot)}
+                  user={user}
+                />
+              ))}
+            </Stack>
+          </>
+        )}
         <Show showIf={slots.length === 0}>
-          <NoResults message="Currently No Dates Available" />
           <WorkshopListingInterest
             workshop={workshop}
             user={user}
@@ -50,6 +62,5 @@ export default function WorkshopListingUpcomingSlotList({
           />
         </Show>
       </Stack>
-    </Box>
   );
 }

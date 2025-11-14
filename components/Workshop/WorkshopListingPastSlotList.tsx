@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Stack } from "@chakra-ui/react";
+import { Box, Stack, Container, Heading } from "@chakra-ui/react";
 import { Booking, Slot } from "@schemas";
 import { WorkshopListingPastSlot } from "@components/Workshop/WorkshopListingPastSlot";
 import Show from "@components/Helpers/Show";
@@ -20,8 +20,8 @@ export default function WorkshopListingPastSlotList({
   };
 
   return (
-    <Box rounded="md">
-      <Stack>
+    <Box>
+      <Stack spacing={3}>
         {slots.map((slot) => (
           <WorkshopListingPastSlot
             key={slot.id}
@@ -30,7 +30,7 @@ export default function WorkshopListingPastSlotList({
           />
         ))}
         <Show showIf={slots.length === 0}>
-          <NoResults message="There aren't any past sessions for this workshop" />
+          <NoResults message="No past sessions for this workshop" />
         </Show>
       </Stack>
     </Box>

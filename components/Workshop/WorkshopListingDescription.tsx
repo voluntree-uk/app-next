@@ -1,19 +1,25 @@
 "use client";
 
-import React, {useState} from "react";
-import { Box, 
-         Flex,
-         Heading, 
-         Text, 
-         FormControl, 
-         FormLabel, 
-         FormErrorMessage,
-         FormHelperText,
-         Button,
-         Textarea } from "@chakra-ui/react";
+import React, { useState } from "react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  Button,
+  Textarea,
+  Container,
+  IconButton,
+  Tooltip,
+  HStack,
+  useToast,
+} from "@chakra-ui/react";
 import { Workshop, User } from "@schemas";
 import { clientData } from "@data/supabase";
-import { MdOutlineCancel, MdOutlineEdit, MdOutlineSave } from "react-icons/md";
+import { MdOutlineCancel, MdOutlineEdit } from "react-icons/md";
 
 interface IProps {
   workshop: Workshop;
@@ -21,115 +27,149 @@ interface IProps {
 }
 
 export default function WorkshopListingDescription({ workshop, user }: IProps) {
-  
   const [description, setDescription] = useState(workshop.description);
   const [editModeOn, setEditModeOn] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const toast = useToast();
 
   const isUserHost = user?.id == workshop.user_id;
-  
-  async function onSave (){
-    workshop.description = description;
-    await clientData.updateWorkshop(workshop);
-    setEditModeOn(false);
+  const descriptionLength = description?.length || 0;
+  const minLength = 200;
+  const isValid = descriptionLength >= minLength;
+
+  async function onSave() {
+    if (!isValid) return;
+
+    setIsSaving(true);
+    try {
+      workshop.description = description;
+      await clientData.updateWorkshop(workshop);
+      setEditModeOn(false);
+      toast({
+        title: "Description updated",
+        description: "Your workshop description has been saved successfully.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to update description",
+        description: "Please try again later.",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    } finally {
+      setIsSaving(false);
+    }
   }
 
   const onEdit = () => setEditModeOn(true);
-  const onCancel = () => setEditModeOn(false);
+  const onCancel = () => {
+    setDescription(workshop.description);
+    setEditModeOn(false);
+  };
 
-  
   return (
-    <>
-    {editModeOn ? (
-      <Box display="flex" justifyContent="space-between" px={{base:"6", md:"16"}} p="6"
-           borderBottomWidth="1px" borderBottomColor="gray.200" rounded="md">
-        <FormControl
-          isInvalid={description == null || description.length < 200}>
-          <Heading as="h2" size="md" pb="0.5em">
-            Description
-          </Heading>
-          <Flex direction={{ base: "column", sm: "row" }} justifyContent="space-between">
-            <Box w="100%" me="4" pt="2">
+    <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
+      <Container maxW="7xl" px={{ base: 6, md: 10 }} py={{ base: 6, md: 8 }}>
+        {editModeOn ? (
+          <Box>
+            <Flex justify="space-between" align="center" mb={4}>
+              <Heading as="h2" size="lg" color="gray.700">
+                Description
+              </Heading>
+            </Flex>
+            <FormControl isInvalid={!isValid}>
               <Textarea
-                value = {description}
-                minH={"18em"}
-                isRequired={true}
+                value={description}
+                minH="250px"
+                size="md"
                 onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe what learners will gain from your workshop. Include topics covered, skill level required, and what makes your workshop unique..."
+                mb={3}
               />
-              {description == null || description.length < 200 ? (
-              <FormErrorMessage>
-                At least 200 characters required,{" "}
-                {`${200 - description.length}`} characters remaining
-              </FormErrorMessage>
-              ) : (
-              <FormHelperText pb={{base:"2", sm:"0"}}>
-                Provide as much detail as possible
-              </FormHelperText>
-              )}
-            </Box>
-            <Flex direction={{base:"row", sm:"column"}} gap={{ base: "2", md: "4" }}>
+              <Flex justify="space-between" align="center" mb={4}>
+                {!isValid ? (
+                  <FormErrorMessage mb={0}>
+                    At least {minLength} characters required ({minLength - descriptionLength} more needed)
+                  </FormErrorMessage>
+                ) : (
+                  <FormHelperText mb={0} color="gray.500">
+                    Provide as much detail as possible to help learners understand what they'll learn
+                  </FormHelperText>
+                )}
+                <Text
+                  fontSize="sm"
+                  fontWeight="medium"
+                  color={
+                    descriptionLength < minLength
+                      ? "red.500"
+                      : descriptionLength < minLength + 50
+                      ? "orange.500"
+                      : "gray.500"
+                  }
+                >
+                  {descriptionLength} / {minLength} characters
+                </Text>
+              </Flex>
+            </FormControl>
+            <Flex justify="flex-end" gap={3}>
               <Button
-                colorScheme="green"
-                rounded="full"
+                colorScheme="gray"
+                variant="outline"
+                onClick={onCancel}
+                size="md"
+                isDisabled={isSaving}
+              >
+                Cancel
+              </Button>
+              <Button
+                colorScheme="blue"
                 variant="solid"
-                type="submit"
-                onClick={() => onSave()}
-                rightIcon={<MdOutlineSave />}
-                size={{ base: "sm", sm: "md" }}
-                w={{ base: "100%", sm: "auto" }}
-                mx="2"
+                onClick={onSave}
+                size="md"
+                isLoading={isSaving}
+                loadingText="Saving..."
+                isDisabled={!isValid}
               >
                 Save
               </Button>
-              <Button
-                rounded="full"
-                colorScheme="blackAlpha"
-                variant="outline"
-                onClick={onCancel}
-                rightIcon={<MdOutlineCancel />}
-                size={{ base: "sm", sm: "md" }}
-                w={{ base: "100%", sm: "auto" }}
-                mx="2"
-                >
-                  Cancel
-              </Button>
             </Flex>
-          </Flex>
-        </FormControl>
-      </Box>
-    ) : (
-    <Box
-      borderBottomWidth="1px"
-      borderBottomColor="gray.200"
-      p="6"
-      rounded="md"
-      px={{ base: "6", md: "16" }} 
-      >
-      <Flex justifyContent={"space-between"} alignItems={"center"}>
-        <Heading as="h2" size="md" pb="0.5em">
-            Description
-        </Heading>
-        {isUserHost && 
-          <Button
-            rounded="full"
-            colorScheme="blackAlpha"
-            variant="outline"
-            rightIcon={<MdOutlineEdit />}
-            onClick={() => onEdit()}
-            size={{ base: "sm", sm: "md" }}
-            mr="3"
+          </Box>
+        ) : (
+          <Box position="relative">
+            <Flex justify="space-between" align="center" mb={4}>
+              <Heading as="h2" size="lg" color="gray.700">
+                Description
+              </Heading>
+              {isUserHost && (
+                <Tooltip label="Edit description" placement="top">
+                  <IconButton
+                    aria-label="Edit description"
+                    icon={<MdOutlineEdit />}
+                    variant="ghost"
+                    size="md"
+                    color="gray.600"
+                    _hover={{ bg: "gray.100", color: "blue.600" }}
+                    onClick={onEdit}
+                  />
+                </Tooltip>
+              )}
+            </Flex>
+            <Text
+              whiteSpace="pre-wrap"
+              color="gray.600"
+              fontSize="md"
+              lineHeight="tall"
+              w="100%"
             >
-            Edit
-          </Button>
-        }
-      </Flex>
-     
-      <Box display="flex" justifyContent="space-between" pt="2">
-        <Text whiteSpace={"pre-wrap"} color={"gray.600"} fontSize={"14px"} lineHeight="6" w="100%">
-          {workshop.description}
-        </Text>
-       
-      </Box>
-    </Box> )}
-  </>
+              {workshop.description}
+            </Text>
+          </Box>
+        )}
+      </Container>
+    </Box>
   );
 }

@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Grid, Heading } from "@chakra-ui/react";
+import { Box, Flex, HStack, Heading, Text } from "@chakra-ui/react";
 import { Workshop } from "@schemas";
 import {
   FacebookIcon,
@@ -16,7 +18,7 @@ interface IProps {
   workshop: Workshop;
 }
 
-export default function WorkshopListingDescription({ workshop }: IProps) {
+export default function WorkshopListingShare({ workshop }: IProps) {
   const [host, setHost] = useState<null|string>(null)
 
   useEffect(() => {
@@ -26,40 +28,43 @@ export default function WorkshopListingDescription({ workshop }: IProps) {
   }, [setHost]);
 
   const shareUrl = `${host}/workshops/${workshop.id}`;
-  const title = `Checkout this free workshop at Voluntree - ${workshop.name}: `
+  const title = `Checkout this free workshop at Voluntree - ${workshop.name}: `;
+  
   return (
-    <Box
-      borderBottomWidth={"1px"}
-      borderBottomColor="gray.200"
-      p="6"
-      px={{ base: "6", md: "16" }}
-      display="flex"
-      justifyContent={"space-between"}
-    >
-      <Flex alignItems={"center"}>
-        <Heading as="h2" size="md" pb="0.5em">
-          Share
-        </Heading>
+    <Box>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        justify="space-between"
+        align={{ base: "flex-start", md: "center" }}
+        gap={4}
+      >
+        <Box>
+          <Heading as="h2" size="lg" color="gray.700" mb={2}>
+            Share This Workshop
+          </Heading>
+          <Text fontSize="sm" color="gray.600">
+            Help spread the word about this workshop
+          </Text>
+        </Box>
+        <HStack spacing={3}>
+          <FacebookShareButton url={shareUrl}>
+            <FacebookIcon size={40} round />
+          </FacebookShareButton>
+          <TwitterShareButton url={shareUrl} title={title}>
+            <XIcon size={40} round />
+          </TwitterShareButton>
+          <LinkedinShareButton
+            url={shareUrl}
+            title={title}
+            summary={workshop.description}
+          >
+            <LinkedinIcon size={40} round />
+          </LinkedinShareButton>
+          <WhatsappShareButton url={shareUrl} title={title}>
+            <WhatsappIcon size={40} round />
+          </WhatsappShareButton>
+        </HStack>
       </Flex>
-      <Grid templateColumns="repeat(4, 1fr)" gap={"1em"} px="4">
-        <FacebookShareButton url={shareUrl}>
-          <FacebookIcon size={32} round />
-        </FacebookShareButton>
-        <TwitterShareButton url={shareUrl} title={title}>
-          <XIcon size={32} round />
-        </TwitterShareButton>
-        <LinkedinShareButton
-          url={shareUrl}
-          title={title}
-          summary={workshop.description}
-        >
-          <LinkedinIcon size={32} round />
-        </LinkedinShareButton>
-        <WhatsappShareButton url={shareUrl} title={title}>
-          <WhatsappIcon size={32} round />
-        </WhatsappShareButton>
-      </Grid>
     </Box>
   );
 }
-

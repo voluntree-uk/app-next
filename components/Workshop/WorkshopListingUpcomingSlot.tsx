@@ -10,8 +10,8 @@ import {
   Flex,
   useDisclosure,
   useToast,
-  Link,
-  ButtonGroup,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
 import { MdOutlineCancel, MdKeyboardArrowRight, MdStart } from "react-icons/md";
 import { Booking, Slot, User, Workshop } from "@schemas";
@@ -42,9 +42,7 @@ export function WorkshopListingUpcomingSlot({
 
   const isUserHost = () => user?.id == workshop.user_id;
   const availableSpaces = slot.capacity - slotBookings.length;
-  const availableSpacesMessage = `${availableSpaces} ${
-    availableSpaces == 1 ? "space" : "spaces"
-  } available`;
+  const isFull = availableSpaces === 0;
 
   async function confirmBooking(): Promise<void> {
     setLoading(true);
@@ -63,7 +61,7 @@ export function WorkshopListingUpcomingSlot({
             duration: 4000,
             isClosable: true,
           });
-          router.push("/auth/setup-profile")
+          router.push("/auth/setup-profile");
         }
       }
     } catch (error) {
@@ -108,83 +106,115 @@ export function WorkshopListingUpcomingSlot({
 
   return (
     <Box
-      py="5"
-      borderBottom={"1px"}
-      borderBottomColor="gray.200"
-      display="flex"
-      justifyContent={"space-between"}
+      bg="white"
+      borderWidth="1px"
+      borderColor="gray.200"
+      borderRadius="xl"
+      p={{ base: 4, md: 6 }}
+      transition="all 0.2s"
+      _hover={{
+        borderColor: "blue.300",
+        boxShadow: "md",
+      }}
     >
-      <Box fontSize={"sm"}>
-        <Text>{dateToReadable(slot.date)}</Text>
-        <Text fontWeight={"bold"}>
-          {timeToReadable(slot.start_time, slot.end_time)}
-        </Text>
-        <Badge variant={"subtle"} colorScheme="green">
-          {availableSpacesMessage}
-        </Badge>
-      </Box>
-      <Flex alignItems={"center"}>
-        <Show showIf={isUserHost()}>
-          <Flex direction={{ base: "column", sm: "row" }} gap={{ base: "2", md: "4" }} >
-              <Link as={NextLink} href={workshop.meeting_link} target="_blank">
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        justify="space-between"
+        align={{ base: "stretch", md: "center" }}
+        gap={4}
+      >
+        {/* Session Info */}
+        <VStack align={{ base: "flex-start", md: "flex-start" }} spacing={2} flex="1">
+          <Text fontSize={{ base: "md", md: "lg" }} fontWeight="semibold" color="gray.700">
+            {dateToReadable(slot.date, false)}
+          </Text>
+          <Text fontSize="sm" color="gray.600">
+            {timeToReadable(slot.start_time, slot.end_time)}
+          </Text>
+          <HStack spacing={2}>
+            <Badge
+              variant="subtle"
+              colorScheme={isFull ? "red" : availableSpaces <= 2 ? "orange" : "green"}
+              fontSize="xs"
+              px={2}
+              py={1}
+              borderRadius="md"
+            >
+              {isFull
+                ? "Full"
+                : `${availableSpaces} ${availableSpaces === 1 ? "spot" : "spots"} available`}
+            </Badge>
+            {slotBookings.length > 0 && (
+              <Text fontSize="xs" color="gray.500">
+                {slotBookings.length} {slotBookings.length === 1 ? "learner" : "learners"} booked
+              </Text>
+            )}
+          </HStack>
+        </VStack>
+
+        {/* Actions */}
+        <Flex align="center" gap={2}>
+          <Show showIf={isUserHost()}>
+            <HStack spacing={2}>
+              {workshop.meeting_link && (
                 <Button
-                  rounded="full"
-                  colorScheme="linkedin"
+                  as={NextLink}
+                  href={workshop.meeting_link}
+                  target="_blank"
+                  colorScheme="blue"
                   variant="solid"
                   rightIcon={<MdStart />}
-                  size={{ base: "sm", sm: "md" }}        
-                  w={{ base: "100%", sm: "auto" }}
+                  size={{ base: "sm", md: "md" }}
                 >
-                  Enter
+                  Enter Session
                 </Button>
-              </Link>
-                <Button
-                  rounded="full"
-                  colorScheme="red"
-                  variant="solid"
-                  onClick={onOpen}
-                  rightIcon={<MdOutlineCancel />}
-                  size={{ base: "sm", sm: "md" }}
-                  w={{ base: "100%", sm: "auto" }}
-                >
+              )}
+              <Button
+                colorScheme="red"
+                variant="outline"
+                onClick={onOpen}
+                rightIcon={<MdOutlineCancel />}
+                size={{ base: "sm", md: "md" }}
+              >
                 Cancel
               </Button>
-          </Flex>
-          <ConfirmActionDialog
-            title="Cancel Session"
-            message="Are you sure you want to cancel this session? This action cannot be undone."
-            isOpen={isOpen}
-            onClose={onClose}
-            onSubmit={cancelSlot}
-          />
-          
-        </Show>
-        <Show showIf={!isUserHost()}>
-          <Button
-            rounded="full"
-            colorScheme={availableSpaces == 0 ? "blackAlpha" : "green"}
-            isDisabled={availableSpaces == 0}
-            variant={"solid"}
-            onClick={() => {
-              if (user) {
-                onOpen();
-              } else {
-                router.push("/login");
-              }
-            }}
-            rightIcon={<MdKeyboardArrowRight />}
-            size={{ base: "sm", sm: "md" }}
-          >
-            Book
-          </Button>
-          <ConfirmActionDialog
-            title="Confirm Booking"
-            message="Are you sure you would like to book this session?"
-            isOpen={isOpen}
-            onClose={onClose}
-            onSubmit={confirmBooking}
-          />
-        </Show>
+            </HStack>
+            <ConfirmActionDialog
+              title="Cancel Session"
+              message="Are you sure you want to cancel this session? This action cannot be undone."
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={cancelSlot}
+            />
+          </Show>
+          <Show showIf={!isUserHost()}>
+            <Button
+              colorScheme={isFull ? "gray" : "blue"}
+              isDisabled={isFull}
+              variant="solid"
+              onClick={() => {
+                if (user) {
+                  onOpen();
+                } else {
+                  router.push("/login");
+                }
+              }}
+              rightIcon={<MdKeyboardArrowRight />}
+              size={{ base: "sm", md: "md" }}
+              isLoading={loading}
+              minW={{ base: "120px", md: "140px" }}
+            >
+              {isFull ? "Full" : "Book Now"}
+            </Button>
+            <ConfirmActionDialog
+              title="Confirm Booking"
+              message="Are you sure you would like to book this session?"
+              isOpen={isOpen}
+              onClose={onClose}
+              onSubmit={confirmBooking}
+            />
+          </Show>
+        </Flex>
       </Flex>
     </Box>
   );

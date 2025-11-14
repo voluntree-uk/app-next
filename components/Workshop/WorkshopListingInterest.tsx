@@ -8,12 +8,14 @@ import {
   Button,
   useToast,
   useDisclosure,
+  VStack,
+  HStack,
+  Badge,
 } from "@chakra-ui/react";
 import { Workshop, User, WorkshopInterest } from "@schemas";
 import { useRouter } from "next/navigation";
 import { clientData } from "@data/supabase";
-import { FaBell } from "react-icons/fa";
-import { FaCheckSquare  } from "react-icons/fa";
+import { FaBell, FaCheckSquare } from "react-icons/fa";
 import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
 
 interface IProps {
@@ -23,7 +25,7 @@ interface IProps {
   numberOfInterestedUsers: number;
 }
 
-export default function WorkshopListingDescription({
+export default function WorkshopListingInterest({
   workshop,
   user,
   isUserInterested,
@@ -33,11 +35,6 @@ export default function WorkshopListingDescription({
   const toast = useToast();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const interestedUsersCountText: string =
-    numberOfInterestedUsers == 1
-      ? `1 user expressed interest.`
-      : `${numberOfInterestedUsers} users expressed interest.`;
 
   async function expressInterest(): Promise<void> {
     try {
@@ -53,14 +50,6 @@ export default function WorkshopListingDescription({
         const success = await clientData.expressInterestInWorkshop(interest, workshop);
 
         if (success) {
-          toast({
-            title: "You have expressed interest",
-            description:
-              "Thank you for your interest in this workshop. The host will be notified.",
-            status: "success",
-            duration: 4000,
-            isClosable: true,
-          });
           onClose();
           router.refresh();
         }
@@ -76,62 +65,65 @@ export default function WorkshopListingDescription({
     }
   }
 
+  if (isUserHost()) return null;
+
   return (
-    <Box p="6" rounded="md" px={{ base: "6", md: "16" }}>
-      {!isUserHost() &&
-        (isUserInterested ? (
-          <Flex
-            justifyContent="space-between"
-            alignItems="center"
-            flexDirection="column"
-          >
+    <Box
+      bg="blue.50"
+      borderWidth="2px"
+      borderColor="blue.200"
+      borderRadius="xl"
+      p={6}
+      mt={4}
+    >
+      <VStack spacing={4} align="stretch">
+        <VStack spacing={2} align="center">
+          <Text fontSize="lg" fontWeight="semibold" color="blue.900">
+            No upcoming sessions scheduled
+          </Text>
+          <Text fontSize="sm" color="blue.700" textAlign="center">
+            Show your interest and we'll notify the host. This helps them see there's demand and may inspire them to schedule more sessions!
+          </Text>
+        </VStack>
+
+        {isUserInterested ? (
+          <VStack spacing={3}>
             <Button
-              rounded="full"
               colorScheme="green"
-              variant="outline"
+              variant="solid"
               rightIcon={<FaCheckSquare />}
-              size={{ base: "sm", sm: "md" }}
-              m="3"
+              size="md"
               isDisabled
+              w="full"
+              maxW="300px"
             >
-              I'm interested
+              You're Interested
             </Button>
-          </Flex>
+          </VStack>
         ) : (
-          <Flex
-            justifyContent="space-between"
-            alignItems="center"
-            flexDirection="column"
-          >
+          <VStack spacing={3}>
             <Button
-              rounded="full"
               colorScheme="blue"
-              variant="outline"
-              onClick={onOpen}
-              rightIcon={<FaBell  />}
-              size={{ base: "sm", sm: "md" }}
-              m="3"
+              variant="solid"
+              onClick={expressInterest}
+              rightIcon={<FaBell />}
+              size="md"
+              w="full"
+              maxW="300px"
             >
-              Show interest
+              Show Interest
             </Button>
-            <ConfirmActionDialog
-              title="Show interest"
-              message="When you show interest, we notify the host that there's demand. That might inspire them to schedule more sessions."
-              isOpen={isOpen}
-              onClose={onClose}
-              onSubmit={expressInterest} />
-          </Flex>
-        ))}
-      <Text
-        whiteSpace={"pre-wrap"}
-        color={"gray.600"}
-        fontSize={"14px"}
-        lineHeight="6"
-        w="100%"
-        textAlign={"center"}
-      >
-        {interestedUsersCountText}
-      </Text>
+          </VStack>
+        )}
+
+        {numberOfInterestedUsers > 0 && (
+          <HStack justify="center" spacing={2} pt={2}>
+            <Badge colorScheme="blue" fontSize="sm" px={3} py={1} borderRadius="full">
+              {numberOfInterestedUsers} {numberOfInterestedUsers === 1 ? "person" : "people"} interested
+            </Badge>
+          </HStack>
+        )}
+      </VStack>
     </Box>
   );
 }
