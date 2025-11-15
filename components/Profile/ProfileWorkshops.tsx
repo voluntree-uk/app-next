@@ -30,7 +30,7 @@ export default function ProfileWorkshops({ workshops, isMe }: IProps) {
   };
 
   return (
-    <Box bg="gray.50" py={{ base: 8, md: 12 }}>
+    <Box bg="gray.100" py={{ base: 8, md: 12 }}>
       <Container maxW="7xl" px={{ base: 6, md: 10 }}>
         <VStack spacing={6} align="stretch">
           <Heading size="lg" color="gray.700">

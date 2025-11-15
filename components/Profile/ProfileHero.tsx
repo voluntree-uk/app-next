@@ -38,7 +38,7 @@ export default function ProfileHero({
     : profile.name;
 
   return (
-    <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
+    <Box bg="white">
       <Container maxW="7xl" px={{ base: 6, md: 10 }} py={{ base: 10, md: 14 }}>
         <Flex
           direction={{ base: "column", md: "row" }}
