@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
-  FormLabel,
+  Button,
   Input,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { clientData } from "@data/supabase";
+import { HiCamera } from "react-icons/hi";
 
 interface IProps {
   url: string;
@@ -70,38 +72,46 @@ export default function AccountAvatar({ url, isMe, onUpload }: IProps) {
     }
   }
 
-  const avatarForm = (
-    <FormLabel
-      htmlFor="single"
-      boxShadow={"lg"}
-      style={{
-        cursor: "pointer",
-        borderRadius: "100%",
-      }}
-    >
-      {avatarUrl ? <Avatar size={"2xl"} src={avatarUrl} /> : null}
-    </FormLabel>
-  );
-
-  const uploadInput = (
-    <Input
-      type="file"
-      id="single"
-      accept="image/*"
-      onChange={uploadAvatar}
-      disabled={uploading}
-      style={{
-        display: "none",
-      }}
-    />
-  );
-
   return (
     <Box>
       <Box pos={"relative"} display="flex" justifyContent={"center"}>
-        {avatarForm}
+        <VStack spacing={4} flexShrink={0}>
+          <Box
+            boxShadow={"lg"}
+            style={{
+              cursor: "default",
+              borderRadius: "100%",
+            }}
+          >
+            <Avatar size={"2xl"} src={avatarUrl || undefined} />
+          </Box>
+          {isMe && (
+            <>
+              <Input
+                type="file"
+                id="single"
+                accept="image/*"
+                onChange={uploadAvatar}
+                disabled={uploading}
+                style={{
+                  display: "none",
+                }}
+              />
+              <Button
+                size="sm"
+                variant="solid"
+                colorScheme="blue"
+                leftIcon={<HiCamera />}
+                onClick={() => {
+                  document.getElementById('single')?.click();
+                }}
+              >
+                Change Photo
+              </Button>
+            </>
+          )}
+        </VStack>
       </Box>
-      <Box>{isMe ? uploadInput : null}</Box>
     </Box>
   );
 }

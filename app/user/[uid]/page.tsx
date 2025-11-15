@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@util/supabase/server";
 import UserPage from "app/user/[uid]/user-page";
 import { Metadata, ResolvingMetadata } from "next";
+import { Profile, Workshop, BookingDetails, Slot } from "@schemas";
 
 type Props = {
   params: { uid: string };
@@ -49,8 +50,57 @@ export default async function Page({ params }: Props) {
     } else {
       redirect("/");
     }
-  } else {
-    return <UserPage user_id={user_id} isMe={isMe} />;
   }
+
+  // Fetch all data server-side
+  const [profile, workshops] = await Promise.all([
+    data.getProfile(user_id),
+    data.getUserWorkshops(user_id).catch(() => []),
+  ]);
+
+  // Fetch bookings only if viewing own profile
+  let bookings: BookingDetails[] = [];
+  if (isMe) {
+    try {
+      bookings = await data.getUserBookings(user_id);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+      bookings = [];
+    }
+  }
+
+  // Fetch all slots and bookings for the user's workshops to calculate session-based stats
+  let allSlots: Slot[] = [];
+  let allSessionBookings: BookingDetails[] = [];
+  
+  if (workshops && workshops.length > 0) {
+    const workshopIds = workshops.map(w => w.id).filter(Boolean) as string[];
+    
+    const slotsPromises = workshopIds.map(id => 
+      data.getWorkshopSlots(id).catch(() => [])
+    );
+    const bookingsPromises = workshopIds.map(id => 
+      data.getWorkshopBookings(id).catch(() => [])
+    );
+    
+    const [slotsResults, bookingsResults] = await Promise.all([
+      Promise.all(slotsPromises),
+      Promise.all(bookingsPromises)
+    ]);
+    
+    allSlots = slotsResults.flat();
+    allSessionBookings = bookingsResults.flat();
+  }
+
+  return (
+    <UserPage
+      profile={profile}
+      isMe={isMe}
+      bookings={bookings}
+      workshops={workshops}
+      allSlots={allSlots}
+      allSessionBookings={allSessionBookings}
+    />
+  );
 }
 
