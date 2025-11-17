@@ -14,12 +14,11 @@ import {
   Container,
   IconButton,
   Tooltip,
-  HStack,
   useToast,
 } from "@chakra-ui/react";
 import { Workshop, User } from "@schemas";
 import { clientData } from "@data/supabase";
-import { MdOutlineCancel, MdOutlineEdit } from "react-icons/md";
+import { MdOutlineEdit } from "react-icons/md";
 
 interface IProps {
   workshop: Workshop;

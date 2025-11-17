@@ -38,6 +38,7 @@ export default function WorkshopCard({ item, navigate }: IProps) {
       borderColor="gray.200"
       borderRadius="xl"
       bg="white"
+      userSelect="none"
       p={{ base: "5", md: "6" }}
       h="100%"
       transition="all 0.2s ease"

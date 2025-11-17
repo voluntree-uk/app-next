@@ -7,7 +7,6 @@ import {
   Badge,
   Box,
   Button,
-  ButtonGroup,
   Flex,
   Heading,
   Link,
@@ -15,6 +14,8 @@ import {
   Text,
   useDisclosure,
   useToast,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
 import { clientData } from "@data/supabase";
 import { MdOutlineCancel, MdStart } from "react-icons/md";
@@ -83,57 +84,69 @@ export default function WorkshopListingUserBooking({
 
   return (
     <Box
-      borderBottomWidth={"1px"}
-      borderBottomColor="gray.200"
-      p="6"
-      rounded="md"
-      px={{ base: "6", md: "16" }}
+      bg="white"
+      borderWidth="1px"
+      borderColor="gray.200"
+      borderRadius="xl"
+      p={{ base: 4, md: 6 }}
+      transition="all 0.2s"
+      _hover={{
+        borderColor: "blue.300",
+        boxShadow: "md",
+      }}
     >
-      <Stack>
-        <Heading as="h2" size="md" pb="0.5em">
-          Your Booking
-        </Heading>
-        <Box
-          py="5"
-          px="2"
-          borderTop={"1px"}
-          borderTopColor="gray.200"
-          display="flex"
-          justifyContent={"space-between"}
+      <Stack spacing={4}>
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          justify="space-between"
+          align={{ base: "stretch", md: "center" }}
+          gap={4}
         >
-          <Box fontSize={"sm"}>
-            <Text>{dateToReadable(slot.date)}</Text>
-            <Text fontWeight={"bold"}>
+          {/* Session Info */}
+          <VStack align={{ base: "flex-start", md: "flex-start" }} spacing={2} flex="1">
+            <Text fontSize={{ base: "md", md: "lg" }} fontWeight="semibold" color="gray.700">
+              {dateToReadable(slot.date, false)}
+            </Text>
+            <Text fontSize="sm" color="gray.600">
               {timeToReadable(slot.start_time, slot.end_time)}
             </Text>
-            <Badge variant={"subtle"} colorScheme="green">
-              {attendeesMessage}
-            </Badge>
-          </Box>
-          <Flex alignItems={"center"}>
-            <Flex direction={{ base: "column", sm: "row" }} gap={{ base: "2", md: "4" }}>
+            <HStack spacing={2}>
+              <Badge
+                variant="subtle"
+                colorScheme="green"
+                fontSize="xs"
+                px={2}
+                py={1}
+                borderRadius="md"
+              >
+                {attendeesMessage}
+              </Badge>
+            </HStack>
+          </VStack>
+
+          {/* Actions */}
+          <Flex align="center" gap={2}>
+            <HStack spacing={2}>
               <Link as={NextLink} href={workshop.meeting_link} target="_blank">
                 <Button
-                  colorScheme="linkedin"
+                  colorScheme="blue"
                   variant="solid"
                   rightIcon={<MdStart />}
-                  size={{ base: "sm", sm: "md" }}
-                  w={{ base: "100%", sm: "auto" }}
+                  size={{ base: "sm", md: "md" }}
                 >
-                  Enter
+                  Enter Session
                 </Button>
               </Link>
               <Button
                 colorScheme="red"
-                variant="solid"
+                variant="outline"
                 onClick={onOpen}
                 rightIcon={<MdOutlineCancel />}
-                size={{ base: "sm", sm: "md" }}
-                w={{ base: "100%", sm: "auto" }}
+                size={{ base: "sm", md: "md" }}
               >
                 Cancel
               </Button>
-            </Flex>
+            </HStack>
             <ConfirmActionDialog
               title="Cancel Booking"
               message="Are you sure you want to cancel your booking? This action cannot be undone."
@@ -142,7 +155,7 @@ export default function WorkshopListingUserBooking({
               onSubmit={cancelBooking}
             />
           </Flex>
-        </Box>
+        </Flex>
       </Stack>
     </Box>
   );

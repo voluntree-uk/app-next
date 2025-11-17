@@ -131,6 +131,9 @@ export default function WorkshopListing({
         {userBooking ? (
           <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
             <Container maxW="7xl" px={{ base: 6, md: 10 }} py={{ base: 6, md: 8 }}>
+              <Heading as="h2" size="lg" color="gray.700" mb={6}>
+                Your Booking
+              </Heading>
               <WorkshopListingUserBooking
                 workshop={workshop}
                 slot={slots.find((slot) => slot.id == userBooking?.slot_id)!}
@@ -165,48 +168,34 @@ export default function WorkshopListing({
                   />
                 </Show>
               </Flex>
-
-              {futureSlots.length > 0 || pastSlots.length > 0 ? (
-                <Tabs variant="line" colorScheme="blue" defaultIndex={0}>
-                  <TabList borderBottomWidth="2px" borderBottomColor="gray.200">
-                    {makeTab(`Upcoming (${futureSlots.length})`)}
-                    {pastSlots.length > 0 && makeTab(`Past (${pastSlots.length})`)}
-                  </TabList>
-                  <TabPanels>
+              <Tabs variant="line" colorScheme="blue" defaultIndex={0}>
+                <TabList borderBottomWidth="2px" borderBottomColor="gray.200">
+                  {makeTab(`Upcoming (${futureSlots.length})`)}
+                  {pastSlots.length > 0 && makeTab(`Past (${pastSlots.length})`)}
+                </TabList>
+                <TabPanels>
+                  <TabPanel px={0} pt={6}>
+                    <WorkshopListingUpcomingSlotList
+                      workshop={workshop}
+                      slots={futureSlots}
+                      bookings={bookings}
+                      user={user}
+                      isUserInterested={isUserInterested}
+                      numberOfInterestedUsers={numberOfInterestedUsers}
+                      isUserHost={isUserHost()}
+                      onAddSessionClick={onOpen}
+                    />
+                  </TabPanel>
+                  {pastSlots.length > 0 && (
                     <TabPanel px={0} pt={6}>
-                      <WorkshopListingUpcomingSlotList
-                        workshop={workshop}
-                        slots={futureSlots}
+                      <WorkshopListingPastSlotList
+                        slots={pastSlots}
                         bookings={bookings}
-                        user={user}
-                        isUserInterested={isUserInterested}
-                        numberOfInterestedUsers={numberOfInterestedUsers}
-                        isUserHost={isUserHost()}
-                        onAddSessionClick={onOpen}
                       />
                     </TabPanel>
-                    {pastSlots.length > 0 && (
-                      <TabPanel px={0} pt={6}>
-                        <WorkshopListingPastSlotList
-                          slots={pastSlots}
-                          bookings={bookings}
-                        />
-                      </TabPanel>
-                    )}
-                  </TabPanels>
-                </Tabs>
-              ) : (
-                <WorkshopListingUpcomingSlotList
-                  workshop={workshop}
-                  slots={[]}
-                  bookings={bookings}
-                  user={user}
-                  isUserInterested={isUserInterested}
-                  numberOfInterestedUsers={numberOfInterestedUsers}
-                  isUserHost={isUserHost()}
-                  onAddSessionClick={onOpen}
-                />
-              )}
+                  )}
+                </TabPanels>
+              </Tabs>
             </Container>
           </Box>
         )}

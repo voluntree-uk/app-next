@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Button,
@@ -30,7 +30,7 @@ interface IProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (slot: Slot) => void;
-  existingSlots?: Slot[]; // Pass existing slots for smart suggestions
+  existingSlots?: Slot[];
 }
 
 interface SlotFormData {
