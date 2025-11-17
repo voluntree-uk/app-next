@@ -153,7 +153,7 @@ export default function DashboardSharingSection({ workshops, workshopsWithSessio
           <Button
             size={{ base: "xs", sm: "sm", md: "sm" }}
             colorScheme="blue"
-            variant="outline"
+            variant="solid"
             leftIcon={<Icon as={MdAdd} />}
             onClick={() => router.push("/workshops/new")}
             minW={{ base: "auto", md: "200px" }}

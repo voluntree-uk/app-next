@@ -14,6 +14,7 @@ import { Slot, BookingDetails } from "@schemas";
 import { CalendarIcon, TimeIcon, CloseIcon } from "@chakra-ui/icons";
 import { dateToReadable, timeToReadable } from "@util/dates";
 import { MdEventAvailable } from "react-icons/md";
+import Show from "@components/Helpers/Show";
 
 interface SessionCardProps {
   slot: Slot;
@@ -72,14 +73,14 @@ export default function WorkshopSessionCard({
               <TimeIcon boxSize={{ base: 3, md: 4 }} />
               <Text>{timeToReadable(slot.start_time, slot.end_time)}</Text>
             </HStack>
-            {showLearnerCount && (
+            <Show showIf={showLearnerCount}>
               <HStack spacing={1}>
                 <Icon as={MdEventAvailable} boxSize={{ base: 3, md: 4 }} />
                 <Text>
                   {bookings.length} {bookings.length === 1 ? "learner" : "learners"}
                 </Text>
               </HStack>
-            )}
+            </Show>
           </VStack>
         </VStack>
         {onCancel && (

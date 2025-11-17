@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { MdSearch } from "react-icons/md";
 import BookingSessionCard from "@components/Dashboard/BookingSessionCard";
 import { Type } from "@components/Dashboard/BookingSessionCard";
+import Show from "@components/Helpers/Show";
 import {
   NoBookingsEmptyState,
   NoUpcomingSessionsEmptyState,
@@ -65,7 +66,7 @@ export default function DashboardLearningSection({ bookings }: IProps) {
           <Button
             size={{ base: "xs", sm: "sm", md: "sm" }}
             colorScheme="blue"
-            variant="outline"
+            variant="solid"
             leftIcon={<Icon as={MdSearch} />}
             onClick={() => router.push("/workshops")}
             minW={{ base: "auto", md: "200px" }}
@@ -97,7 +98,7 @@ export default function DashboardLearningSection({ bookings }: IProps) {
                   </Badge>
                 </HStack>
               </Flex>
-              {upcomingBookings.length > 0 ? (
+              <Show showIf={upcomingBookings.length > 0}>
                 <Stack spacing={{ base: 2, md: 3 }}>
                   {upcomingBookings.map((booking) => (
                     <BookingSessionCard
@@ -108,9 +109,10 @@ export default function DashboardLearningSection({ bookings }: IProps) {
                     />
                   ))}
                 </Stack>
-              ) : (
+              </Show>
+              <Show showIf={upcomingBookings.length === 0}>
                 <NoUpcomingSessionsEmptyState onFindWorkshops={() => router.push("/workshops")} />
-              )}
+              </Show>
             </Box>
 
             {/* Past Sessions Section */}
@@ -131,7 +133,7 @@ export default function DashboardLearningSection({ bookings }: IProps) {
                   </Badge>
                 </HStack>
               </Flex>
-              {pastBookings.length > 0 ? (
+              <Show showIf={pastBookings.length > 0}>
                 <Stack spacing={{ base: 2, md: 3 }}>
                   {pastBookings.map((booking) => (
                     <BookingSessionCard
@@ -142,9 +144,10 @@ export default function DashboardLearningSection({ bookings }: IProps) {
                     />
                   ))}
                 </Stack>
-              ) : (
+              </Show>
+              <Show showIf={pastBookings.length === 0}>
                 <NoPastSessionsEmptyState />
-              )}
+              </Show>
             </Box>
           </VStack>
         )}
