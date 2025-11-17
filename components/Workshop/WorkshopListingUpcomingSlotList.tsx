@@ -1,12 +1,11 @@
 "use client";
 
-import { Box, Stack, Heading, Flex, Button } from "@chakra-ui/react";
-import { MdAdd } from "react-icons/md";
+import { Stack } from "@chakra-ui/react";
 import { Booking, Slot, User, Workshop } from "@schemas";
 import { WorkshopListingUpcomingSlot } from "@components/Workshop/WorkshopListingUpcomingSlot";
 import Show from "@components/Helpers/Show";
-import NoResults from "@components/NoResults";
 import WorkshopListingInterest from "@components/Workshop/WorkshopListingInterest";
+import WorkshopListingCreateSlots from "./WorkshopListingCreateSlots";
 
 interface IProps {
   workshop: Workshop;
@@ -35,30 +34,30 @@ export default function WorkshopListingUpcomingSlotList({
 
   return (
       <Stack spacing={4}>
-        {slots.length > 0 && (
-          <>
-            <Heading as="h3" size="md" color="gray.700">
-              Upcoming Sessions
-            </Heading>
-            <Stack spacing={3}>
-              {slots.map((slot) => (
-                <WorkshopListingUpcomingSlot
-                  workshop={workshop}
-                  key={slot.id}
-                  slot={slot}
-                  slotBookings={getActiveBookingsForSlot(slot)}
-                  user={user}
-                />
-              ))}
-            </Stack>
-          </>
-        )}
-        <Show showIf={slots.length === 0}>
+        <Show showIf={slots.length > 0}>
+          <Stack spacing={3}>
+            {slots.map((slot) => (
+              <WorkshopListingUpcomingSlot
+                workshop={workshop}
+                key={slot.id}
+                slot={slot}
+                slotBookings={getActiveBookingsForSlot(slot)}
+                user={user}
+              />
+            ))}
+          </Stack>
+        </Show>
+        <Show showIf={slots.length === 0 && !isUserHost}>
           <WorkshopListingInterest
             workshop={workshop}
             user={user}
             isUserInterested={isUserInterested}
             numberOfInterestedUsers={numberOfInterestedUsers}
+          />
+        </Show>
+        <Show showIf={slots.length === 0 && isUserHost}>
+          <WorkshopListingCreateSlots
+            onAddSessionClick={onAddSessionClick}
           />
         </Show>
       </Stack>

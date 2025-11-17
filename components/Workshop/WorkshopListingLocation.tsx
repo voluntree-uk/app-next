@@ -2,7 +2,7 @@
 
 import React from "react";
 import { BsCameraVideo, BsPinMap } from "react-icons/bs";
-import { Box, Flex, Text, Container, Badge, HStack } from "@chakra-ui/react";
+import { Box, Flex, Text, Container } from "@chakra-ui/react";
 import { Workshop } from "@schemas";
 import { workshopToReadableAddress } from "@util/addresses";
 

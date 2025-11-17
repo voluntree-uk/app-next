@@ -3,11 +3,9 @@
 import React from "react";
 import {
   Box,
-  Flex,
   Text,
   Button,
   useToast,
-  useDisclosure,
   VStack,
   HStack,
   Badge,
@@ -16,7 +14,6 @@ import { Workshop, User, WorkshopInterest } from "@schemas";
 import { useRouter } from "next/navigation";
 import { clientData } from "@data/supabase";
 import { FaBell, FaCheckSquare } from "react-icons/fa";
-import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
 
 interface IProps {
   workshop: Workshop;
@@ -31,10 +28,8 @@ export default function WorkshopListingInterest({
   isUserInterested,
   numberOfInterestedUsers,
 }: IProps) {
-  const isUserHost = () => user?.id == workshop.user_id;
   const toast = useToast();
   const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   async function expressInterest(): Promise<void> {
     try {
@@ -50,7 +45,6 @@ export default function WorkshopListingInterest({
         const success = await clientData.expressInterestInWorkshop(interest, workshop);
 
         if (success) {
-          onClose();
           router.refresh();
         }
       }
@@ -65,8 +59,6 @@ export default function WorkshopListingInterest({
     }
   }
 
-  if (isUserHost()) return null;
-
   return (
     <Box
       bg="blue.50"
@@ -78,7 +70,7 @@ export default function WorkshopListingInterest({
     >
       <VStack spacing={4} align="stretch">
         <VStack spacing={2} align="center">
-          <Text fontSize="lg" fontWeight="semibold" color="blue.900">
+          <Text fontSize="lg" fontWeight="semibold" color="blue.900" textAlign="center">
             No upcoming sessions scheduled
           </Text>
           <Text fontSize="sm" color="blue.700" textAlign="center">
