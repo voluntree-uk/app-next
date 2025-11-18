@@ -120,3 +120,30 @@ export interface WorkshopListItem {
   upcomingSessionCount: number;
   totalAvailableSpots: number;
 }
+
+export type TransactionType =
+  | "Donation"
+  | "Expense"
+  | "Processing Charge"
+  | "Administrative Charge";
+
+export interface FinancialTransaction {
+  title: string;
+  type: TransactionType;
+  date: string;
+  isoDate: string;
+  amountInPence: number;
+  formattedAmount: string;
+}
+
+export interface FinancialSummary {
+  balanceInPence: number;
+  donationsTotalInPence: number;
+  expensesTotalInPence: number;
+  chargesTotalInPence: number;
+  formattedBalance: string;
+  formattedDonationsTotal: string;
+  formattedExpensesTotal: string;
+  formattedChargesTotal: string;
+  recentTransactions: FinancialTransaction[];
+}

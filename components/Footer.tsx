@@ -88,8 +88,7 @@ export default function Footer({
               </Link>
               <Link
                 as={NextLink}
-                target="_blank"
-                href={"https://voluntree.net/finances/"}
+                href={"/finances"}
               >
                 Finances
               </Link>
