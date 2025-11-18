@@ -1,5 +1,6 @@
 import {
   calculateFinancials,
+  fetchTransactions,
   formatPenceToCurrency,
   parseCurrencyToPence,
 } from "./finances";
@@ -42,5 +43,33 @@ describe("finances helpers", () => {
     expect(summary.balanceInPence).toBe(2850);
     expect(summary.formattedBalance).toBe(formatPenceToCurrency(2850));
     expect(summary.recentTransactions).toHaveLength(2);
+  });
+
+  it("returns an empty list when fetch fails", async () => {
+    const failingFetch = async () => {
+      throw new Error("Network error");
+    };
+
+    const result = await fetchTransactions({ fetchFn: failingFetch as any });
+    expect(result.transactions).toEqual([]);
+    expect(result.error).toBeDefined();
+    expect(typeof result.error).toBe("string");
+  });
+
+  it("returns an empty list when the response is not ok", async () => {
+    const responseNotOk = async () =>
+      ({
+        ok: false,
+        statusText: "Not found",
+        json: async () => [],
+      } as any);
+
+    const result = await fetchTransactions({
+      fetchFn: responseNotOk as any,
+      sourceUrl: "http://example.com/transactions.json",
+    });
+    expect(result.transactions).toEqual([]);
+    expect(result.error).toBeDefined();
+    expect(typeof result.error).toBe("string");
   });
 });

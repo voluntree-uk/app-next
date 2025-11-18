@@ -9,7 +9,7 @@ import {
 } from "@data/finances";
 
 export default async function TransactionsPage() {
-  const transactions = await fetchTransactions();
+  const { transactions, error } = await fetchTransactions();
 
   const suggestedDonationLinks = suggestedDonations.map((suggestion) => ({
     label: formatPenceToCurrency(suggestion.value),
@@ -19,6 +19,7 @@ export default async function TransactionsPage() {
   return (
     <Transactions
       transactions={transactions}
+      transactionsError={error}
       donationLink={defaultDonationUrl}
       suggestedDonationLinks={suggestedDonationLinks}
     />

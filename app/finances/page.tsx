@@ -10,7 +10,7 @@ import {
 } from "@data/finances";
 
 export default async function FinancesPage() {
-  const transactions = await fetchTransactions();
+  const { transactions, error } = await fetchTransactions();
   const summary = calculateFinancials(transactions);
 
   const suggestedDonationLinks = suggestedDonations.map((suggestion) => ({
@@ -22,6 +22,7 @@ export default async function FinancesPage() {
     <Finances
       summary={summary}
       transactions={summary.recentTransactions}
+      transactionsError={error}
       donationLink={defaultDonationUrl}
       suggestedDonationLinks={suggestedDonationLinks}
     />

@@ -7,6 +7,9 @@ import {
   Stack,
   Text,
   VStack,
+  Alert,
+  AlertIcon,
+  AlertDescription,
 } from "@chakra-ui/react";
 import TransactionRow from "@components/Transaction/TransactionRow";
 import { FinancialTransaction } from "@schemas";
@@ -15,12 +18,14 @@ import TransactionsDonate from "@components/Transaction/TransactionsDonate";
 
 interface TransactionsPageProps {
   transactions: FinancialTransaction[];
+  transactionsError?: string;
   donationLink: string;
   suggestedDonationLinks: { label: string; href: string }[];
 }
 
 export default function Transactions({
   transactions,
+  transactionsError,
   donationLink,
   suggestedDonationLinks,
 }: TransactionsPageProps) {
@@ -67,6 +72,14 @@ export default function Transactions({
         donationLink={donationLink}
         suggestedDonationLinks={suggestedDonationLinks}
       />
+      {transactionsError ? (
+        <Alert status="warning">
+          <AlertIcon />
+          <AlertDescription>
+            {transactionsError}
+          </AlertDescription>
+        </Alert>
+      ) : null}
       <Stack spacing={6}>
         {allMonthKeys.length === 0 ? (
           <Box

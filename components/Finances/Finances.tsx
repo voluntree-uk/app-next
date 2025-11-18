@@ -11,6 +11,7 @@ import FinancesOtherWaysToSupport from "@components/Finances/FinancesOtherWaysTo
 interface FinancesProps {
   summary: FinancialSummary;
   transactions: FinancialTransaction[];
+  transactionsError?: string;
   donationLink: string;
   suggestedDonationLinks: { label: string; href: string }[];
 }
@@ -18,6 +19,7 @@ interface FinancesProps {
 export default function Finances({
   summary,
   transactions,
+  transactionsError,
   donationLink,
   suggestedDonationLinks,
 }: FinancesProps) {
@@ -25,12 +27,15 @@ export default function Finances({
     <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>
       <Stack spacing={6}>
         <FinancesHero donationLink={donationLink} />
-        <FinancesStats summary={summary} />
+        <FinancesStats summary={summary} error={transactionsError} />
         <FinancesDonate
           donationLink={donationLink}
           suggestedDonationLinks={suggestedDonationLinks}
         />
-        <FinancesLatestTransactions transactions={transactions} />
+        <FinancesLatestTransactions
+          transactions={transactions}
+          error={transactionsError}
+        />
         <FinancesOtherWaysToSupport />
       </Stack>
     </Container>

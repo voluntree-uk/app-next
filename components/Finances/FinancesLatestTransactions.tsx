@@ -7,14 +7,19 @@ import {
   Divider,
   Heading,
   Stack,
+  Alert,
+  AlertDescription,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { FinancialTransaction } from "@schemas";
 import TransactionRow from "@components/Transaction/TransactionRow";
 
 export default function LatestTransactionsSection({
   transactions,
+  error,
 }: {
   transactions: FinancialTransaction[];
+  error?: string;
 }) {
   return (
     <Box
@@ -42,6 +47,14 @@ export default function LatestTransactionsSection({
         </Button>
       </Stack>
       <Divider />
+      {error ? (
+        <Alert status="warning" mt={3}>
+          <AlertIcon />
+          <AlertDescription>
+            {error}
+          </AlertDescription>
+        </Alert>
+      ) : null}
       <Stack spacing={3} mt={3}>
         {transactions.map((txn) => (
           <TransactionRow

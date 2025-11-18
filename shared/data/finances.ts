@@ -86,32 +86,43 @@ export type FetchTransactionsOptions = {
   sourceUrl?: string;
 };
 
+export type FetchTransactionsResult = {
+  transactions: FinancialTransaction[];
+  error?: string;
+};
+
 export const fetchTransactions = async (
   options: FetchTransactionsOptions = {}
-): Promise<FinancialTransaction[]> => {
+): Promise<FetchTransactionsResult> => {
   const {
     fetchFn = fetch,
     revalidateSeconds = DEFAULT_REVALIDATE_SECONDS,
     sourceUrl = TRANSACTIONS_SOURCE_URL,
   } = options;
 
-  const response = await fetchFn(sourceUrl, {
-    next: { revalidate: revalidateSeconds },
-    cache: "force-cache",
-  });
+  try {
+    const response = await fetchFn(sourceUrl, {
+      next: { revalidate: revalidateSeconds },
+    });
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch transactions: ${response.statusText}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch transactions: ${response.statusText}`);
+    }
+
+    const rawTransactions: RawFinancialTransaction[] = await response.json();
+
+    const transactions = rawTransactions
+      .map(normaliseTransaction)
+      .sort(
+        (a, b) =>
+          new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime()
+      );
+
+    return { transactions };
+  } catch (error) {
+    console.error("Failed to load transactions", error);
+    return { transactions: [], error: "We could not load transaction data right now. Please try again later." };
   }
-
-  const rawTransactions: RawFinancialTransaction[] = await response.json();
-
-  return rawTransactions
-    .map(normaliseTransaction)
-    .sort(
-      (a, b) =>
-        new Date(b.isoDate).getTime() - new Date(a.isoDate).getTime()
-    );
 };
 
 export const calculateFinancials = (
