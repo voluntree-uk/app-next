@@ -17,19 +17,18 @@ import {
   ListItem,
   ListIcon,
 } from "@chakra-ui/react";
-import { CheckCircleIcon, CloseIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon } from "@chakra-ui/icons";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useMemo } from "react";
+import {
+  isPasswordStrong as isPasswordStrongUtil,
+  PasswordStrengthChecklist,
+} from "@components/Login/PasswordStrength";
 
 interface IProps {
   updatePassword(
     password: string
   ): Promise<{ success: boolean; error: string | undefined }>;
-}
-
-interface PasswordRequirement {
-  label: string;
-  met: boolean;
 }
 
 export default function UpdatePasswordPage({ updatePassword }: IProps) {
@@ -68,35 +67,6 @@ export default function UpdatePasswordPage({ updatePassword }: IProps) {
     });
   };
 
-  const passwordRequirements = useMemo((): PasswordRequirement[] => {
-    return [
-      {
-        label: "At least 8 characters",
-        met: password.length >= 8,
-      },
-      {
-        label: "Contains uppercase letter",
-        met: /[A-Z]/.test(password),
-      },
-      {
-        label: "Contains lowercase letter",
-        met: /[a-z]/.test(password),
-      },
-      {
-        label: "Contains number",
-        met: /[0-9]/.test(password),
-      },
-      {
-        label: "Contains special character",
-        met: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
-      },
-    ];
-  }, [password]);
-
-  const isPasswordStrong = useMemo(() => {
-    return passwordRequirements.length > 0 && passwordRequirements.every((req) => req.met);
-  }, [passwordRequirements]);
-
   function validateForm(): boolean {
     var isValid = true;
     if (!password) {
@@ -110,7 +80,7 @@ export default function UpdatePasswordPage({ updatePassword }: IProps) {
     if (password !== confirmedPassword) {
       isValid = false;
     }
-    if (!isPasswordStrong) {
+    if (!isPasswordStrongUtil(password)) {
       isValid = false;
     }
     return isValid;
@@ -128,7 +98,7 @@ export default function UpdatePasswordPage({ updatePassword }: IProps) {
         redirect();
       }
     } else {
-      if (!isPasswordStrong) {
+      if (!isPasswordStrongUtil(password)) {
         showToast("Password too weak", "Please meet all password requirements", false);
       } else if (password !== confirmedPassword) {
         showToast("Passwords don't match", "Please ensure both passwords are identical", false);
@@ -216,23 +186,7 @@ export default function UpdatePasswordPage({ updatePassword }: IProps) {
                 </Text>
               </Box>
               <Box bg="white" borderRadius="xl" p={{ base: 6, md: 8 }} boxShadow="sm">
-                <List spacing={3} color="gray.600" fontSize="md">
-                  {passwordRequirements.map((requirement, index) => (
-                    <ListItem key={index}>
-                      <ListIcon
-                        as={requirement.met ? CheckCircleIcon : CloseIcon}
-                        color={requirement.met ? "green.500" : "gray.300"}
-                      />
-                      <Text
-                        as="span"
-                        color={requirement.met ? "gray.700" : "gray.400"}
-                        textDecoration={requirement.met ? "none" : "none"}
-                      >
-                        {requirement.label}
-                      </Text>
-                    </ListItem>
-                  ))}
-                </List>
+                <PasswordStrengthChecklist password={password} />
               </Box>
               <Box>
                 <Heading size="sm" color="gray.700" mb={3}>
