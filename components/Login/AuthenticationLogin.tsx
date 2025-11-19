@@ -11,7 +11,7 @@ import {
   Heading,
   Input,
   Stack,
-  useBreakpointValue,
+  HStack,
   useToast,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
@@ -115,43 +115,38 @@ export default function AuthenticationLogin({ signIn, resetPassword }: IProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing="8">
-        <Box
-          py={{ base: "4", sm: "8" }}
-          px={{ base: "4", sm: "10" }}
-          bg={useBreakpointValue({ base: "white", sm: "white" })}
-          boxShadow={{ base: "none" }}
-          borderRadius={{ base: "2xl", sm: "xl" }}
-        >
-          {mode === Mode.RESET_PASSWORD ? backArrowIcon : null}
-          <Stack textAlign="center" padding="5">
-            <Heading size={useBreakpointValue({ base: "sm", md: "md" })}>
+      <Stack spacing={6}>
+        <Box>
+          <HStack mb={4}>
+            {mode === Mode.RESET_PASSWORD ? backArrowIcon : null}
+            <Heading size={"md"}>
               {mode === Mode.LOGIN
                 ? "Log in to your account"
-                : "Reset Password "}
+                : "Reset your password"}
             </Heading>
-          </Stack>
-          <Stack spacing="6">
-            <Stack spacing="3">
-              {makeFormField("loginEmail", "email", "Email", "email")}
+          </HStack>
+          <Stack spacing={5}>
+            <Stack spacing={4}>
+              {makeFormField("loginEmail", "email", "Email", "Enter your email")}
               {mode === Mode.LOGIN
                 ? makeFormField(
                     "loginPassword",
                     "password",
                     "Password",
-                    "password"
+                    "Enter your password"
                   )
                 : null}
             </Stack>
-            <Stack spacing="6">
+            <Stack spacing={4}>
               <Stack>
                 <Button
-                  colorScheme={"green"}
+                  colorScheme={"blue"}
                   type="submit"
                   isLoading={isLoading}
-                  boxShadow="lg"
+                  boxShadow="md"
+                  w="full"
                 >
-                  {mode === Mode.LOGIN ? "Sign in" : "Reset Password"}
+                  {mode === Mode.LOGIN ? "Sign in" : "Send reset link"}
                 </Button>
                 {mode === Mode.LOGIN ? forgotPasswordLink : null}
               </Stack>

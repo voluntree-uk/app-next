@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import { useForm } from "react-hook-form";
 import NextLink from "next/link";
 import {
@@ -12,12 +12,16 @@ import {
   Heading,
   Input,
   Link,
+  Text,
   Stack,
-  useBreakpointValue,
   useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import {
+  isPasswordStrong,
+  PasswordStrengthChecklist,
+} from "@components/Login/PasswordStrength";
 
 interface IProps {
   signUp(
@@ -27,10 +31,12 @@ interface IProps {
 }
 
 export default function AuthenticationSignUp({ signUp }: IProps) {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, watch } = useForm();
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
   const toast = useToast();
+
+  const passwordValue: string = watch("signupPassword") || "";
 
   const submit = async (formData: any) => {
     setIsLoading(true);
@@ -42,15 +48,13 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
       showToast("Passwords must match", null, false);
     }
     else {
-      const isPasswordStrong:boolean = checkIfPasswordIsStrong(password);
+      const strong = isPasswordStrong(password);
       
-      if(!isPasswordStrong)
-      {
-        const passwordStrengthMessage = "Password must be at least 8 characters long, "
-            + "include an uppercase letter, a lowercase letter, a number, and a special character.";
+      if (!strong) {
+        const passwordStrengthMessage =
+          "Password must meet all the requirements in the checklist below.";
         showToast("Password is weak", passwordStrengthMessage, false);
-      }
-      else{
+      } else {
         const { success, error } = await signUp(formData.signupEmail, password);
 
         if (error) {
@@ -68,13 +72,6 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
 
     setIsLoading(false);
   };
-
-  function checkIfPasswordIsStrong(password: string): boolean  {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%*?&]{8,}$/;
-  
-    return passwordRegex.test(password);
-  }
-  
 
   const showToast = (
     title: any,
@@ -115,35 +112,37 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
 
   return (
     <form onSubmit={handleSubmit(submit)}>
-      <Stack spacing="8">
-        <Box
-          py={{ base: "4", sm: "8" }}
-          px={{ base: "4", sm: "10" }}
-          bg={useBreakpointValue({ base: "white", sm: "white" })}
-          boxShadow={{ base: "none" }}
-          borderRadius={{ base: "2xl", sm: "xl" }}
-        >
-          <Stack textAlign="center" padding="5">
-            <Heading size={useBreakpointValue({ base: "sm", md: "md" })}>
+      <Stack spacing={6}>
+        <Box>
+          <Stack mb={4}>
+            <Heading size={"md"}>
               Create an account
             </Heading>
           </Stack>
-          <Stack spacing="6">
-            <Stack spacing="3">
-              {makeFormField("signupEmail", "email", "Email", "email")}
+          <Stack spacing={5}>
+            <Stack spacing={4}>
+              {makeFormField(
+                "signupEmail",
+                "email",
+                "Email",
+                "Enter your email"
+              )}
               {makeFormField(
                 "signupPassword",
                 "password",
                 "Password",
-                "password"
+                "Choose a strong password"
               )}
               {makeFormField(
                 "signupConfirmedPassword",
                 "password",
-                "Confirm Password",
-                "password"
+                "Confirm password",
+                "Re-enter your password"
               )}
-              {/* Accept T&C */}
+              <Box bg="gray.100" borderRadius="xl" p={{ base: 6, md: 8 }} boxShadow="sm">
+                <Text fontWeight="semibold" color="gray.600" mb={3}>Password Strength Requirements</Text>
+                <PasswordStrengthChecklist password={passwordValue} />
+              </Box>
               <FormControl>
                 <Checkbox fontSize={"sm"} id={"acceptT&C"} isRequired={true}>
                   I accept{" "}
@@ -153,20 +152,21 @@ export default function AuthenticationSignUp({ signUp }: IProps) {
                     href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
                     target="_blank"
                   >
-                    Terms & Conditions
+                    Terms &amp; Conditions
                   </Link>
                 </Checkbox>
               </FormControl>
             </Stack>
-            <Stack spacing="6">
+            <Stack spacing={4}>
               <Stack>
                 <Button
-                  colorScheme={"green"}
+                  colorScheme={"blue"}
                   type="submit"
                   isLoading={isLoading}
-                  boxShadow="lg"
+                  boxShadow="md"
+                  w="full"
                 >
-                  Join
+                  Join Voluntree
                 </Button>
               </Stack>
             </Stack>

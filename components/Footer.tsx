@@ -13,10 +13,11 @@ import {
 } from "@chakra-ui/react";
 import { FaLinkedin, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { defaultDonationUrl } from "@data/finances";
 
 const ListHeader = ({ children }: { children: ReactNode }) => {
   return (
-    <Text fontWeight={"500"} fontSize={"lg"} mb={2}>
+    <Text fontWeight={"700"} fontSize={"lg"} mb={2}>
       {children}
     </Text>
   );
@@ -40,6 +41,9 @@ const SocialButton = ({
       cursor={"pointer"}
       as={"a"}
       href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={label}
       display={"inline-flex"}
       alignItems={"center"}
       justifyContent={"center"}
@@ -65,65 +69,88 @@ export default function Footer({
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
     >
-      <Container as={Stack} maxW={"7xl"} py={5}>
+      <Container as={Stack} maxW={"7xl"} py={8} px={{ base: 6, md: 16 }}>
         <SimpleGrid
-          columns={2}
+          columns={{ base: 2, md: 4 }}
           spacing={8}
-          alignItems={"stretch"}
-          alignContent={"space-evenly"}
+          alignItems={"flex-start"}
         >
-          <Stack align={"flex-start"}>
-            <ListHeader>Company</ListHeader>
-            <Stack
-              align={"flex-start"}
-              direction={{ base: "column", md: "row" }}
-              spacing={{ base: 0, md: 10 }}
-            >
-              <Link
-                as={NextLink}
-                target="_blank"
-                href={"https://voluntree.net/"}
-              >
-                About Us
-              </Link>
-              <Link
-                as={NextLink}
-                href={"/finances"}
-              >
-                Finances
-              </Link>
-              <Link
-                as={NextLink}
-                target="_blank"
-                href={"https://voluntree.net/get-involved/"}
-              >
-                Get Involved
-              </Link>
-            </Stack>
+          <Stack
+            align={"flex-start"}
+            pl={{ base: 6, md: 0 }}
+          >
+            <ListHeader>Explore</ListHeader>
+            <Link as={NextLink} href={"/"}>
+              Home
+            </Link>
+            <Link as={NextLink} href={"/workshops"}>
+              Workshops
+            </Link>
           </Stack>
-          <Stack align={"flex-end"}>
-            <ListHeader>Legal</ListHeader>
-            <Stack
-              align={"flex-end"}
-              direction={{ base: "column", md: "row" }}
-              spacing={{ base: 0, md: 10 }}
+
+          <Stack
+            align={"flex-start"}
+            pl={{ base: 6, md: 0 }}
+          >
+            <ListHeader>Support</ListHeader>
+            <Link as={NextLink} href={"/finances"}>
+              Finances
+            </Link>
+            <Link as={NextLink} href={defaultDonationUrl} target="_blank">
+              Donate
+            </Link>
+            <Link
+              as={NextLink}
+              target="_blank"
+              href={"https://voluntree.net/get-involved/"}
             >
-              <Link
-                as={NextLink}
-                target="_blank"
-                href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL}
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                as={NextLink}
-                target="_blank"
-                href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
-              >
-                Terms of Service
-              </Link>
-              <Link onClick={openCookieConsent}>Cookie Settings</Link>
-            </Stack>
+              Get involved
+            </Link>
+          </Stack>
+
+          <Stack
+            align={"flex-start"}
+            pl={{ base: 6, md: 0 }}
+          >
+            <ListHeader>Company</ListHeader>
+            <Link
+              as={NextLink}
+              target="_blank"
+              href={"https://voluntree.net/"}
+            >
+              About us
+            </Link>
+            <Link
+              as={NextLink}
+              target="_blank"
+              href={"https://voluntree.net/get-involved/"}
+            >
+              Contact
+            </Link>
+          </Stack>
+
+          <Stack
+            align={"flex-start"}
+            pl={{ base: 6, md: 0 }}
+          >
+            <ListHeader>Legal</ListHeader>
+            <Link
+              as={NextLink}
+              target="_blank"
+              href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL}
+            >
+              Privacy policy
+            </Link>
+            <Link
+              as={NextLink}
+              target="_blank"
+              href={process.env.NEXT_PUBLIC_TERMS_AND_CONDITIONS_URL}
+            >
+              Terms of service
+            </Link>
+            <Link onClick={openCookieConsent}>
+              Cookie settings
+            </Link>
           </Stack>
         </SimpleGrid>
       </Container>
@@ -142,10 +169,10 @@ export default function Footer({
           justify={{ md: "space-between" }}
           align={"center"}
         >
-          <Text>© 2024 Voluntree Community Interest Company</Text>
+          <Text>© 2025 Voluntree Community Interest Company</Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton
-              label={"Linkedin"}
+              label={"LinkedIn"}
               href={"https://www.linkedin.com/company/voluntreecommunity/"}
             >
               <FaLinkedin />
@@ -157,18 +184,19 @@ export default function Footer({
               <FaInstagram />
             </SocialButton>
             <SocialButton
-              label={"Twitter"}
+              label={"X (Twitter)"}
               href={"https://x.com/voluntree2024"}
             >
               <FaXTwitter />
             </SocialButton>
           </Stack>
-          <Text>
+          <Text textAlign="center">
             Graphics designed by{" "}
             <Link
               color={"blue.500"}
               as={NextLink}
               href="https://www.freepik.com/author/pch-vector"
+              target="_blank"
             >
               pch.vector / Freepik
             </Link>
