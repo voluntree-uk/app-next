@@ -32,6 +32,7 @@ export default function FinancesHero({ donationLink }: { donationLink: string })
             <Button
               as={NextLink}
               href={donationLink}
+              target="_blank"
               colorScheme="blue"
               size="lg"
               w={{ base: "full", sm: "auto" }}

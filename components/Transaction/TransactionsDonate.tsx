@@ -44,6 +44,7 @@ export default function TransactionsDonate({
               key={link.label}
               as={Link}
               href={link.href}
+              target="_blank"
               colorScheme="blue"
               variant="outline"
               size={{ base: "sm", md: "md" }}
@@ -54,6 +55,7 @@ export default function TransactionsDonate({
           <Button
             as={Link}
             href={donationLink}
+            target="_blank"
             colorScheme="blue"
             size={{ base: "sm", md: "md" }}
           >

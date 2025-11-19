@@ -7,16 +7,19 @@ import LandingStats from "@components/Landing/LandingStats";
 import LandingBenefits from "@components/Landing/LandingBenefits";
 import LandingHowItWorks from "@components/Landing/LandingHowItWorks";
 import LandingInvite from "@components/Landing/LandingInvite";
+import LandingDonateCTA from "@components/Landing/LandingDonateCTA";
 import { UpcomingSession, PlatformStats } from "@schemas";
 
 interface LandingProps {
   upcomingSessions: UpcomingSession[];
   platformStats: PlatformStats;
+  donationLink: string;
 }
 
 export default function Landing({
   upcomingSessions,
   platformStats,
+  donationLink,
 }: LandingProps) {
   return (
     <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>
@@ -24,6 +27,7 @@ export default function Landing({
         <LandingHeading />
         <LandingUpcomingSessions sessions={upcomingSessions} />
         <LandingStats stats={platformStats} />
+        <LandingDonateCTA donationLink={donationLink} />
         <LandingBenefits />
         <LandingHowItWorks />
         <LandingInvite />
