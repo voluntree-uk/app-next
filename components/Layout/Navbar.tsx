@@ -10,10 +10,10 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  MenuDivider,
   useColorModeValue,
   Stack,
   Img,
-  Divider,
   Container,
   IconButton,
   useDisclosure,
@@ -22,33 +22,52 @@ import Show from "@components/Helpers/Show";
 import { Link } from "@chakra-ui/next-js";
 import { createClient } from "@util/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { AiOutlineUser } from "react-icons/ai";
+import { MdSpaceDashboard } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
 
-const Links = [
-  { label: "Find workshops", href: "/workshops" },
-  { label: "Create workshop", href: "/workshops/new" },
+type NavLinkItem = {
+  label: string;
+  href: string;
+};
+
+const MAIN_LINKS: NavLinkItem[] = [
+  { label: "Home", href: "/" },
+  { label: "Workshops", href: "/workshops" },
+  { label: "Finances", href: "/finances" },
 ];
+
+const CREATE_WORKSHOP_HREF = "/workshops/new";
 
 const NavLink = ({
   children,
   href,
   onClick,
+  isActive,
 }: {
   children: ReactNode;
   href: string;
   onClick?: () => void;
+  isActive?: boolean;
 }) => {
+  const hoverBg = useColorModeValue("gray.200", "gray.700");
+  const activeColor = useColorModeValue("blue.700", "blue.300");
+  const activeBg = useColorModeValue("gray.100", "gray.800");
+
   return (
     <Link
       as={NextLink}
-      px={2}
-      py={1}
+      px={3}
+      py={2}
       rounded={"md"}
+      fontWeight={isActive ? "semibold" : "medium"}
+      color={isActive ? activeColor : undefined}
+      bg={isActive ? activeBg : "transparent"}
       _hover={{
         textDecoration: "none",
-        bg: useColorModeValue("gray.200", "gray.700"),
+        bg: hoverBg,
       }}
       display={"block"}
       href={href}
@@ -59,17 +78,18 @@ const NavLink = ({
   );
 };
 
-export default function Navbar({ user }: { user: User|null }) {
+export default function Navbar({ user }: { user: User | null }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentUser, setCurrentUser] = useState<User | null>(user);
 
   const router = useRouter();
+  const pathname = usePathname();
 
   const getUser = async () => {
     const supabase = createClient();
     const { data } = await supabase.auth.getUser();
     setCurrentUser(data.user);
-  }
+  };
 
   useEffect(() => {
     getUser();
@@ -110,29 +130,45 @@ export default function Navbar({ user }: { user: User|null }) {
                 spacing={4}
                 display={{ base: "none", md: "flex" }}
               >
-                {Links.map((link) => (
-                  <NavLink key={link?.label} href={link?.href}>
-                    {link.label}
-                  </NavLink>
-                ))}
+                {MAIN_LINKS.map((link) => {
+                  const isActive =
+                    pathname === link.href ||
+                    (link.href !== "/" && pathname.startsWith(link.href) && pathname !== CREATE_WORKSHOP_HREF);
+
+                  return (
+                    <NavLink key={link.label} href={link.href} isActive={isActive}>
+                      {link.label}
+                    </NavLink>
+                  );
+                })}
               </HStack>
+              <Button
+                display={{ base: "none", md: "inline-flex" }}
+                size={"sm"}
+                colorScheme="teal"
+                variant="solid"
+                onClick={() => router.push(CREATE_WORKSHOP_HREF)}
+              >
+                Create Workshop
+              </Button>
             </HStack>
-            <Flex alignItems={"center"}>
+            <Flex alignItems={"center"} gap={3}>
               {!currentUser ? (
                 <Button
-                  variant={"text"}
+                  variant={"ghost"}
                   size={"sm"}
                   onClick={() => router.push("/login")}
                 >
                   Log in
                 </Button>
               ) : null}
+
               <Show showIf={currentUser != null}>
                 <Menu>
                   <MenuButton
                     as={Button}
                     rounded={"full"}
-                    variant={"link"}
+                    variant={"ghost"}
                     cursor={"pointer"}
                     minW={0}
                   >
@@ -142,50 +178,43 @@ export default function Navbar({ user }: { user: User|null }) {
                       icon={<AiOutlineUser fontSize="1.5rem" />}
                     />
                   </MenuButton>
-                  <MenuList>
-                    <Link
-                      _hover={{
-                        textDecoration: "none",
-                      }}
+                  <MenuList
+                    py={2}
+                    borderRadius="lg"
+                    boxShadow="lg"
+                    borderColor={useColorModeValue("gray.100", "gray.700")}
+                  >
+                    <MenuItem
                       as={NextLink}
                       href={`/user/${currentUser?.id}`}
-                    >
-                      <MenuItem
-                        _hover={{
-                          background: useColorModeValue("gray.200", "gray.700"),
-                        }}
-                        background={"white"}
-                      >
-                        Profile
-                      </MenuItem>
-                    </Link>
-                    <Link
+                      icon={<AiOutlineUser fontSize="1.2rem" />}
                       _hover={{
-                        textDecoration: "none",
+                        background: useColorModeValue("gray.100", "gray.700"),
                       }}
+                    >
+                      Profile
+                    </MenuItem>
+                    <MenuItem
                       as={NextLink}
                       href="/me/dashboard"
+                      icon={<MdSpaceDashboard fontSize="1.2rem" />}
+                      _hover={{
+                        background: useColorModeValue("gray.100", "gray.700"),
+                      }}
                     >
-                      <MenuItem
-                        _hover={{
-                          background: useColorModeValue("gray.200", "gray.700"),
-                        }}
-                        background={"white"}
-                      >
-                        Dashboard
-                      </MenuItem>
-                    </Link>
-                    <Divider />
+                      Dashboard
+                    </MenuItem>
+                    <MenuDivider />
                     <MenuItem
                       onClick={async () => {
                         await createClient().auth.signOut();
                         router.refresh();
                       }}
+                      icon={<FiLogOut fontSize="1.2rem" />}
                       _hover={{
-                        textDecoration: "none",
-                        background: useColorModeValue("gray.200", "gray.700"),
+                        background: useColorModeValue("red.50", "red.600"),
+                        color: useColorModeValue("red.600", "white"),
                       }}
-                      background={"white"}
                     >
                       Log out
                     </MenuItem>
@@ -197,11 +226,49 @@ export default function Navbar({ user }: { user: User|null }) {
           <Show showIf={isOpen}>
             <Box pb={4} display={{ md: "none" }}>
               <Stack as={"nav"} spacing={4}>
-                {Links.map((link) => (
-                  <NavLink key={link?.label} href={link?.href} onClick={onClose}>
-                    {link.label}
-                  </NavLink>
-                ))}
+                {MAIN_LINKS.map((link) => {
+                  const isActive =
+                    pathname === link.href ||
+                    (link.href !== "/" && pathname.startsWith(link.href) && pathname !== CREATE_WORKSHOP_HREF);
+
+                  return (
+                    <NavLink
+                      key={link.label}
+                      href={link.href}
+                      onClick={onClose}
+                      isActive={isActive}
+                    >
+                      {link.label}
+                    </NavLink>
+                  );
+                })}
+
+                <Button
+                  w="full"
+                  size={"sm"}
+                  colorScheme="teal"
+                  variant="solid"
+                  onClick={() => {
+                    router.push(CREATE_WORKSHOP_HREF);
+                    onClose();
+                  }}
+                >
+                  Create Workshop
+                </Button>
+
+                {!currentUser ? (
+                  <Button
+                    w="full"
+                    size={"sm"}
+                    variant={"ghost"}
+                    onClick={() => {
+                      router.push("/login");
+                      onClose();
+                    }}
+                  >
+                    Log in
+                  </Button>
+                ) : null}
               </Stack>
             </Box>
           </Show>

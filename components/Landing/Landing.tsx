@@ -7,6 +7,7 @@ import LandingStats from "@components/Landing/LandingStats";
 import LandingBenefits from "@components/Landing/LandingBenefits";
 import LandingHowItWorks from "@components/Landing/LandingHowItWorks";
 import LandingInvite from "@components/Landing/LandingInvite";
+import LandingDonateCTA from "@components/Landing/LandingDonateCTA";
 import { UpcomingSession, PlatformStats } from "@schemas";
 
 interface LandingProps {
@@ -24,6 +25,7 @@ export default function Landing({
         <LandingHeading />
         <LandingUpcomingSessions sessions={upcomingSessions} />
         <LandingStats stats={platformStats} />
+        <LandingDonateCTA />
         <LandingBenefits />
         <LandingHowItWorks />
         <LandingInvite />
