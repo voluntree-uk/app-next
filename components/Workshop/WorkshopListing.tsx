@@ -1,21 +1,11 @@
 "use client";
 
-import { Stack, Box } from "@chakra-ui/react";
-import {
-  Button,
-  Heading,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  useToast,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Stack, Box, Container, Tabs, TabList, TabPanels, Tab, TabPanel, Heading, Flex, Button } from "@chakra-ui/react";
+import { MdAdd } from "react-icons/md";
+import { useToast, useDisclosure } from "@chakra-ui/react";
 import React, { ReactElement } from "react";
 import { useRouter } from "next/navigation";
 import { Booking, Profile, Slot, User, Workshop } from "@schemas";
-import { MdAdd } from "react-icons/md";
 import { clientData } from "@data/supabase";
 import WorkshopListingHeading from "@components/Workshop/WorkshopListingHeading";
 import WorkshopListingUpcomingSlotList from "@components/Workshop/WorkshopListingUpcomingSlotList";
@@ -75,8 +65,7 @@ export default function WorkshopListing({
       (a, b) =>
         new Date(`${a.date}T${a.end_time}`).getTime() -
         new Date(`${b.date}T${b.end_time}`).getTime()
-    )
-    .slice(0, 5);
+    );
 
   async function addNewSlot(slot: Slot): Promise<void> {
     try {
@@ -110,15 +99,16 @@ export default function WorkshopListing({
   const makeTab = (title: string): ReactElement => {
     return (
       <Tab
-        color={"gray"}
-        fontStyle={"italic"}
+        color="gray.600"
+        fontWeight="medium"
         _selected={{
           fontWeight: "bold",
-          color: "black",
-          borderBottomColor: "gray.400 !important",
-          fontStyle: "normal",
-          borderBottom: "4px",
+          color: "blue.600",
+          borderBottomColor: "blue.500",
+          borderBottomWidth: "2px",
         }}
+        px={4}
+        py={2}
       >
         {title}
       </Tab>
@@ -126,79 +116,97 @@ export default function WorkshopListing({
   };
 
   return (
-    <Stack>
-      <WorkshopListingHeading workshop={workshop} host={host} user={user} />
-      <WorkshopListingLocation workshop={workshop} />
-      <WorkshopListingDescription workshop={workshop} user={user} />
-      {userBooking ? (
-        <WorkshopListingUserBooking
-          workshop={workshop}
-          slot={slots.find((slot) => slot.id == userBooking?.slot_id)!}
-          bookings={bookings.filter((booking) => userBooking?.id == booking.id)}
-          user_booking={userBooking}
-        />
-      ) : (
-        <Box
-          borderBottomWidth={"1px"}
-          borderBottomColor="gray.200"
-          rounded="md"
-          px={{ base: "6", md: "16" }}
-        >
-          <Box
-            py="6"
-            display="flex"
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Heading as="h2" size="md" pb="0.5em">
-              Availability
-            </Heading>
-            <Show showIf={isUserHost()}>
-              <Button
-                variant="solid"
-                colorScheme="teal"
-                rightIcon={<MdAdd />}
-                onClick={onOpen}
-                mx="4"
-              >
-                New Session
-              </Button>
+    <Box bg="gray.50" minH="100vh">
+      <Stack spacing={0}>
+        {/* Hero Section */}
+        <WorkshopListingHeading workshop={workshop} host={host} user={user} />
 
-              <WorkshopListingNewSlotModal
+        {/* Location */}
+        <WorkshopListingLocation workshop={workshop} />
+
+        {/* Description */}
+        <WorkshopListingDescription workshop={workshop} user={user} />
+
+        {/* User Booking or Sessions */}
+        {userBooking ? (
+          <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
+            <Container maxW="7xl" px={{ base: 6, md: 10 }} py={{ base: 6, md: 8 }}>
+              <Heading as="h2" size="lg" color="gray.700" mb={6}>
+                Your Booking
+              </Heading>
+              <WorkshopListingUserBooking
                 workshop={workshop}
-                isOpen={isOpen}
-                onClose={onClose}
-                onSubmit={addNewSlot}
+                slot={slots.find((slot) => slot.id == userBooking?.slot_id)!}
+                bookings={bookings.filter((booking) => userBooking?.id == booking.id)}
+                user_booking={userBooking}
               />
-            </Show>
+            </Container>
           </Box>
-          <Tabs variant={"line"} colorScheme={"gray.400"} defaultIndex={1}>
-            <TabList>
-              {makeTab("Past sessions")}
-              {makeTab("Upcoming sessions")}
-            </TabList>
-            <TabPanels>
-              <TabPanel>
-                <WorkshopListingPastSlotList
-                  slots={pastSlots}
-                  bookings={bookings}
-                />
-              </TabPanel>
-              <TabPanel>
-                <WorkshopListingUpcomingSlotList
-                  workshop={workshop}
-                  slots={futureSlots}
-                  bookings={bookings}
-                  user={user}
-                  isUserInterested={isUserInterested}
-                  numberOfInterestedUsers={numberOfInterestedUsers}
-                />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
+        ) : (
+          <Box bg="white" borderBottomWidth="1px" borderBottomColor="gray.200">
+            <Container maxW="7xl" px={{ base: 6, md: 10 }} py={{ base: 6, md: 8 }}>
+              <Flex justify="space-between" align="center" mb={6}>
+                <Heading as="h2" size="lg" color="gray.700">
+                  Sessions
+                </Heading>
+                <Show showIf={isUserHost()}>
+                  <Button
+                    variant="solid"
+                    colorScheme="teal"
+                    rightIcon={<MdAdd />}
+                    onClick={onOpen}
+                    size="md"
+                  >
+                    New Session
+                  </Button>
+                  <WorkshopListingNewSlotModal
+                    workshop={workshop}
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    onSubmit={addNewSlot}
+                    existingSlots={slots}
+                  />
+                </Show>
+              </Flex>
+              <Tabs variant="line" colorScheme="blue" defaultIndex={0}>
+                <TabList borderBottomWidth="2px" borderBottomColor="gray.200">
+                  {makeTab(`Upcoming (${futureSlots.length})`)}
+                  {pastSlots.length > 0 && makeTab(`Past (${pastSlots.length})`)}
+                </TabList>
+                <TabPanels>
+                  <TabPanel px={0} pt={6}>
+                    <WorkshopListingUpcomingSlotList
+                      workshop={workshop}
+                      slots={futureSlots}
+                      bookings={bookings}
+                      user={user}
+                      isUserInterested={isUserInterested}
+                      numberOfInterestedUsers={numberOfInterestedUsers}
+                      isUserHost={isUserHost()}
+                      onAddSessionClick={onOpen}
+                    />
+                  </TabPanel>
+                  {pastSlots.length > 0 && (
+                    <TabPanel px={0} pt={6}>
+                      <WorkshopListingPastSlotList
+                        slots={pastSlots}
+                        bookings={bookings}
+                      />
+                    </TabPanel>
+                  )}
+                </TabPanels>
+              </Tabs>
+            </Container>
+          </Box>
+        )}
+
+        {/* Share Section */}
+        <Box bg="white">
+          <Container maxW="7xl" px={{ base: 6, md: 10 }} py={{ base: 6, md: 8 }}>
+            <WorkshopListingShare workshop={workshop} />
+          </Container>
         </Box>
-      )}
-      <WorkshopListingShare workshop={workshop} />
-    </Stack>
+      </Stack>
+    </Box>
   );
 }

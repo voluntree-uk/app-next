@@ -9,6 +9,7 @@ import {
   FilterProps,
   UpcomingSession,
   PlatformStats,
+  WorkshopListItem,
 } from "@schemas";
 
 export interface DataAccessor {
@@ -77,18 +78,11 @@ export interface DataAccessor {
 
   /**
    * Returns all workshops that have available slots at any point in the future,
-   * optionally filtered
+   * optionally filtered, with enriched host and session information
    * @param filters A set of additional filters([FilterProps]) to be applied 
-   * @return A list of matching workshops
+   * @return A list of matching workshops with host and session details
    */
-  filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]>
-
-  /**
-   * Returns a list of workshops associated with the given category
-   * @param category A category name
-   * @return A list of matching workshops
-   */
-  getWorkshopsByCategory(category: string): Promise<Workshop[]> 
+  filterAvailableWorkshops(filters: FilterProps): Promise<WorkshopListItem[]>
 
   /**
    * Returns a workshop associated with the given id

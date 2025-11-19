@@ -1,11 +1,11 @@
 "use client";
 
-import { Box, Stack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 import { Booking, Slot, User, Workshop } from "@schemas";
 import { WorkshopListingUpcomingSlot } from "@components/Workshop/WorkshopListingUpcomingSlot";
 import Show from "@components/Helpers/Show";
-import NoResults from "@components/NoResults";
 import WorkshopListingInterest from "@components/Workshop/WorkshopListingInterest";
+import WorkshopListingCreateSlots from "./WorkshopListingCreateSlots";
 
 interface IProps {
   workshop: Workshop;
@@ -14,6 +14,8 @@ interface IProps {
   user: User | null;
   isUserInterested: boolean;
   numberOfInterestedUsers: number;
+  isUserHost: boolean;
+  onAddSessionClick: () => void;
 }
 
 export default function WorkshopListingUpcomingSlotList({
@@ -23,25 +25,29 @@ export default function WorkshopListingUpcomingSlotList({
   user,
   isUserInterested,
   numberOfInterestedUsers,
+  isUserHost,
+  onAddSessionClick,
 }: IProps) {
   const getActiveBookingsForSlot = (slot: Slot): Booking[] => {
     return bookings.filter((b) => b.slot_id === slot.id);
   };
 
   return (
-    <Box rounded="md">
-      <Stack>
-        {slots.map((slot) => (
-          <WorkshopListingUpcomingSlot
-            workshop={workshop}
-            key={slot.id}
-            slot={slot}
-            slotBookings={getActiveBookingsForSlot(slot)}
-            user={user}
-          />
-        ))}
-        <Show showIf={slots.length === 0}>
-          <NoResults message="Currently No Dates Available" />
+      <Stack spacing={4}>
+        <Show showIf={slots.length > 0}>
+          <Stack spacing={3}>
+            {slots.map((slot) => (
+              <WorkshopListingUpcomingSlot
+                workshop={workshop}
+                key={slot.id}
+                slot={slot}
+                slotBookings={getActiveBookingsForSlot(slot)}
+                user={user}
+              />
+            ))}
+          </Stack>
+        </Show>
+        <Show showIf={slots.length === 0 && !isUserHost}>
           <WorkshopListingInterest
             workshop={workshop}
             user={user}
@@ -49,7 +55,11 @@ export default function WorkshopListingUpcomingSlotList({
             numberOfInterestedUsers={numberOfInterestedUsers}
           />
         </Show>
+        <Show showIf={slots.length === 0 && isUserHost}>
+          <WorkshopListingCreateSlots
+            onAddSessionClick={onAddSessionClick}
+          />
+        </Show>
       </Stack>
-    </Box>
   );
 }

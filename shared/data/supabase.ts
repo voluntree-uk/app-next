@@ -7,8 +7,10 @@ import {
   Profile,
   FilterProps,
   TimeFilter,
+  SortOption,
   UpcomingSession,
   PlatformStats,
+  WorkshopListItem,
 } from "@schemas";
 import {
   dateAsISOString,
@@ -161,12 +163,18 @@ class SupabaseDataAccessor implements DataAccessor {
     return data.length > 0;
   }
 
-  async filterAvailableWorkshops(filters: FilterProps): Promise<Workshop[]> {
+  /**
+   * Builds the Supabase query for filtering workshops
+   */
+  private buildWorkshopQuery(filters: FilterProps) {
     const isTimeFilterSelected = filters.time !== TimeFilter.ANY_TIME;
+    const today = dateAsISOString();
 
+    // When time filter is selected, use inner join to only get workshops with matching slots
+    // Otherwise, use left join to include all workshops (even without slots)
     const slotJoin = isTimeFilterSelected
-      ? "slot!inner(date, at_capacity)"
-      : "slot(date, at_capacity)";
+      ? "slot!inner(date, at_capacity, start_time, end_time, capacity, id)"
+      : "slot(date, at_capacity, start_time, end_time, capacity, id)";
 
     const query = this.client
       .from("workshop")
@@ -178,14 +186,15 @@ class SupabaseDataAccessor implements DataAccessor {
     }
 
     if (filters.text !== "") {
-      query.ilike("name", `%${filters.text}%`);
+      const searchTerm = `%${filters.text}%`;
+      query.or(`name.ilike.${searchTerm},description.ilike.${searchTerm}`);
     }
 
     if (isTimeFilterSelected) {
       query.eq("slot.at_capacity", false);
       switch (filters.time) {
         case TimeFilter.THIS_WEEK:
-          query.gte("slot.date", dateAsISOString());
+          query.gte("slot.date", today);
           query.lte("slot.date", endOfThisWeekAsISOString());
           break;
         case TimeFilter.THIS_WEEKEND:
@@ -196,27 +205,236 @@ class SupabaseDataAccessor implements DataAccessor {
           query.gte("slot.date", startOfNextWeekAsISOString());
           query.lte("slot.date", endOfNextWeekAsISOString());
           break;
-        default:
-          break;
       }
-    } else {
-      query.gte("slot.date", dateAsISOString())
     }
 
-    const { data: filteredData, error: error } = await query;
-
-    if (error) throw error;
-
-    return filteredData ? filteredData.sort((a, b) => b.slot.length - a.slot.length) : [];
+    return query;
   }
 
-  async getWorkshopsByCategory(category: string): Promise<Workshop[]> {
-    const { data: workshops, error } = await this.client
-      .from("workshop")
+  /**
+   * Filters slots to only include upcoming, non-full slots
+   */
+  private filterValidSlots(slots: any[]): Slot[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return slots.filter((slot: any) => {
+      if (!slot || slot.at_capacity) return false;
+      const slotDate = new Date(slot.date);
+      return slotDate >= today;
+    });
+  }
+
+  /**
+   * Processes raw workshop data and extracts valid slots
+   */
+  private processWorkshopSlots(
+    filteredData: any[]
+  ): Array<{ workshop: Workshop; slots: Slot[]; userId: string }> {
+    const workshopsWithSlots: Array<{ workshop: Workshop; slots: Slot[]; userId: string }> = [];
+
+    for (const item of filteredData) {
+      const workshop = item as any;
+      if (workshop.user_id) {
+        const validSlots = this.filterValidSlots(workshop.slot || []);
+        workshopsWithSlots.push({
+          workshop,
+          slots: validSlots,
+          userId: workshop.user_id,
+        });
+      }
+    }
+
+    return workshopsWithSlots;
+  }
+
+  /**
+   * Fetches host profiles for given user IDs
+   */
+  private async fetchHostProfiles(userIds: string[]): Promise<Map<string, Profile>> {
+    const profileMap = new Map<string, Profile>();
+
+    if (userIds.length === 0) return profileMap;
+
+    const { data: profiles, error } = await this.client
+      .from("profile")
       .select("*")
-      .eq("category", category);
+      .in("user_id", userIds);
+
+    if (error) {
+      console.error(`Failed to fetch profiles: ${error.message}`);
+      return profileMap;
+    }
+
+    if (profiles) {
+      for (const profile of profiles) {
+        profileMap.set(profile.user_id, profile as Profile);
+      }
+    }
+
+    return profileMap;
+  }
+
+  /**
+   * Fetches booking counts for given slot IDs
+   */
+  private async fetchBookingCounts(slotIds: string[]): Promise<Map<string, number>> {
+    const bookingCountMap = new Map<string, number>();
+
+    if (slotIds.length === 0) return bookingCountMap;
+
+    const { data: bookings, error } = await this.client
+      .from("booking")
+      .select("slot_id")
+      .in("slot_id", slotIds);
+
+    if (!error && bookings) {
+      for (const booking of bookings) {
+        const slotId = booking.slot_id.toString();
+        bookingCountMap.set(slotId, (bookingCountMap.get(slotId) || 0) + 1);
+      }
+    }
+
+    return bookingCountMap;
+  }
+
+  /**
+   * Finds the next upcoming session from a list of slots
+   */
+  private findNextSession(slots: Slot[]): Slot | null {
+    if (slots.length === 0) return null;
+
+    const sortedSlots = [...slots].sort((a, b) => {
+      const dateCompare = a.date.localeCompare(b.date);
+      if (dateCompare !== 0) return dateCompare;
+      return a.start_time.localeCompare(b.start_time);
+    });
+
+    return sortedSlots[0];
+  }
+
+  /**
+   * Calculates total available spots across all slots
+   */
+  private calculateTotalAvailableSpots(
+    slots: Slot[],
+    bookingCountMap: Map<string, number>
+  ): number {
+    let totalAvailableSpots = 0;
+
+    for (const slot of slots) {
+      if (slot.id && slot.capacity) {
+        const bookingCount = bookingCountMap.get(slot.id.toString()) || 0;
+        const available = slot.capacity - bookingCount;
+        totalAvailableSpots += Math.max(0, available);
+      }
+    }
+
+    return totalAvailableSpots;
+  }
+
+  /**
+   * Builds enriched workshop list items from processed data
+   */
+  private buildEnrichedWorkshops(
+    workshopsWithSlots: Array<{ workshop: Workshop; slots: Slot[]; userId: string }>,
+    profileMap: Map<string, Profile>,
+    bookingCountMap: Map<string, number>
+  ): WorkshopListItem[] {
+    const enrichedWorkshops: WorkshopListItem[] = [];
+
+    for (const { workshop, slots, userId } of workshopsWithSlots) {
+      const host = profileMap.get(userId);
+      if (!host) continue;
+
+      const nextSession = this.findNextSession(slots);
+      const totalAvailableSpots = this.calculateTotalAvailableSpots(slots, bookingCountMap);
+
+      enrichedWorkshops.push({
+        workshop,
+        host,
+        nextSession,
+        upcomingSessionCount: slots.length,
+        totalAvailableSpots,
+      });
+    }
+
+    return enrichedWorkshops;
+  }
+
+  /**
+   * Sorts workshops based on the selected sort option
+   */
+  private sortWorkshops(
+    workshops: WorkshopListItem[],
+    sortOption: SortOption
+  ): WorkshopListItem[] {
+    return workshops.sort((a, b) => {
+      switch (sortOption) {
+        case SortOption.SOONEST:
+          if (!a.nextSession && !b.nextSession) {
+            const aCreated = a.workshop.created_at || 0;
+            const bCreated = b.workshop.created_at || 0;
+            return bCreated - aCreated;
+          }
+          if (!a.nextSession) return 1;
+          if (!b.nextSession) return -1;
+          const aDate = new Date(`${a.nextSession.date}T${a.nextSession.start_time}`);
+          const bDate = new Date(`${b.nextSession.date}T${b.nextSession.start_time}`);
+          return aDate.getTime() - bDate.getTime();
+
+        case SortOption.MOST_POPULAR:
+          if (b.upcomingSessionCount !== a.upcomingSessionCount) {
+            return b.upcomingSessionCount - a.upcomingSessionCount;
+          }
+          return b.totalAvailableSpots - a.totalAvailableSpots;
+
+        case SortOption.NEWEST:
+        default:
+          const aCreated = a.workshop.created_at || 0;
+          const bCreated = b.workshop.created_at || 0;
+          return bCreated - aCreated;
+      }
+    });
+  }
+
+  async filterAvailableWorkshops(filters: FilterProps): Promise<WorkshopListItem[]> {
+    // Build and execute query
+    const query = this.buildWorkshopQuery(filters);
+    const { data: filteredData, error } = await query;
+
     if (error) throw error;
-    return workshops;
+    if (!filteredData || filteredData.length === 0) return [];
+
+    // Process workshops and extract valid slots
+    const workshopsWithSlots = this.processWorkshopSlots(filteredData);
+    if (workshopsWithSlots.length === 0) return [];
+
+    // Collect unique user IDs and slot IDs
+    const userIds = Array.from(new Set(workshopsWithSlots.map((w) => w.userId)));
+    const slotIds = Array.from(
+      new Set(
+        workshopsWithSlots.flatMap((w) =>
+          w.slots.map((s) => (s.id ? s.id.toString() : "")).filter(Boolean)
+        )
+      )
+    );
+
+    // Fetch related data in parallel
+    const [profileMap, bookingCountMap] = await Promise.all([
+      this.fetchHostProfiles(userIds),
+      this.fetchBookingCounts(slotIds),
+    ]);
+
+    // Build enriched workshops
+    const enrichedWorkshops = this.buildEnrichedWorkshops(
+      workshopsWithSlots,
+      profileMap,
+      bookingCountMap
+    );
+
+    // Apply sorting
+    return this.sortWorkshops(enrichedWorkshops, filters.sort);
   }
 
   async getWorkshop(id: string): Promise<Workshop> {
@@ -471,10 +689,66 @@ class SupabaseDataAccessor implements DataAccessor {
     return true;
   }
 
+  /**
+   * Filters out past slots by checking end_time against current time
+   */
+  private filterPastSlots(slots: Array<{ slot: any; workshop: Workshop }>): Array<{ slot: any; workshop: Workshop }> {
+    const now = new Date();
+    return slots.filter(({ slot }) => {
+      if (!slot.date || !slot.end_time) return false;
+      const slotEndTime = new Date(`${slot.date}T${slot.end_time}`);
+      return slotEndTime > now;
+    });
+  }
+
+  /**
+   * Calculates available spots for a slot given its capacity and booking count
+   */
+  private calculateAvailableSpots(capacity: number, bookingCount: number): number {
+    return Math.max(0, capacity - bookingCount);
+  }
+
+  /**
+   * Builds UpcomingSession objects from processed slot data
+   */
+  private buildUpcomingSessions(
+    validSlots: Array<{ slot: any; workshop: Workshop }>,
+    profileMap: Map<string, Profile>,
+    bookingCountMap: Map<string, number>,
+    limit: number
+  ): UpcomingSession[] {
+    const upcomingSessions: UpcomingSession[] = [];
+
+    for (const { slot, workshop } of validSlots) {
+      if (upcomingSessions.length >= limit) break;
+
+      const slotId = slot.id?.toString();
+      if (!slotId) continue;
+
+      const bookingCount = bookingCountMap.get(slotId) || 0;
+      const availableSpots = this.calculateAvailableSpots(slot.capacity, bookingCount);
+
+      // Double-check availability (at_capacity might be slightly out of sync)
+      if (availableSpots > 0) {
+        const host = profileMap.get(workshop.user_id);
+        if (host) {
+          upcomingSessions.push({
+            workshop,
+            slot: slot as Slot,
+            host,
+            bookingCount,
+            availableSpots,
+          });
+        }
+      }
+    }
+
+    return upcomingSessions;
+  }
+
   async getUpcomingSessions(limit: number = 6): Promise<UpcomingSession[]> {
     try {
       // Get upcoming slots that are not at capacity, with workshop data
-      // Use at_capacity field to filter directly in the query (maintained by book_slot RPC)
       const today = dateAsISOString();
       const { data: slotsData, error: slotsError } = await this.client
         .from("slot")
@@ -486,77 +760,43 @@ class SupabaseDataAccessor implements DataAccessor {
         .eq("at_capacity", false)
         .order("date", { ascending: true })
         .order("start_time", { ascending: true })
-        .limit(limit);
+        .limit(limit * 2); // Fetch more to account for filtering
 
       if (slotsError) throw slotsError;
       if (!slotsData || slotsData.length === 0) return [];
 
-      // Filter out past slots (by end_time) and collect user IDs
-      const validSlots: Array<{ slot: any; workshop: Workshop }> = [];
-      const userIds = new Set<string>();
+      // Process slots and collect user IDs
+      const slotsWithWorkshops: Array<{ slot: any; workshop: Workshop }> = [];
+      const userIds = new Array<string>();
 
       for (const slotItem of slotsData) {
         const slot = slotItem as any;
         const workshop = slot.workshop as Workshop;
         if (workshop?.user_id) {
-          userIds.add(workshop.user_id);
-          validSlots.push({ slot, workshop });
+          userIds.push(workshop.user_id);
+          slotsWithWorkshops.push({ slot, workshop });
         }
       }
 
+      if (slotsWithWorkshops.length === 0) return [];
+
+      // Filter out past slots (by end_time)
+      const validSlots = this.filterPastSlots(slotsWithWorkshops);
       if (validSlots.length === 0) return [];
 
-      // Fetch all profiles in one query
-      const profileMap = new Map<string, Profile>();
-      const { data: profiles, error: profilesError } = await this.client
-        .from("profile")
-        .select("*")
-        .in("user_id", Array.from(userIds));
+      // Collect slot IDs for booking count query
+      const slotIds = validSlots
+        .map(({ slot }) => (slot.id ? slot.id.toString() : ""))
+        .filter(Boolean);
 
-      if (profilesError) {
-        console.error(`Failed to fetch profiles: ${profilesError.message}`);
-        return [];
-      }
+      // Fetch host profiles and booking counts in parallel
+      const [profileMap, bookingCountMap] = await Promise.all([
+        this.fetchHostProfiles(userIds),
+        this.fetchBookingCounts(slotIds),
+      ]);
 
-      if (profiles) {
-        for (const profile of profiles) {
-          profileMap.set(profile.user_id, profile as Profile);
-        }
-      }
-
-      // Get booking counts for all slots in parallel
-      const bookingCountPromises = validSlots.map(({ slot }) =>
-        this.client
-          .from("booking")
-          .select("*", { count: "exact", head: true })
-          .eq("slot_id", slot.id)
-      );
-
-      const bookingCountResults = await Promise.all(bookingCountPromises);
-
-      // Build upcoming sessions
-      const upcomingSessions: UpcomingSession[] = [];
-      for (let i = 0; i < validSlots.length && upcomingSessions.length < limit; i++) {
-        const { slot, workshop } = validSlots[i];
-        const bookingCount = bookingCountResults[i].count || 0;
-        const availableSpots = slot.capacity - bookingCount;
-
-        // Double-check availability (at_capacity might be slightly out of sync)
-        if (availableSpots > 0) {
-          const host = profileMap.get(workshop.user_id);
-          if (host) {
-            upcomingSessions.push({
-              workshop,
-              slot: slot as Slot,
-              host,
-              bookingCount,
-              availableSpots
-            });
-          }
-        }
-      }
-
-      return upcomingSessions;
+      // Build and return upcoming sessions
+      return this.buildUpcomingSessions(validSlots, profileMap, bookingCountMap, limit);
     } catch (error) {
       console.error(`Failed to get upcoming sessions: ${error}`);
       return [];
