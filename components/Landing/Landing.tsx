@@ -13,13 +13,11 @@ import { UpcomingSession, PlatformStats } from "@schemas";
 interface LandingProps {
   upcomingSessions: UpcomingSession[];
   platformStats: PlatformStats;
-  donationLink: string;
 }
 
 export default function Landing({
   upcomingSessions,
   platformStats,
-  donationLink,
 }: LandingProps) {
   return (
     <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>
@@ -27,7 +25,7 @@ export default function Landing({
         <LandingHeading />
         <LandingUpcomingSessions sessions={upcomingSessions} />
         <LandingStats stats={platformStats} />
-        <LandingDonateCTA donationLink={donationLink} />
+        <LandingDonateCTA />
         <LandingBenefits />
         <LandingHowItWorks />
         <LandingInvite />
