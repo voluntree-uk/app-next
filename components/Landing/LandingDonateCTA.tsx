@@ -3,13 +3,8 @@
 import { Box, Button, HStack, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-interface LandingDonateCTAProps {
-  donationLink: string;
-}
 
-export default function LandingDonateCTA({
-  donationLink,
-}: LandingDonateCTAProps) {
+export default function LandingDonateCTA() {
   return (
     <Box
       bgGradient="linear(to-r, blue.700, blue.500)"
@@ -44,8 +39,7 @@ export default function LandingDonateCTA({
         >
           <Button
             as={NextLink}
-            href={donationLink}
-            target="_blank"
+            href={"/finances"}
             size={{ base: "md", sm: "lg" }}
             w="full"
             colorScheme="whiteAlpha"
