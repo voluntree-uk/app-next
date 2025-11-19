@@ -14,24 +14,30 @@ import {
   useDisclosure,
   Button,
   VStack,
+  HStack,
+  Box,
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { clientData } from "@data/supabase";
 import { BookingDetails } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
-import { Type } from "@components/Dashboard/BookingList";
 import { ReviewModal } from "@components/Review/ReviewModal";
 import { ActionTrigger } from "@infra/api";
 import Show from "@components/Helpers/Show";
 import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
+
+export enum Type {
+  Upcoming,
+  Past,
+}
 
 interface IProps {
   booking: BookingDetails;
   type: Type;
   navigate: (id: string) => void;
 }
-export default function BookingListCard({ booking, type, navigate }: IProps) {
+export default function BookingSessionCard({ booking, type, navigate }: IProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const query = useSearchParams();
 
@@ -130,56 +136,51 @@ export default function BookingListCard({ booking, type, navigate }: IProps) {
   }
 
   return (
-    <Flex
-      cursor={"pointer"}
-      px="7"
-      py="3"
-      w={"100%"}
-      justifyContent="space-between"
-      alignItems={"center"}
-      borderBottomWidth="1px"
-      borderBottomColor={"gray.300"}
+    <Box
+      borderWidth="1px"
+      borderColor="gray.200"
+      borderRadius="xl"
+      p={{ base: 3, md: 4, lg: 5 }}
+      bg="gray.50"
       _hover={{
-        background: "gray.50",
+        borderColor: "blue.300",
+        boxShadow: "md",
+        bg: "white",
       }}
+      transition="all 0.2s"
+      cursor="pointer"
       onClick={() => navigate(booking.workshop_id)}
     >
-      <Flex alignItems={"center"} justifyContent="space-between" w={"100%"}>
-        <VStack w={"70%"} alignItems={"start"} spacing="0">
-          <Text fontWeight={"bold"} mb="0.5">
+      <Flex alignItems="center" justifyContent="space-between" w="100%" flexDirection={{ base: "column", sm: "row" }} gap={{ base: 3, sm: 0 }}>
+        <VStack alignItems="start" spacing={2} flex="1" minW={0} w={{ base: "100%", sm: "auto" }}>
+          <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} color="gray.800" noOfLines={1}>
             {booking.workshop?.name}
           </Text>
-          <Text
-            color="gray.500"
-            display={"flex"}
-            alignItems="center"
-            fontSize="small"
-            mb="0.5"
-          >
-            <CalendarIcon mr="2" />
-            {dateToReadable(booking.slot.date)}
-          </Text>
-          <Text
-            color="gray.500"
-            display={"flex"}
-            alignItems="center"
-            fontSize="small"
-          >
-            <TimeIcon mr="2" />{" "}
-            {timeToReadable(booking.slot?.start_time, booking.slot?.end_time)}
-          </Text>
+          <VStack alignItems="start" spacing={1} color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
+            <HStack spacing={1}>
+              <CalendarIcon boxSize={{ base: 3, md: 4 }} />
+              <Text>{dateToReadable(booking.slot.date)}</Text>
+            </HStack>
+            <HStack spacing={1}>
+              <TimeIcon boxSize={{ base: 3, md: 4 }} />
+              <Text>{timeToReadable(booking.slot?.start_time, booking.slot?.end_time)}</Text>
+            </HStack>
+          </VStack>
         </VStack>
         <Show showIf={type === Type.Upcoming}>
           <Button
-            rounded="full"
-            rightIcon={<CloseIcon />}
+            size={{ base: "xs", sm: "sm", md: "sm" }}
             colorScheme="red"
-            variant="solid"
-            size={{ base: "sm", sm: "md" }}
+            variant="outline"
+            leftIcon={<CloseIcon />}
             onClick={(event) => {
               event.stopPropagation();
               onOpen();
             }}
+            ml={{ base: 0, sm: 4 }}
+            alignSelf={{ base: "flex-start", sm: "auto" }}
+            w={{ base: "full", sm: "auto", md: "auto" }}
+            minW={{ base: "auto", sm: "100px", md: "100px" }}
           >
             Cancel
           </Button>
@@ -194,27 +195,33 @@ export default function BookingListCard({ booking, type, navigate }: IProps) {
         <Show showIf={type === Type.Past}>
           <Show showIf={isReviewed()}>
             <Button
-              rounded="full"
-              rightIcon={<CheckIcon />}
+              size={{ base: "xs", sm: "sm", md: "sm" }}
               colorScheme="teal"
               variant="ghost"
-              size={{ base: "sm", sm: "md" }}
+              leftIcon={<CheckIcon />}
               disabled={true}
+              ml={{ base: 0, sm: 4 }}
+              alignSelf={{ base: "flex-start", sm: "auto" }}
+              w={{ base: "full", sm: "auto", md: "auto" }}
+              minW={{ base: "auto", sm: "100px", md: "100px" }}
             >
               Reviewed
             </Button>
           </Show>
           <Show showIf={!isReviewed()}>
             <Button
-              rounded="full"
-              rightIcon={<EditIcon />}
+              size={{ base: "xs", sm: "sm", md: "sm" }}
               colorScheme="teal"
               variant="solid"
-              size={{ base: "sm", sm: "md" }}
+              leftIcon={<EditIcon />}
               onClick={(event) => {
                 event.stopPropagation();
                 onOpen();
               }}
+              ml={{ base: 0, sm: 4 }}
+              alignSelf={{ base: "flex-start", sm: "auto" }}
+              w={{ base: "full", sm: "auto", md: "auto" }}
+              minW={{ base: "auto", sm: "100px", md: "100px" }}
             >
               Review
             </Button>
@@ -227,6 +234,6 @@ export default function BookingListCard({ booking, type, navigate }: IProps) {
           />
         </Show>
       </Flex>
-    </Flex>
+    </Box>
   );
 }
