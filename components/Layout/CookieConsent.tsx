@@ -20,22 +20,24 @@ import { useRouter } from "next/navigation";
 
 
 export default function CookieConsent({
-  isOpen, onOpen, onClose
+  isOpen,
+  onOpen,
+  onClose,
 }: {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
 }) {
   const analyticsConsent = "analytics-consent";
+  const ONE_YEAR_SECONDS = 60 * 60 * 24 * 365;
+  const ONE_MONTH_SECONDS = 60 * 60 * 24 * 30;
   const router = useRouter();
-  const [consent, setConsent] = useState(false);
 
   useEffect(() => {
     if (!hasCookie(analyticsConsent)) {
-      setConsent(true);
       onOpen();
     }
-  }, [consent]);
+  }, [analyticsConsent, onOpen]);
 
 
   useEffect(() => {
@@ -53,13 +55,17 @@ export default function CookieConsent({
   }, []);
 
   const acceptConsent = () => {
-    setCookie(analyticsConsent, "true");
+    setCookie(analyticsConsent, "true", {
+      maxAge: ONE_YEAR_SECONDS,
+    });
     onClose();
     router.refresh();
   };
 
   const rejectConsent = () => {
-    setCookie(analyticsConsent, "false");
+    setCookie(analyticsConsent, "false", {
+      maxAge: ONE_MONTH_SECONDS,
+    });
     onClose();
     router.refresh();
   };

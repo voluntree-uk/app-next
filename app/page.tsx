@@ -4,7 +4,6 @@ import { createBrowserlessClient } from "@util/supabase/server";
 import { unstable_cache } from "next/cache";
 import { SupabaseDataAccessor } from "@data/supabase";
 import Landing from "@components/Landing/Landing";
-import { defaultDonationUrl } from "@data/finances";
 
 const getHomepageData = unstable_cache(async () => {
   const supabase = createBrowserlessClient();
@@ -25,7 +24,6 @@ export default async function Home() {
     <Landing
       upcomingSessions={upcomingSessions}
       platformStats={platformStats}
-      donationLink={defaultDonationUrl}
     />
   );
 }
