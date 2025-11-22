@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@util/supabase/server";
 import { SupabaseDataAccessor } from "@data/supabase";
 import SetupProfilePage from "./setup-profile-page";
-import { api } from "@infra/aws";
 
 export default async function Page() {
   const supabase = createClient();
@@ -49,12 +48,7 @@ export default async function Page() {
     };
 
     try {
-      const profile = await data.createProfile(values);
-      try {
-        await api.welcomeUser(profile);
-      } catch (emailError) {
-        console.error("Failed to send welcome email", emailError);
-      }
+      await data.createProfile(values);
       return {
         success: true,
       };
@@ -66,5 +60,5 @@ export default async function Page() {
     }
   };
 
-  return <SetupProfilePage setupProfile={setupProfile} />;
+  return <SetupProfilePage user={user} setupProfile={setupProfile} />;
 }
