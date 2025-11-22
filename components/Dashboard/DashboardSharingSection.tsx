@@ -123,11 +123,11 @@ export default function DashboardSharingSection({ workshops, workshopsWithSessio
 
   if (!hasWorkshops) {
     return (
-      <Box bg="gray.100" py={{ base: 8, md: 12 }}>
+      <Box bg="gray.100" py={8}>
         <Container maxW="7xl" px={{ base: 6, md: 10 }}>
           <VStack spacing={{ base: 4, md: 6 }} align="stretch">
             <Flex justify="space-between" align="center" flexWrap="wrap" gap={2}>
-              <Heading size={{ base: "md", md: "lg" }} color="gray.700">
+              <Heading size={"lg"} color="gray.700">
                 Sharing
               </Heading>
             </Flex>
@@ -143,7 +143,7 @@ export default function DashboardSharingSection({ workshops, workshopsWithSessio
   }
 
   return (
-    <Box bg="gray.100" py={{ base: 8, md: 12 }}>
+    <Box bg="gray.100" py={8}>
       <Container maxW="7xl" px={{ base: 6, md: 10 }}>
         <VStack spacing={{ base: 4, md: 6, lg: 8 }} align="stretch">
         <Flex justify="space-between" align="center" flexWrap="wrap" gap={2}>

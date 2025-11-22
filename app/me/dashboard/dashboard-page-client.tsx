@@ -28,26 +28,29 @@ export default function DashboardPageClient({
   workshopsWithSessions,
 }: DashboardPageClientProps) {
   return (
-    <Box bg="gray.50" minH="100vh">
-      <Box bg="white" py={{ base: 8, md: 12 }}>
-        <Container maxW="7xl" px={{ base: 6, md: 10 }}>
-          <VStack spacing={4} align="stretch">
-            <Heading size="xl" color="gray.800" fontWeight="bold">
-              Dashboard
-            </Heading>
-            <Text fontSize={{ base: "md", md: "lg" }} color="gray.600" maxW="3xl">
-              Manage your workshops and learning journey all in one place. 
-              Here you can schedule sessions for workshops you host and track the sessions you're attending.
-            </Text>
-          </VStack>
-        </Container>
+    <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>
+      <Box bg="white" pb={{ base: 8, md: 8 }}>
+        <VStack align="stretch">
+          <Heading
+            fontWeight="bold"
+            mb={3}
+            color="gray.700"
+            size={{ base: "xl", md: "2xl" }}
+          >
+            Dashboard
+          </Heading>
+          <Text fontSize="lg" color="gray.700" maxW="3xl">
+            Manage your workshops and learning journey all in one place.
+            Here you can schedule sessions for workshops you host and track the sessions you're attending.
+          </Text>
+        </VStack>
       </Box>
       <DashboardSharingSection 
         workshops={workshops}
         workshopsWithSessions={workshopsWithSessions}
       />
       <DashboardLearningSection bookings={bookings} />
-    </Box>
+    </Container>
   );
 }
 

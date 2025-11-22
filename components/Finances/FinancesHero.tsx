@@ -17,8 +17,13 @@ export default function FinancesHero({ donationLink }: { donationLink: string })
         gap={{ base: 6, md: 10 }}
         alignItems="center"
       >
-        <Stack spacing={4}>
-          <Heading size="xl">Finances</Heading>
+        <Stack spacing={4} pb={{ base: 8, md: 8 }}>
+          <Heading
+              fontWeight="bold"
+              mb={3}
+              color="gray.700"
+              size={{ base: "xl", md: "2xl" }}
+            >Finances</Heading>
           <Text fontSize="lg" color="gray.700">
             At Voluntree, our organization operates entirely on the dedication
             of volunteers. Central to our ethos is{" "}

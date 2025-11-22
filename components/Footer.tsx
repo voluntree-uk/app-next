@@ -169,7 +169,7 @@ export default function Footer({
           justify={{ md: "space-between" }}
           align={"center"}
         >
-          <Text>© 2025 Voluntree Community Interest Company</Text>
+          <Text textAlign="center">© 2025 Voluntree Community Interest Company</Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton
               label={"LinkedIn"}

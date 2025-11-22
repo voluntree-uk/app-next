@@ -25,7 +25,7 @@ export default function Finances({
 }: FinancesProps) {
   return (
     <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>
-      <Stack spacing={6}>
+      <Stack spacing={{ base: 12, md: 16 }}>
         <FinancesHero donationLink={donationLink} />
         <FinancesStats summary={summary} error={transactionsError} />
         <FinancesDonate

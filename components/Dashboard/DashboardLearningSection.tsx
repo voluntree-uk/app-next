@@ -56,24 +56,26 @@ export default function DashboardLearningSection({ bookings }: IProps) {
   const hasBookings = bookings.length > 0;
 
   return (
-    <Box bg="white" py={{ base: 8, md: 12 }}>
+    <Box bg="white" py={8}>
       <Container maxW="7xl" px={{ base: 6, md: 10 }}>
         <VStack spacing={{ base: 4, md: 6, lg: 8 }} align="stretch">
         <Flex justify="space-between" align="center" flexWrap="wrap" gap={2}>
           <Heading size={"lg"} color="gray.700">
             Learning
           </Heading>
-          <Button
+          {hasBookings && (
+            <Button
             size={{ base: "xs", sm: "sm", md: "sm" }}
             colorScheme="blue"
             variant="solid"
             leftIcon={<Icon as={MdSearch} />}
             onClick={() => router.push("/workshops")}
             minW={{ base: "auto", md: "200px" }}
-          >
-            <Box as="span" display={{ base: "none", sm: "inline" }}>Browse Workshops</Box>
-            <Box as="span" display={{ base: "inline", sm: "none" }}>Browse</Box>
-          </Button>
+            >
+              <Box as="span" display={{ base: "none", sm: "inline" }}>Browse Workshops</Box>
+              <Box as="span" display={{ base: "inline", sm: "none" }}>Browse</Box>
+            </Button>
+          )}
         </Flex>
 
         {!hasBookings ? (

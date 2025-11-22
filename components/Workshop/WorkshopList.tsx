@@ -23,7 +23,7 @@ export default function WorkshopList({ workshops, initialFilters }: IProps) {
   };
 
   return (
-    <Container maxW="7xl" px={{ base: 6, md: 10 }}>
+    <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>
       <Box mb={{ base: 8, md: 10 }}>
         <Heading
           size={{ base: "xl", md: "2xl" }}
