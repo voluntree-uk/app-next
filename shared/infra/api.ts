@@ -49,9 +49,10 @@ export interface InfrastructureAPI {
 
   /**
    * Sends a welcome email to a newly onboarded user
-   * @param profile The user profile that was created
+   * @param name The user's name
+   * @param email The user's email
    */
-  welcomeUser(profile: Profile): Promise<void>
+  welcomeUser({name, email}: {name: string, email: string}): Promise<void>
 }
 
 export enum ActionTrigger {

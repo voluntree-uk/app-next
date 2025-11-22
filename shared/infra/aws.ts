@@ -230,13 +230,13 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     return
   }
 
-  async welcomeUser(profile: Profile): Promise<void> {
+  async welcomeUser({name, email}: {name: string, email: string}): Promise<void> {
     const jwt = await clientData.getJWT();
-    if (jwt && profile?.email) {
+    if (jwt && email) {
       const data = {
         user: {
-          name: profile.name,
-          email: profile.email,
+          name: name,
+          email: email,
         }
       };
 

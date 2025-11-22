@@ -22,8 +22,11 @@ import { CheckCircleIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { isOlderThan } from "@util/dates";
+import { api } from "@infra/aws";
+import { User } from "@supabase/supabase-js";
 
 interface IProps {
+  user: User;
   setupProfile(
     firstName: string,
     lastName: string,
@@ -32,7 +35,7 @@ interface IProps {
   ): Promise<{ success: boolean; error?: string }>;
 }
 
-export default function SetupProfilePage({ setupProfile }: IProps) {
+export default function SetupProfilePage({ user, setupProfile }: IProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const toast = useToast();
@@ -93,6 +96,14 @@ export default function SetupProfilePage({ setupProfile }: IProps) {
     if (validateForm()) {
       const { success, error } = await setupProfile(firstName!, lastName!, dob!, username!);
       if (success) {
+        try {
+          await api.welcomeUser({
+            name: firstName!,
+            email: user.email!,
+          });
+        } catch (emailError) {
+          console.error("Failed to send welcome email", emailError);
+        }
         showToast("Profile saved", "Thanks for introducing yourself!");
         router.push("/me");
       }
