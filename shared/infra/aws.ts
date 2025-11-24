@@ -249,6 +249,21 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
         });
     }
   }
+
+  async contactUs({name, email, purpose, message}: {name: string, email: string, purpose: string, message: string}): Promise<void> {
+    const data = {
+      name: name,
+      email: email,
+      purpose: purpose,
+      message: message,
+    };
+
+    this.axios_instance
+      .post(`${apiGatewayBaseUrl}/contact`, JSON.stringify(data))
+      .catch((err) => {
+        console.error(`Failed to send contact form email: ${err}`);
+      });
+  }
 }
 
 const apiGatewayBaseUrl: string = process.env.NEXT_PUBLIC_AWS_GATEWAY_BASE_URL || "";

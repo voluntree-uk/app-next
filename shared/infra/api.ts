@@ -53,6 +53,15 @@ export interface InfrastructureAPI {
    * @param email The user's email
    */
   welcomeUser({name, email}: {name: string, email: string}): Promise<void>
+
+  /**
+   * Sends a contact form submission email
+   * @param name The contact's name
+   * @param email The contact's email
+   * @param purpose The purpose of the contact
+   * @param message The contact's message
+   */
+  contactUs({name, email, purpose, message}: {name: string, email: string, purpose: string, message: string}): Promise<void>
 }
 
 export enum ActionTrigger {

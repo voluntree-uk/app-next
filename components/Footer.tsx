@@ -102,7 +102,7 @@ export default function Footer({
             <Link
               as={NextLink}
               target="_blank"
-              href={"https://voluntree.net/get-involved/"}
+              href={"/contact"}
             >
               Get involved
             </Link>
@@ -123,7 +123,7 @@ export default function Footer({
             <Link
               as={NextLink}
               target="_blank"
-              href={"https://voluntree.net/get-involved/"}
+              href={"/contact"}
             >
               Contact
             </Link>
