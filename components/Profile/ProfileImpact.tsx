@@ -31,7 +31,7 @@ export default function ProfileImpact({
 }: IProps) {
   // Calculate session-based metrics
   const pastSlots = allSlots.filter(
-    (slot) => slot.date && slot.end_time && isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))
+    (slot) => slot.date && slot.end_time && isBeforeNow(slot.date, slot.end_time)
   );
   
   // Only count sessions that had at least 1 booking
@@ -58,7 +58,7 @@ export default function ProfileImpact({
   }, 0);
   
   const upcomingSessions = allSlots.filter(
-    (slot) => slot.date && slot.end_time && !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))
+    (slot) => slot.date && slot.end_time && !isBeforeNow(slot.date, slot.end_time)
   ).length;
 
   const stats = [

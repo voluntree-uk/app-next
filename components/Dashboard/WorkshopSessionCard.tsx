@@ -71,7 +71,7 @@ export default function WorkshopSessionCard({
             </HStack>
             <HStack spacing={1}>
               <TimeIcon boxSize={{ base: 3, md: 4 }} />
-              <Text>{timeToReadable(slot.start_time, slot.end_time)}</Text>
+              <Text>{timeToReadable(slot.start_time, slot.end_time, slot.date)}</Text>
             </HStack>
             <Show showIf={showLearnerCount}>
               <HStack spacing={1}>

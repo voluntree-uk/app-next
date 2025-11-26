@@ -114,7 +114,7 @@ export default function WorkshopCard({ item, navigate }: IProps) {
               <HStack>
                 <Box as={BiTime} />
                 <Text>
-                  {timeToReadable(nextSession.start_time, nextSession.end_time)}
+                  {timeToReadable(nextSession.start_time, nextSession.end_time, nextSession.date)}
                 </Text>
               </HStack>
               {upcomingSessionCount > 1 && (

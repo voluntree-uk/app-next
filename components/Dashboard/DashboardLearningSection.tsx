@@ -36,17 +36,13 @@ export default function DashboardLearningSection({ bookings }: IProps) {
   const upcomingBookings = bookings.filter(
     (booking) =>
       booking.slot &&
-      !isBeforeNow(
-        new Date(`${booking.slot.date}T${booking.slot.end_time}`)
-      )
+      !isBeforeNow(booking.slot.date, booking.slot.end_time)
   );
   
   const pastBookings = bookings.filter(
     (booking) =>
       booking.slot &&
-      isBeforeNow(
-        new Date(`${booking.slot.date}T${booking.slot.end_time}`)
-      )
+      isBeforeNow(booking.slot.date, booking.slot.end_time)
   );
 
   const navigateToWorkshop = (id: string) => {

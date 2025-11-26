@@ -19,7 +19,8 @@ import {
   endOfThisWeekendAsISOString,
   startOfNextWeekAsISOString,
   endOfNextWeekAsISOString,
-  isBeforeNow
+  isBeforeNow,
+  parseUTCDateTime
 } from "@util/dates";
 import { api } from "@infra/aws";
 import { ActionTrigger } from "@infra/api";
@@ -215,13 +216,15 @@ class SupabaseDataAccessor implements DataAccessor {
    * Filters slots to only include upcoming, non-full slots
    */
   private filterValidSlots(slots: any[]): Slot[] {
+    // Get today's date in UTC for comparison
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const todayUTC = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
 
     return slots.filter((slot: any) => {
       if (!slot || slot.at_capacity) return false;
-      const slotDate = new Date(slot.date);
-      return slotDate >= today;
+      // Parse UTC date string (YYYY-MM-DD) as UTC midnight
+      const slotDate = new Date(`${slot.date}T00:00:00Z`);
+      return slotDate >= todayUTC;
     });
   }
 
@@ -379,8 +382,8 @@ class SupabaseDataAccessor implements DataAccessor {
           }
           if (!a.nextSession) return 1;
           if (!b.nextSession) return -1;
-          const aDate = new Date(`${a.nextSession.date}T${a.nextSession.start_time}`);
-          const bDate = new Date(`${b.nextSession.date}T${b.nextSession.start_time}`);
+          const aDate = parseUTCDateTime(a.nextSession.date, a.nextSession.start_time);
+          const bDate = parseUTCDateTime(b.nextSession.date, b.nextSession.start_time);
           return aDate.getTime() - bDate.getTime();
 
         case SortOption.MOST_POPULAR:
@@ -623,7 +626,7 @@ class SupabaseDataAccessor implements DataAccessor {
       return false
     }
 
-    if (!isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))) {
+    if (!isBeforeNow(slot.date, slot.end_time)) {
       await api.cancelSlot(slot)
     }
 
@@ -693,11 +696,10 @@ class SupabaseDataAccessor implements DataAccessor {
    * Filters out past slots by checking end_time against current time
    */
   private filterPastSlots(slots: Array<{ slot: any; workshop: Workshop }>): Array<{ slot: any; workshop: Workshop }> {
-    const now = new Date();
     return slots.filter(({ slot }) => {
       if (!slot.date || !slot.end_time) return false;
-      const slotEndTime = new Date(`${slot.date}T${slot.end_time}`);
-      return slotEndTime > now;
+      // Use isBeforeNow to check if slot has ended (inverse check)
+      return !isBeforeNow(slot.date, slot.end_time);
     });
   }
 

@@ -129,7 +129,7 @@ export function WorkshopListingUpcomingSlot({
             {dateToReadable(slot.date, false)}
           </Text>
           <Text fontSize="sm" color="gray.600">
-            {timeToReadable(slot.start_time, slot.end_time)}
+            {timeToReadable(slot.start_time, slot.end_time, slot.date)}
           </Text>
           <HStack spacing={2}>
             <Badge

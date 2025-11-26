@@ -16,7 +16,7 @@ import WorkshopListingShare from "@components/Workshop/WorkshopListingShare";
 import WorkshopListingUserBooking from "@components/Workshop/WorkshopListingUserBooking";
 import { WorkshopListingNewSlotModal } from "@components/Workshop/WorkshopListingNewSlotModal";
 import Show from "@components/Helpers/Show";
-import { isBeforeNow } from "@util/dates";
+import { isBeforeNow, parseUTCDateTime } from "@util/dates";
 
 interface IProps {
   workshop: Workshop;
@@ -42,7 +42,7 @@ export default function WorkshopListing({
     return (
       booking.user_id == user?.id &&
       bookingSlot &&
-      !isBeforeNow(new Date(`${bookingSlot.date}T${bookingSlot.end_time}`))
+      !isBeforeNow(bookingSlot.date, bookingSlot.end_time)
     );
   });
 
@@ -52,19 +52,19 @@ export default function WorkshopListing({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const pastSlots = slots
-    .filter((slot) => isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)))
+    .filter((slot) => isBeforeNow(slot.date, slot.end_time))
     .sort(
       (a, b) =>
-        new Date(`${b.date}T${b.end_time}`).getTime() -
-        new Date(`${a.date}T${a.end_time}`).getTime()
+        parseUTCDateTime(b.date, b.end_time).getTime() -
+        parseUTCDateTime(a.date, a.end_time).getTime()
     )
     .slice(0, 5);
   const futureSlots = slots
-    .filter((slot) => !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)))
+    .filter((slot) => !isBeforeNow(slot.date, slot.end_time))
     .sort(
       (a, b) =>
-        new Date(`${a.date}T${a.end_time}`).getTime() -
-        new Date(`${b.date}T${b.end_time}`).getTime()
+        parseUTCDateTime(a.date, a.end_time).getTime() -
+        parseUTCDateTime(b.date, b.end_time).getTime()
     );
 
   async function addNewSlot(slot: Slot): Promise<void> {
