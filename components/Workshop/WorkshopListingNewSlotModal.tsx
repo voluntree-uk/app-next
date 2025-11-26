@@ -23,7 +23,7 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import { Workshop, Slot } from "@schemas";
-import { dateAsISOString } from "@util/dates";
+import { dateAsISOString, localSlotToUTC, parseUTCDateTime } from "@util/dates";
 
 interface IProps {
   workshop: Workshop;
@@ -68,12 +68,14 @@ export function WorkshopListingNewSlotModal({
 
     const upcomingSlots = existingSlots
       .filter((slot) => {
-        const slotDate = new Date(`${slot.date}T${slot.end_time}`);
-        return slotDate > new Date();
+        // Parse UTC datetime strings properly
+        const slotEndDate = parseUTCDateTime(slot.date, slot.end_time);
+        return slotEndDate > new Date();
       })
       .sort((a, b) => {
-        const dateA = new Date(`${a.date}T${a.start_time}`);
-        const dateB = new Date(`${b.date}T${b.start_time}`);
+        // Parse UTC datetime strings properly
+        const dateA = parseUTCDateTime(a.date, a.start_time);
+        const dateB = parseUTCDateTime(b.date, b.start_time);
         return dateB.getTime() - dateA.getTime();
       });
 
@@ -144,11 +146,14 @@ export function WorkshopListingNewSlotModal({
   };
 
   const onSubmitForm = (data: SlotFormData) => {
+    // Convert local date/time inputs to UTC before saving
+    const utcSlot = localSlotToUTC(data.date, data.startTime, data.endTime);
+
     onSubmit({
       workshop_id: workshop.id!,
-      date: data.date,
-      start_time: data.startTime,
-      end_time: data.endTime,
+      date: utcSlot.date,
+      start_time: utcSlot.start_time,
+      end_time: utcSlot.end_time,
       capacity: parseInt(data.capacity),
     });
     reset();

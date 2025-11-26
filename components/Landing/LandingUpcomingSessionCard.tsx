@@ -89,7 +89,7 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
                 <Box mt="1">
                   <BiTime />
                 </Box>
-                <Text fontWeight="medium">{timeToReadable(slot.start_time, slot.end_time)}</Text>
+                <Text fontWeight="medium">{timeToReadable(slot.start_time, slot.end_time, slot.date)}</Text>
               </HStack>
               <HStack align="flex-start">
                 <Box mt="1">

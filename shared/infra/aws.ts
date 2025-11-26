@@ -2,7 +2,7 @@ import { ActionTrigger, InfrastructureAPI } from "./api";
 import { clientData } from "../data/supabase";
 import { BookingDetails, Profile, Slot, Workshop } from "../schemas";
 import axios from "axios";
-import { dateToReadable, isBeforeNow } from "@util/dates";
+import { dateToReadable, isBeforeNow, parseUTCDateTime } from "@util/dates";
 
 /**
  * An AWS API gateway implementation of the InfrastructureAPI
@@ -137,8 +137,11 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
   async scheduleSlot(slot: Slot): Promise<boolean> {
     const jwt = await clientData.getJWT()
     if (jwt) {
-      const slot_end_timestamp = `${slot.date}T${slot.end_time}`
-      if (!isBeforeNow(new Date(slot_end_timestamp))) {
+      // Parse UTC datetime and format as ISO 8601 UTC timestamp
+      const slotEndDate = parseUTCDateTime(slot.date, slot.end_time);
+      const slot_end_timestamp = slotEndDate.toISOString();
+
+      if (!isBeforeNow(slot.date, slot.end_time)) {
         const data = {
           slot_id: slot.id,
           slot_end_timestamp: slot_end_timestamp

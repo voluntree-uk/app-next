@@ -52,7 +52,7 @@ export default function ProfileAchievements({
 }: IProps) {
   // Calculate session-based metrics
   const pastSlots = allSlots.filter(
-    (slot) => slot.date && slot.end_time && isBeforeNow(new Date(`${slot.date}T${slot.end_time}`))
+    (slot) => slot.date && slot.end_time && isBeforeNow(slot.date, slot.end_time)
   );
   
   // Only count sessions that had at least 1 booking

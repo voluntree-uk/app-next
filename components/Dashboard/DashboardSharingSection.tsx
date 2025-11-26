@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { Workshop, Slot, BookingDetails } from "@schemas";
 import { clientData } from "@data/supabase";
-import { isBeforeNow } from "@util/dates";
+import { isBeforeNow, parseUTCDateTime } from "@util/dates";
 import { useRouter } from "next/navigation";
 import { MdAdd } from "react-icons/md";
 import { HiOutlineArrowRight } from "react-icons/hi";
@@ -54,11 +54,11 @@ export default function DashboardSharingSection({ workshops, workshopsWithSessio
     return workshopsWithSessionsData
       .map(({ workshop, slots, workshopBookings }) => {
         const upcomingSlots = (slots || [])
-          .filter((slot) => slot && slot.date && slot.end_time && !isBeforeNow(new Date(`${slot.date}T${slot.end_time}`)))
+          .filter((slot) => slot && slot.date && slot.end_time && !isBeforeNow(slot.date, slot.end_time))
           .sort(
             (a, b) =>
-              new Date(`${a.date}T${a.start_time}`).getTime() -
-              new Date(`${b.date}T${b.start_time}`).getTime()
+              parseUTCDateTime(a.date, a.start_time).getTime() -
+              parseUTCDateTime(b.date, b.start_time).getTime()
           )
           .map((slot) => ({
             slot,

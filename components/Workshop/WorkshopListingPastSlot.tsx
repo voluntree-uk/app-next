@@ -30,7 +30,7 @@ export function WorkshopListingPastSlot({ slot, slotBookings }: IProps) {
             {dateToReadable(slot.date, false)}
           </Text>
           <Text fontSize="sm" color="gray.600">
-            {timeToReadable(slot.start_time, slot.end_time)}
+            {timeToReadable(slot.start_time, slot.end_time, slot.date)}
           </Text>
         </VStack>
         <HStack spacing={2}>
