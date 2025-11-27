@@ -108,7 +108,7 @@ export default function WorkshopCard({ item, navigate }: IProps) {
               <HStack>
                 <Box as={BiCalendar} />
                 <Text fontWeight="medium">
-                  {dateToReadable(nextSession.date, false)}
+                  {dateToReadable(nextSession.date, nextSession.start_time, false)}
                 </Text>
               </HStack>
               <HStack>

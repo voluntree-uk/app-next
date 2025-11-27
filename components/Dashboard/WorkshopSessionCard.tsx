@@ -66,7 +66,7 @@ export default function WorkshopSessionCard({
             <HStack spacing={1}>
               <CalendarIcon boxSize={{ base: 3, md: 4 }} />
               <Text fontWeight="semibold" color="gray.800">
-                {dateToReadable(slot.date)}
+                {dateToReadable(slot.date, slot.start_time, false)}
               </Text>
             </HStack>
             <HStack spacing={1}>

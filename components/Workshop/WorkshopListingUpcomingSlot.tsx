@@ -126,7 +126,7 @@ export function WorkshopListingUpcomingSlot({
         {/* Session Info */}
         <VStack align={{ base: "flex-start", md: "flex-start" }} spacing={2} flex="1">
           <Text fontSize={{ base: "md", md: "lg" }} fontWeight="semibold" color="gray.700">
-            {dateToReadable(slot.date, false)}
+            {dateToReadable(slot.date, slot.start_time, false)}
           </Text>
           <Text fontSize="sm" color="gray.600">
             {timeToReadable(slot.start_time, slot.end_time, slot.date)}

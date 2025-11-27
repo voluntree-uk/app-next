@@ -87,11 +87,12 @@ export function utcTimeToLocal(utcDate: string, utcTime: string): string {
  * Returns the given date as a readable string.
  * Assumes the date string is in UTC format (YYYY-MM-DD).
  * @param date the UTC date string to convert to a readable string
+ * @param time the UTC time string to convert to a readable string
  * @param include_weekday a boolean flag determining whether to include
  * weekdays in the output string
  * @returns given date as a readable string in local timezone
  */
-export function dateToReadable(date: string, include_weekday: boolean = true): string {
+export function dateToReadable(date: string, time: string = "00:00:00", include_weekday: boolean = true): string {
   const options: {
     weekday?: any;
     year?: any;
@@ -107,7 +108,7 @@ export function dateToReadable(date: string, include_weekday: boolean = true): s
 
   // Parse as UTC date and convert to local for display
   // Create a Date object from UTC date string (treating it as UTC midnight)
-  const utcDateObj = new Date(`${date}T00:00:00Z`);
+  const utcDateObj = new Date(`${date}T${time}Z`);
 
   return utcDateObj.toLocaleDateString("en-GB", options);
 }

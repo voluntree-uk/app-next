@@ -159,7 +159,7 @@ export default function BookingSessionCard({ booking, type, navigate }: IProps) 
           <VStack alignItems="start" spacing={1} color="gray.600" fontSize={{ base: "xs", md: "sm" }}>
             <HStack spacing={1}>
               <CalendarIcon boxSize={{ base: 3, md: 4 }} />
-              <Text>{dateToReadable(booking.slot.date)}</Text>
+              <Text>{dateToReadable(booking.slot.date, booking.slot.start_time, false)}</Text>
             </HStack>
             <HStack spacing={1}>
               <TimeIcon boxSize={{ base: 3, md: 4 }} />

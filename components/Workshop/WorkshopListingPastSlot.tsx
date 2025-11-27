@@ -27,7 +27,7 @@ export function WorkshopListingPastSlot({ slot, slotBookings }: IProps) {
       >
         <VStack align="flex-start" spacing={1}>
           <Text fontSize="md" fontWeight="medium" color="gray.700">
-            {dateToReadable(slot.date, false)}
+            {dateToReadable(slot.date, slot.start_time, false)}
           </Text>
           <Text fontSize="sm" color="gray.600">
             {timeToReadable(slot.start_time, slot.end_time, slot.date)}

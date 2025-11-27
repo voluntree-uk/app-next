@@ -73,7 +73,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           },
           event: {
             name: booking.workshop.name,
-            date: dateToReadable(booking_slot.date),
+            date: dateToReadable(booking_slot.date, booking_slot.start_time),
             start_time: booking_slot.start_time,
             end_time: booking_slot.end_time,
             join_link: booking.workshop.meeting_link
@@ -117,7 +117,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
           },
           event: {
             name: booking.workshop.name,
-            date: dateToReadable(booking_slot.date),
+            date: dateToReadable(booking_slot.date, booking_slot.start_time),
             time: booking_slot.start_time
           }
         }
@@ -139,7 +139,7 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
     if (jwt) {
       // Parse UTC datetime and format as ISO 8601 UTC timestamp
       const slotEndDate = parseUTCDateTime(slot.date, slot.end_time);
-      const slot_end_timestamp = slotEndDate.toISOString();
+      const slot_end_timestamp = slotEndDate.toISOString().replace("Z","");
 
       if (!isBeforeNow(slot.date, slot.end_time)) {
         const data = {

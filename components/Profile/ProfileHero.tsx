@@ -99,7 +99,7 @@ export default function ProfileHero({
                 variant="subtle"
               >
                 Member since {profile.created_at
-                  ? dateToReadable(profile.created_at.toString(), false)
+                  ? dateToReadable(profile.created_at.toString(), "00:00:00", false)
                   : "recently"}
               </Badge>
               

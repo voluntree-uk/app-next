@@ -83,7 +83,7 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
                 <Box mt="1">
                   <BiCalendar />
                 </Box>
-                <Text>{dateToReadable(slot.date, false)}</Text>
+                <Text>{dateToReadable(slot.date, slot.start_time, false)}</Text>
               </HStack>
               <HStack align="flex-start">
                 <Box mt="1">
