@@ -110,7 +110,7 @@ export function dateToReadable(date: string, time: string = "00:00:00", include_
   // Create a Date object from UTC date string (treating it as UTC midnight)
   const utcDateObj = new Date(`${date}T${time}Z`);
 
-  return utcDateObj.toLocaleDateString("en-GB", options);
+  return utcDateObj.toLocaleDateString("en-US", options);
 }
 
 /**
