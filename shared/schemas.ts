@@ -158,23 +158,8 @@ export interface AboutValue {
   description: string;
 }
 
-export interface EngagementPath {
-  id: string;
-  title: string;
-  description: string;
-  href: string;
-  ctaText?: string;
-}
-
 export interface TeamMember {
   name: string;
   role: string;
-  bio: string;
   imageUrl?: string;
-}
-
-export interface Collaborator {
-  name: string;
-  description: string;
-  url?: string;
 }

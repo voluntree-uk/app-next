@@ -6,13 +6,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-
-interface TeamMember {
-  name: string;
-  role: string;
-  bio: string;
-  imageUrl?: string;
-}
+import { TeamMember } from "@schemas";
 
 interface TeamGridProps {
   team: TeamMember[];
@@ -24,7 +18,7 @@ export default function TeamGrid({ team }: TeamGridProps) {
       <Box borderWidth="1px" borderRadius="lg" p={6} borderColor="gray.200">
         <Text color="gray.600">
           Voluntree is powered by volunteers from different backgrounds and
-          communities. We&apos;ll be sharing more about the people behind the
+          communities. We'll be sharing more about the people behind the
           platform soon.
         </Text>
       </Box>
@@ -41,7 +35,7 @@ export default function TeamGrid({ team }: TeamGridProps) {
           borderRadius="lg"
           borderColor="gray.200"
           p={5}
-          align="flex-start"
+          align="center"
           bg="white"
         >
           <Avatar
@@ -49,15 +43,12 @@ export default function TeamGrid({ team }: TeamGridProps) {
             src={member.imageUrl}
             size="lg"
           />
-          <Box>
+          <Box textAlign="center">
             <Heading fontSize="lg" mb={1}>
               {member.name}
             </Heading>
             <Text fontSize="sm" fontWeight="medium" color="gray.700" mb={2}>
               {member.role}
-            </Text>
-            <Text fontSize="sm" color="gray.600">
-              {member.bio}
             </Text>
           </Box>
         </Stack>

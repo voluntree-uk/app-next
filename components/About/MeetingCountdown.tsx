@@ -24,20 +24,14 @@ export default function MeetingCountdown({ meetLink }: MeetingCountdownProps) {
       return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
     };
     
-    // Check if a given Monday is a meeting week based on bi-weekly pattern
-    // We use a simple heuristic: check if the week number modulo 2 matches the pattern
-    // Since user said last meeting was 6 days ago and next is in 8 days,
-    // we know that meetings happen on alternating weeks
     const isMeetingWeek = (mondayDate: Date): boolean => {
       const weekNum = getISOWeekNumber(mondayDate);
-      // Try both patterns - even weeks or odd weeks
-      // Based on user feedback, we'll try odd weeks being meeting weeks
       return weekNum % 2 === 1;
     };
 
     const calculateNextMeeting = () => {
       const now = new Date();
-      const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+      const currentDay = now.getDay();
       const currentHour = now.getHours();
       
       // Target: Monday at 6pm (18:00)
@@ -140,7 +134,7 @@ export default function MeetingCountdown({ meetLink }: MeetingCountdownProps) {
           </Heading>
           <Text fontSize={{ base: "sm", md: "md" }} color="green.800" lineHeight="tall">
             Come see what we're working on, meet the team, and find ways to contribute. 
-            Everyone is welcome — no commitment required.
+            Everyone is welcome, no commitment required.
           </Text>
         </Box>
 
@@ -170,7 +164,7 @@ export default function MeetingCountdown({ meetLink }: MeetingCountdownProps) {
             Join the meeting
           </Button>
           <Text fontSize="xs" color="green.700" mt={2} textAlign="center">
-            Mondays at 6pm • Every two weeks
+            Mondays at 6pm UK time • Every two weeks
           </Text>
         </Box>
       </Stack>
