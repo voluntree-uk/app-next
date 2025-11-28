@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     title: "Voluntree",
     description:
       "Totally transparent, and free to use, community built volunteering platform",
-    images: ["https://voluntree.net/wp-content/uploads/2024/06/banner.png"],
+    images: ["https://platform-static-resources.s3.eu-west-1.amazonaws.com/banner.png"],
   },
 };
 

@@ -35,6 +35,7 @@ type NavLinkItem = {
 
 const MAIN_LINKS: NavLinkItem[] = [
   { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
   { label: "Workshops", href: "/workshops" },
   { label: "Finances", href: "/finances" },
 ];

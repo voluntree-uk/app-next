@@ -71,6 +71,7 @@ export interface Session {
   user: User | null
 }
 
+/** Landing */
 export enum SortOption {
   SOONEST = "soonest",
   NEWEST = "newest",
@@ -84,6 +85,14 @@ export interface FilterProps {
   sort: SortOption;
 }
 
+export interface PlatformStats {
+  totalWorkshops: number;
+  totalUsers: number;
+  totalSessions: number;
+  totalBookings: number;
+}
+
+/** Workshop Listing */
 export enum TimeFilter {
   ANY_TIME = "Any time",
   THIS_WEEK = "This week",
@@ -106,13 +115,6 @@ export interface UpcomingSession {
   availableSpots: number;
 }
 
-export interface PlatformStats {
-  totalWorkshops: number;
-  totalUsers: number;
-  totalSessions: number;
-  totalBookings: number;
-}
-
 export interface WorkshopListItem {
   workshop: Workshop;
   host: Profile;
@@ -121,6 +123,7 @@ export interface WorkshopListItem {
   totalAvailableSpots: number;
 }
 
+/** Finances */
 export type TransactionType =
   | "Donation"
   | "Expense"
@@ -146,4 +149,17 @@ export interface FinancialSummary {
   formattedExpensesTotal: string;
   formattedChargesTotal: string;
   recentTransactions: FinancialTransaction[];
+}
+
+/** About */
+export interface AboutValue {
+  key: string;
+  name: string;
+  description: string;
+}
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  imageUrl?: string;
 }

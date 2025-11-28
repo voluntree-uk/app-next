@@ -113,11 +113,7 @@ export default function Footer({
             pl={{ base: 6, md: 0 }}
           >
             <ListHeader>Company</ListHeader>
-            <Link
-              as={NextLink}
-              target="_blank"
-              href={"https://voluntree.net/"}
-            >
+            <Link as={NextLink} href={"/about"}>
               About us
             </Link>
             <Link
