@@ -13,12 +13,8 @@ export async function generateMetadata(
 }
 
 export default async function AboutPage() {
-  const meetLink = process.env.NEXT_PUBLIC_COMMUNITY_MEET_LINK || "";
-  
   return (
-    <AboutPageClient
-      meetLink={meetLink}
-    />
+    <AboutPageClient/>
   );
 }
 

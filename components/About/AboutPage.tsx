@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Button,
   Heading,
   HStack,
   Img,
@@ -10,7 +11,6 @@ import {
 } from "@chakra-ui/react";
 import ValueList from "@components/About/ValueList";
 import TeamGrid from "@components/About/TeamGrid";
-import MeetingCountdown from "@components/About/MeetingCountdown";
 import { AboutValue, TeamMember } from "@schemas";
 
 const values: AboutValue[] = [
@@ -73,6 +73,8 @@ const team: TeamMember[] = [
   },
 ];
 
+const calendarLink = process.env.NEXT_PUBLIC_COMMUNITY_CALENDAR_LINK || "";
+
 const SectionHeader = ({ text }: { text: string }) => {
   return (
     <Heading
@@ -86,7 +88,7 @@ const SectionHeader = ({ text }: { text: string }) => {
   );
 };
 
-export default function AboutPage({ meetLink }: { meetLink?: string }) {
+export default function AboutPage() {
   return (
     <Stack spacing={{ base: 12, md: 16 }}>
       {/* Hero */}
@@ -167,10 +169,52 @@ export default function AboutPage({ meetLink }: { meetLink?: string }) {
           <TeamGrid team={team} />
         </Stack>
         {/* Bi-weekly meeting */}
-        {meetLink && (
-          <Box mt={{ base: 6, md: 8 }}>
-            <MeetingCountdown meetLink={meetLink} />
-          </Box>
+        {calendarLink && (
+        <Box
+          borderWidth="2px"
+          borderRadius="xl"
+          borderColor="green.300"
+          bg="green.50"
+          p={{ base: 6, md: 8 }}
+          boxShadow="md"
+        >
+          <Stack spacing={5}>
+            <Box>
+              <Heading fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" color="green.900" mb={2}>
+                Join our bi-weekly community meeting
+              </Heading>
+              <Text fontSize={{ base: "sm", md: "md" }} color="green.800" lineHeight="tall">
+                Come see what we're working on, meet the team, and find ways to contribute.
+                Everyone is welcome, no commitment required.
+              </Text>
+            </Box>
+
+            <Box>
+              <Stack
+                spacing={4}
+                flexDir={{ base: "column", md: "row" }}
+                alignItems="center"
+                justifyContent="center"
+              >
+              <Button
+                as="a"
+                href={calendarLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                colorScheme="green"
+                size={{ base: "md", md: "lg" }}
+                w="full"
+                fontWeight="semibold"
+              >
+                  Add to calendar
+                </Button>
+              </Stack>
+              <Text fontSize="xs" color="green.700" mt={2} textAlign="center">
+                Mondays at 6pm UK time • Every two weeks
+              </Text>
+            </Box>
+          </Stack>
+        </Box>
         )}
       </Stack>
     </Stack>
