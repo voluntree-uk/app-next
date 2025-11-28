@@ -3,6 +3,7 @@
 import {
   Box,
   Button,
+  Container,
   Heading,
   HStack,
   Img,
@@ -90,134 +91,136 @@ const SectionHeader = ({ text }: { text: string }) => {
 
 export default function AboutPage() {
   return (
-    <Stack spacing={{ base: 12, md: 16 }}>
-      {/* Hero */}
-      <Stack spacing={6}>
-        <Heading
-          as="h1"
-          fontSize={{ base: "3xl", md: "5xl" }}
-          fontWeight="extrabold"
-          letterSpacing="tight"
-          lineHeight="shorter"
-          color="gray.900"
-        >
-          Building a culture of everyday mutual aid.
-        </Heading>
-        <Text
-          fontSize={{ base: "lg", md: "xl" }}
-          color="gray.700"
-          lineHeight="tall"
-          maxW="3xl"
-        >
-          Voluntree is a volunteer-run platform where people share skills,
-          knowledge, and support through free workshops. We're here to make
-          learning and helping one another simple, open, and accessible,
-          building a movement where mutual support becomes a normal, joyful part
-          of daily life.
-        </Text>
-      </Stack>
-
-      {/* Mission & values */}
-      <Stack spacing={{ base: 8, md: 12 }}>
-        <HStack
-          spacing={8}
-          alignItems="start"
-          flexDir={{ base: "column", md: "row" }}
-        >
-          <Stack spacing={5}>
-            <SectionHeader text="Mission" />
-            <Text
-              fontSize={{ base: "lg", md: "xl" }}
-              color="gray.700"
-              lineHeight="tall"
-            >
-              Our mission is to support communities in empowering themselves and
-              each other, freely, openly, and without barriers. Anyone can host
-              and anyone can learn, because we believe that everyone has
-              something valuable to offer. By making knowledge-sharing simple,
-              welcoming, and transparent, we help people connect, grow, and
-              create real impact together.
-            </Text>
-          </Stack>
-          <Img
-            height={{ base: "15em", lg: "20em" }}
-            src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/unity.jpg`}
-          ></Img>
-        </HStack>
-
-        <Stack spacing={5}>
-          <SectionHeader text="Values" />
-          <ValueList values={values} />
-        </Stack>
-      </Stack>
-
-      {/* Team */}
-      <Stack spacing={{ base: 8, md: 10 }}>
-        <Stack spacing={5} mt={{ base: 4, md: 6 }}>
-          <SectionHeader text="Team" />
+    <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>
+      <Stack spacing={{ base: 12, md: 16 }}>
+        {/* Hero */}
+        <Stack spacing={6}>
+          <Heading
+            as="h1"
+            fontSize={{ base: "3xl", md: "5xl" }}
+            fontWeight="extrabold"
+            letterSpacing="tight"
+            lineHeight="shorter"
+            color="gray.900"
+          >
+            Building a culture of everyday mutual aid.
+          </Heading>
           <Text
-            fontSize={{ base: "md", md: "lg" }}
+            fontSize={{ base: "lg", md: "xl" }}
             color="gray.700"
             lineHeight="tall"
             maxW="3xl"
           >
-            Voluntree started as a small group of people who believed everyday
-            acts of help should be easier. Today, the platform is shaped by
-            volunteers who share their skills, host workshops, and help run the
-            organisation.
+            Voluntree is a volunteer-run platform where people share skills,
+            knowledge, and support through free workshops. We're here to make
+            learning and helping one another simple, open, and accessible,
+            building a movement where mutual support becomes a normal, joyful part
+            of daily life.
           </Text>
-          <TeamGrid team={team} />
         </Stack>
-        {/* Bi-weekly meeting */}
-        {calendarLink && (
-        <Box
-          borderWidth="2px"
-          borderRadius="xl"
-          borderColor="green.300"
-          bg="green.50"
-          p={{ base: 6, md: 8 }}
-          boxShadow="md"
-        >
-          <Stack spacing={5}>
-            <Box>
-              <Heading fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" color="green.900" mb={2}>
-                Join our bi-weekly community meeting
-              </Heading>
-              <Text fontSize={{ base: "sm", md: "md" }} color="green.800" lineHeight="tall">
-                Come see what we're working on, meet the team, and find ways to contribute.
-                Everyone is welcome, no commitment required.
-              </Text>
-            </Box>
 
-            <Box>
-              <Stack
-                spacing={4}
-                flexDir={{ base: "column", md: "row" }}
-                alignItems="center"
-                justifyContent="center"
+        {/* Mission & values */}
+        <Stack spacing={{ base: 8, md: 12 }}>
+          <HStack
+            spacing={8}
+            alignItems="start"
+            flexDir={{ base: "column", md: "row" }}
+          >
+            <Stack spacing={5}>
+              <SectionHeader text="Mission" />
+              <Text
+                fontSize={{ base: "lg", md: "xl" }}
+                color="gray.700"
+                lineHeight="tall"
               >
-              <Button
-                as="a"
-                href={calendarLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                colorScheme="green"
-                size={{ base: "md", md: "lg" }}
-                w="full"
-                fontWeight="semibold"
-              >
-                  Add to calendar
-                </Button>
-              </Stack>
-              <Text fontSize="xs" color="green.700" mt={2} textAlign="center">
-                Mondays at 6pm UK time • Every two weeks
+                Our mission is to support communities in empowering themselves and
+                each other, freely, openly, and without barriers. Anyone can host
+                and anyone can learn, because we believe that everyone has
+                something valuable to offer. By making knowledge-sharing simple,
+                welcoming, and transparent, we help people connect, grow, and
+                create real impact together.
               </Text>
-            </Box>
+            </Stack>
+            <Img
+              height={{ base: "15em", lg: "20em" }}
+              src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/unity.jpg`}
+            ></Img>
+          </HStack>
+
+          <Stack spacing={5}>
+            <SectionHeader text="Values" />
+            <ValueList values={values} />
           </Stack>
-        </Box>
-        )}
+        </Stack>
+
+        {/* Team */}
+        <Stack spacing={{ base: 8, md: 10 }}>
+          <Stack spacing={5} mt={{ base: 4, md: 6 }}>
+            <SectionHeader text="Team" />
+            <Text
+              fontSize={{ base: "md", md: "lg" }}
+              color="gray.700"
+              lineHeight="tall"
+              maxW="3xl"
+            >
+              Voluntree started as a small group of people who believed everyday
+              acts of help should be easier. Today, the platform is shaped by
+              volunteers who share their skills, host workshops, and help run the
+              organisation.
+            </Text>
+            <TeamGrid team={team} />
+          </Stack>
+          {/* Bi-weekly meeting */}
+          {calendarLink && (
+          <Box
+            borderWidth="2px"
+            borderRadius="xl"
+            borderColor="green.300"
+            bg="green.50"
+            p={{ base: 6, md: 8 }}
+            boxShadow="md"
+          >
+            <Stack spacing={5}>
+              <Box>
+                <Heading fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" color="green.900" mb={2}>
+                  Join our bi-weekly community meeting
+                </Heading>
+                <Text fontSize={{ base: "sm", md: "md" }} color="green.800" lineHeight="tall">
+                  Come see what we're working on, meet the team, and find ways to contribute.
+                  Everyone is welcome, no commitment required.
+                </Text>
+              </Box>
+
+              <Box>
+                <Stack
+                  spacing={4}
+                  flexDir={{ base: "column", md: "row" }}
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                <Button
+                  as="a"
+                  href={calendarLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  colorScheme="green"
+                  size={{ base: "md", md: "lg" }}
+                  w="full"
+                  fontWeight="semibold"
+                >
+                    Add to calendar
+                  </Button>
+                </Stack>
+                <Text fontSize="xs" color="green.700" mt={2} textAlign="center">
+                  Mondays at 6pm UK time • Every two weeks
+                </Text>
+              </Box>
+            </Stack>
+          </Box>
+          )}
+        </Stack>
       </Stack>
-    </Stack>
+    </Container>
   );
 }
 
