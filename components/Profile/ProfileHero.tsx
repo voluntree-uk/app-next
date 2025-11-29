@@ -60,21 +60,24 @@ export default function ProfileHero({
             justify="center"
           >
             <VStack spacing={3} width="100%">
-              <Heading 
-                size="2xl" 
-                color="gray.900"
-                fontWeight="extrabold"
-              >
+              <Heading size="2xl" color="gray.900" fontWeight="extrabold">
                 {full_name}
               </Heading>
-              
+
               <HStack spacing={4} flexWrap="wrap">
                 <Text fontSize="xl" color="blue.600" fontWeight="bold">
                   @{profile.username}
                 </Text>
-                
+
                 {profile.rating && profile.rating > 0 && (
-                  <HStack spacing={1} color="yellow.500" bg="yellow.50" px={3} py={1} borderRadius="full">
+                  <HStack
+                    spacing={1}
+                    color="yellow.500"
+                    bg="yellow.50"
+                    px={3}
+                    py={1}
+                    borderRadius="full"
+                  >
                     <HiOutlineStar size={18} />
                     <Text fontSize="md" fontWeight="bold" color="gray.800">
                       {profile.rating.toFixed(1)}
@@ -98,14 +101,18 @@ export default function ProfileHero({
                 fontWeight="medium"
                 variant="subtle"
               >
-                Member since {profile.created_at
-                  ? dateToReadable(profile.created_at.toString(), "00:00:00", false)
+                Member since{" "}
+                {profile.created_at
+                  ? dateToReadable(
+                      profile.created_at.toString().split("T")[0],
+                      "00:00:00",
+                      false
+                    )
                   : "recently"}
               </Badge>
-              
               {profile.share_email_consent && (
-                <HStack 
-                  spacing={2} 
+                <HStack
+                  spacing={2}
                   color="gray.700"
                   bg="gray.100"
                   px={4}
