@@ -24,7 +24,6 @@ export default function Landing({
       <Stack spacing={{ base: 12, md: 16 }}>
         <LandingHeading />
         <LandingUpcomingSessions sessions={upcomingSessions} />
-        <LandingStats stats={platformStats} />
         <LandingDonateCTA />
         <LandingBenefits />
         <LandingHowItWorks />
