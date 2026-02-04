@@ -163,3 +163,9 @@ export interface TeamMember {
   role: string;
   imageUrl?: string;
 }
+
+/** Workshop Reviews */
+export interface WorkshopReview {
+  booking: BookingDetails;
+  reviewer: Profile;
+}
