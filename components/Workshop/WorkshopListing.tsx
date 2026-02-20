@@ -5,7 +5,7 @@ import { MdAdd } from "react-icons/md";
 import { useToast, useDisclosure } from "@chakra-ui/react";
 import React, { ReactElement } from "react";
 import { useRouter } from "next/navigation";
-import { Booking, Profile, Slot, User, Workshop } from "@schemas";
+import { Booking, Profile, Slot, User, Workshop, WorkshopReview } from "@schemas";
 import { clientData } from "@data/supabase";
 import WorkshopListingHeading from "@components/Workshop/WorkshopListingHeading";
 import WorkshopListingUpcomingSlotList from "@components/Workshop/WorkshopListingUpcomingSlotList";
@@ -15,6 +15,7 @@ import WorkshopListingDescription from "@components/Workshop/WorkshopListingDesc
 import WorkshopListingShare from "@components/Workshop/WorkshopListingShare";
 import WorkshopListingUserBooking from "@components/Workshop/WorkshopListingUserBooking";
 import { WorkshopListingNewSlotModal } from "@components/Workshop/WorkshopListingNewSlotModal";
+import WorkshopListingReviews from "@components/Workshop/WorkshopListingReviews";
 import Show from "@components/Helpers/Show";
 import { isBeforeNow, parseUTCDateTime } from "@util/dates";
 
@@ -26,6 +27,7 @@ interface IProps {
   user: User | null;
   isUserInterested: boolean;
   numberOfInterestedUsers: number;
+  reviews?: WorkshopReview[];
 }
 
 export default function WorkshopListing({
@@ -36,6 +38,7 @@ export default function WorkshopListing({
   user,
   isUserInterested,
   numberOfInterestedUsers,
+  reviews,
 }: IProps) {
   const userBooking = bookings.find((booking) => {
     const bookingSlot = slots.find((slot) => slot.id == booking.slot_id);
@@ -199,6 +202,11 @@ export default function WorkshopListing({
             </Container>
           </Box>
         )}
+
+        {/* Reviews Section */}
+        <Show showIf={reviews && reviews.length > 0}>
+          <WorkshopListingReviews reviews={reviews!} workshop={workshop} />
+        </Show>
 
         {/* Share Section */}
         <Box bg="white">

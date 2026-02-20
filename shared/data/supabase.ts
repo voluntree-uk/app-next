@@ -91,6 +91,18 @@ class SupabaseDataAccessor implements DataAccessor {
     }
   }
 
+  async getProfiles(userIds: string[]): Promise<Profile[]> {
+    if (userIds.length === 0) {
+      return [];
+    }
+    const { data, error } = await this.client
+      .from("profile")
+      .select('*')
+      .in("user_id", userIds);
+    if (error) throw error;
+    return data || [];
+  }
+
   async createWorkshop(workshop: Workshop): Promise<Workshop> {
     if (workshop.virtual) {
       workshop.meeting_link = await api.generateMeetingLink(workshop)

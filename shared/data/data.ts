@@ -42,6 +42,13 @@ export interface DataAccessor {
   getProfile(id: string): Promise<Profile>
 
   /**
+   * Returns profiles associated with the given user ids
+   * @param userIds An array of user ids
+   * @return An array of profiles associated with the given user ids
+   */
+  getProfiles(userIds: string[]): Promise<Profile[]>
+
+  /**
    * Gets a JWT token for the currently logged in user
    * @return A JWT token if a user is logged in
    */
