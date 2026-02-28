@@ -3,6 +3,7 @@ import { clientData } from "../data/supabase";
 import { BookingDetails, Profile, Slot, Workshop } from "../schemas";
 import axios from "axios";
 import { dateToReadable, isBeforeNow, parseUTCDateTime } from "@util/dates";
+import { workshopToReadableAddress } from "@util/addresses";
 
 /**
  * An AWS API gateway implementation of the InfrastructureAPI
@@ -76,9 +77,12 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
             date: dateToReadable(booking_slot.date, booking_slot.start_time),
             start_time: booking_slot.start_time,
             end_time: booking_slot.end_time,
-            join_link: booking.workshop.meeting_link
-          }
+            virtual: booking.workshop.virtual,
+            join_link: booking.workshop.meeting_link,
+            location: workshopToReadableAddress(booking.workshop),
+          },
         }
+        console.log(JSON.stringify(data));
         this.axios_instance.post(
           `${apiGatewayBaseUrl}/booking/confirm`,
           JSON.stringify(data),

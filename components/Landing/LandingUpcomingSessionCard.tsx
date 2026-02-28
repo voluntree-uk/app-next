@@ -18,7 +18,7 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
     router.push(`/workshops/${workshop.id}`);
   };
 
-  const locationText = workshop.virtual ? "Online" : `${workshop.city || "In-person"}`;
+  const locationText = workshop.virtual ? "Online" : "In-person";
   const hostName = host.name || host.username || "Anonymous";
 
   return (

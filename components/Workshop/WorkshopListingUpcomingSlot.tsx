@@ -156,7 +156,7 @@ export function WorkshopListingUpcomingSlot({
         <Flex align="center" gap={2}>
           <Show showIf={isUserHost()}>
             <HStack spacing={2}>
-              {workshop.meeting_link && (
+              {workshop.virtual && workshop.meeting_link && (
                 <Button
                   as={NextLink}
                   href={workshop.meeting_link}
@@ -208,7 +208,11 @@ export function WorkshopListingUpcomingSlot({
             </Button>
             <ConfirmActionDialog
               title="Confirm Booking"
-              message="Are you sure you would like to book this session?"
+              message={
+                workshop.virtual
+                  ? "Are you sure you would like to book this session?"
+                  : "Since this workshop takes place in a public setting, please remember to follow standard safety precautions as you would when meeting anyone new. Ready to confirm your spot for this session?"
+              }
               isOpen={isOpen}
               onClose={onClose}
               onSubmit={confirmBooking}

@@ -24,7 +24,7 @@ export default function WorkshopCard({ item, navigate }: IProps) {
 
   const hostName = host.name || host.username || "Anonymous";
 
-  const locationText = workshop.virtual ? "Online" : workshop.city || "In-person";
+  const locationText = workshop.virtual ? "Online" : "In-person";
   const locationIcon = workshop.virtual ? BiVideo : BiMap;
 
   const handleClick = () => {

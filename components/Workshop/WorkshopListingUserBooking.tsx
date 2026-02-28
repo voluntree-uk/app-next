@@ -127,16 +127,18 @@ export default function WorkshopListingUserBooking({
           {/* Actions */}
           <Flex align="center" gap={2}>
             <HStack spacing={2}>
-              <Link as={NextLink} href={workshop.meeting_link} target="_blank">
-                <Button
-                  colorScheme="blue"
-                  variant="solid"
-                  rightIcon={<MdStart />}
-                  size={{ base: "sm", md: "md" }}
-                >
-                  Enter Session
-                </Button>
-              </Link>
+              {workshop.virtual && workshop.meeting_link && (
+                <Link as={NextLink} href={workshop.meeting_link} target="_blank">
+                  <Button
+                    colorScheme="blue"
+                    variant="solid"
+                    rightIcon={<MdStart />}
+                    size={{ base: "sm", md: "md" }}
+                  >
+                    Enter Session
+                  </Button>
+                </Link>
+              )}
               <Button
                 colorScheme="red"
                 variant="outline"

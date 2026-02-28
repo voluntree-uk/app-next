@@ -6,7 +6,7 @@ import { Box, Input, Select, Flex, Badge, VStack } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import { BiFilter } from "react-icons/bi";
 import config from "@config";
-import { FilterProps, TimeFilter, SortOption } from "@schemas";
+import { FilterProps, TimeFilter, SortOption, LocationFilter } from "@schemas";
 
 interface IProps {
   initialFilters: FilterProps;
@@ -27,6 +27,7 @@ export default function WorkshopListFilter({ initialFilters }: IProps) {
     if (newFilters.category) params.set("category", newFilters.category);
     if (newFilters.time !== TimeFilter.ANY_TIME) params.set("time", newFilters.time);
     if (newFilters.sort !== SortOption.SOONEST) params.set("sort", newFilters.sort);
+    if (newFilters.location !== "all") params.set("location", newFilters.location);
 
     const queryString = params.toString();
     const newURL = queryString ? `/workshops?${queryString}` : "/workshops";
@@ -47,11 +48,12 @@ export default function WorkshopListFilter({ initialFilters }: IProps) {
     // Skip if URL hasn't actually changed
     if (currentURLString === lastURLStringRef.current) return;
 
-    const urlFilters = {
+    const urlFilters: FilterProps = {
       text: searchParams.get("text") || "",
       category: searchParams.get("category") || "",
       time: (searchParams.get("time") as TimeFilter) || TimeFilter.ANY_TIME,
       sort: (searchParams.get("sort") as SortOption) || SortOption.SOONEST,
+      location: (searchParams.get("location") as LocationFilter) || "all",
     };
 
     // Always update from URL when URL changes (e.g., browser navigation)
@@ -98,6 +100,12 @@ export default function WorkshopListFilter({ initialFilters }: IProps) {
   const handleCategoryClick = (category: string) => {
     const newCategory = filters.category === category ? "" : category;
     const newFilters = { ...filters, category: newCategory };
+    setFilters(newFilters);
+    updateURL(newFilters);
+  };
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newFilters = { ...filters, location: e.target.value as LocationFilter };
     setFilters(newFilters);
     updateURL(newFilters);
   };
@@ -152,6 +160,20 @@ export default function WorkshopListFilter({ initialFilters }: IProps) {
           <option value={SortOption.SOONEST}>Soonest first</option>
           <option value={SortOption.NEWEST}>Newest first</option>
           <option value={SortOption.MOST_POPULAR}>Most popular</option>
+        </Select>
+        <Select
+          fontWeight={"semibold"}
+          rounded={"full"}
+          bg="gray.100"
+          w={{ base: "100%", md: "140px" }}
+          h={{ base: "44px", md: "40px" }}
+          minH="44px"
+          value={filters.location}
+          onChange={handleLocationChange}
+        >
+          <option value="all">Anywhere</option>
+          <option value="online">Online</option>
+          <option value="in-person">In-Person</option>
         </Select>
       </Flex>
 
