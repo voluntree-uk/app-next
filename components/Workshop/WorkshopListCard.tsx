@@ -13,6 +13,7 @@ import {
 import { WorkshopListItem } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
 import { BiCalendar, BiTime, BiMap, BiUser, BiVideo } from "react-icons/bi";
+import { useAvatarSrc } from "shared/hooks/useAvatarSrc";
 
 interface IProps {
   item: WorkshopListItem;
@@ -23,6 +24,8 @@ export default function WorkshopCard({ item, navigate }: IProps) {
   const { workshop, host, nextSession, upcomingSessionCount, totalAvailableSpots } = item;
 
   const hostName = host.name || host.username || "Anonymous";
+
+  const avatarSrc = useAvatarSrc(host?.avatar_url);
 
   const locationText = workshop.virtual ? "Online" : workshop.city || "In-person";
   const locationIcon = workshop.virtual ? BiVideo : BiMap;
@@ -148,11 +151,7 @@ export default function WorkshopCard({ item, navigate }: IProps) {
             <Avatar
               size="sm"
               name={hostName}
-              src={
-                host.avatar_url && host.avatar_url !== "default_avatar.png"
-                  ? `${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${host.avatar_url}`
-                  : undefined
-              }
+              src={avatarSrc}
             />
             <VStack align="flex-start" spacing={0}>
               <HStack spacing={1}>

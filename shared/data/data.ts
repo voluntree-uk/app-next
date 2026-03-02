@@ -171,7 +171,7 @@ export interface DataAccessor {
    * @param path An avatar path
    * @return The avatar public URL
    */
-  getAvatarUrl(path: string): Promise<string>
+  getAvatarUrl(path: string | null): Promise<string | undefined>
 
   /**
    * Uploads an avatar given the path and the file body

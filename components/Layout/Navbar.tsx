@@ -27,6 +27,8 @@ import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
+import { Profile } from "@schemas";
+import { useAvatarSrc } from "shared/hooks/useAvatarSrc";
 
 type NavLinkItem = {
   label: string;
@@ -79,9 +81,10 @@ const NavLink = ({
   );
 };
 
-export default function Navbar({ user }: { user: User | null }) {
+export default function Navbar({ user, profile }: { user: User | null; profile: Profile | null; }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentUser, setCurrentUser] = useState<User | null>(user);
+  const avatarSrc = useAvatarSrc(profile?.avatar_url);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -176,7 +179,10 @@ export default function Navbar({ user }: { user: User | null }) {
                     <Avatar
                       size={"sm"}
                       bg="#0c70ab"
-                      icon={<AiOutlineUser fontSize="1.5rem" />}
+                      src={avatarSrc}
+                      icon={
+                          <AiOutlineUser fontSize="1.5rem" />
+                      }
                     />
                   </MenuButton>
                   <MenuList
