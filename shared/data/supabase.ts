@@ -685,15 +685,15 @@ class SupabaseDataAccessor implements DataAccessor {
     return (r_data) ? true : false
   }
 
-  async getAvatarUrl(path: string): Promise<string> {
+  async getAvatarUrl(path: string | null): Promise<string | undefined> {
+    if (!path || path === "default_avatar.png") {
+      return undefined;
+    }
     const { data } = await this.client.storage
       .from("avatars")
       .getPublicUrl(path);
-    if (data) {
+
       return data?.publicUrl;
-    } else {
-      throw Error(`Failed to find an avatar on the given path: ${path}`)
-    }
   }
 
   async uploadAvatar(path: string, file: string): Promise<boolean> {

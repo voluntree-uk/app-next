@@ -36,6 +36,7 @@ import { Profile, User, Workshop } from "@schemas";
 import { useRouter } from "next/navigation";
 import Show from "@components/Helpers/Show";
 import { ConfirmActionDialog } from "@components/Helpers/ConfirmActionDialog";
+import { useAvatarSrc } from "shared/hooks/useAvatarSrc";
 
 interface IProps {
   workshop: Workshop;
@@ -57,10 +58,9 @@ export default function WorkshopListingHeading({
 
   const isUserHost = () => user?.id == workshop.user_id;
 
+  const avatarSrc = useAvatarSrc(host?.avatar_url);
+  
   const hostName = host.name || host.username || "Anonymous";
-  const hostAvatarUrl = host.avatar_url && host.avatar_url !== "default_avatar.png"
-    ? `${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/${host.avatar_url}`
-    : undefined;
 
   async function cancelWorkshop(): Promise<void> {
     setLoading(true);
@@ -222,7 +222,7 @@ export default function WorkshopListingHeading({
                     <Avatar
                       size="md"
                       name={hostName}
-                      src={hostAvatarUrl}
+                      src={avatarSrc}
                     />
                     <VStack align="flex-start" spacing={1} flex="1">
                       <HStack spacing={2}>

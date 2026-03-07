@@ -2,6 +2,7 @@ import { createClient } from '@util/supabase/server';
 import { Providers } from './providers'
 import { Metadata } from "next";
 import Layout from '@components/Layout/Layout';
+import { SupabaseDataAccessor } from "@data/supabase";
 
 export const metadata: Metadata = {
   title: "Voluntree",
@@ -29,13 +30,14 @@ export default async function RootLayout({
   children: React.ReactNode,
   }) {
   const supabase = createClient()
+  const dataAccessor = new SupabaseDataAccessor(supabase);
   const { data: { user } } = await supabase.auth.getUser();
-  
+  const profile = user ? await dataAccessor.getProfile(user.id) : null;
   return (
     <html lang='en'>
       <body>
         <Providers>
-          <Layout user={user}>
+          <Layout user={user} profile={profile}>
             {children}
           </Layout>
         </Providers>

@@ -7,9 +7,11 @@ import Navbar from "@components/Layout/Navbar";
 import ResponsiveContainer from "@components/Layout/ResponsiveContainer";
 import CookieConsent from "@components/Layout/CookieConsent";
 import { User } from "@supabase/supabase-js";
+import { Profile } from "@schemas";
 
 type LayoutProps = {
   user: User | null;
+  profile: Profile | null;
   children: ReactNode;
 };
 
@@ -27,7 +29,7 @@ export default function Layout(props: LayoutProps) {
       justifyContent="space-between"
     >
       <Box>
-        <Navbar user={props.user} />
+        <Navbar user={props.user} profile={props.profile}/>
         <ResponsiveContainer>{props.children}</ResponsiveContainer>
         <CookieConsent
           isOpen={isCookieConsentOpen}
