@@ -51,8 +51,7 @@ export default function LandingBenefits() {
               shadow="md"
               h="100%"
               borderTopWidth="4px"
-              borderTopColor={`${benefit.accent}.400`
-              }
+              borderTopColor={`${benefit.accent}.400`}
               transition="all 0.2s ease"
               _hover={{ shadow: "xl", transform: "translateY(-4px)" }}
             >

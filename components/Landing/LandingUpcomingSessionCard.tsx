@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Box, HStack, Text, Badge, Flex, Img } from "@chakra-ui/react";
 import { UpcomingSession } from "@schemas";
 import { dateToReadable, timeToReadable } from "@util/dates";
-import { BiCalendar, BiTime, BiMap, BiUser } from "react-icons/bi";
+import { BiCalendar, BiTime, BiMap, BiUser, BiVideo } from "react-icons/bi";
 
 interface IProps {
   session: UpcomingSession;
@@ -18,7 +18,11 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
     router.push(`/workshops/${workshop.id}`);
   };
 
-  const locationText = workshop.virtual ? "Online" : "In-person";
+  const locationText = workshop.virtual
+    ? "Online"
+    : workshop.city
+      ? "In-person - " + workshop.city
+      : "In-person";
   const hostName = host.name || host.username || "Anonymous";
 
   return (
@@ -89,11 +93,13 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
                 <Box mt="1">
                   <BiTime />
                 </Box>
-                <Text fontWeight="medium">{timeToReadable(slot.start_time, slot.end_time, slot.date)}</Text>
+                <Text fontWeight="medium">
+                  {timeToReadable(slot.start_time, slot.end_time, slot.date)}
+                </Text>
               </HStack>
               <HStack align="flex-start">
                 <Box mt="1">
-                  <BiMap />
+                  {workshop.virtual ? <BiVideo /> : <BiMap />}
                 </Box>
                 <Text>{locationText}</Text>
               </HStack>
@@ -138,4 +144,3 @@ export default function LandingUpcomingSessionCard({ session }: IProps) {
     </Box>
   );
 }
-

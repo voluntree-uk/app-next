@@ -22,7 +22,11 @@ export default function LandingInvite() {
           Ready to share your passion?
         </Text>
         <Text fontSize={{ base: "md", md: "lg" }} color="whiteAlpha.900">
-            Whether you want to learn something new or pass on the skills you already love using, Voluntree makes it easy. Every story, skill, or lived experience can spark the next step for someone else. Join a session, share your passion, and keep the community learning together.
+          Whether you want to learn something new or pass on the skills you
+          love, Voluntree makes it easy - online or in your local community.
+          Every story, skill, or lived experience can spark the next step for
+          someone else. Join a session, share your passion, and keep the
+          community learning together.
         </Text>
         <Button
           as={NextLink}

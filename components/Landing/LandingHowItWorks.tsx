@@ -20,7 +20,7 @@ const learnerSteps = [
   {
     number: 3,
     title: "Join and learn",
-    description: "Attend the workshop, meet other volunteers, and gain practical skills together.",
+    description: "Attend the workshop in person or online. Meet other volunteers and gain practical skills together.",
     duration: "1-3 hours",
   },
   {
@@ -47,7 +47,7 @@ const hostSteps = [
   {
     number: 3,
     title: "Schedule sessions",
-    description: "Pick dates and times that work for you. We'll manage bookings and reminders.",
+    description: "Pick dates and times that work for you. Choose a venue or go virtual. We'll manage bookings and reminders.",
     duration: "2 minutes",
   },
   {
