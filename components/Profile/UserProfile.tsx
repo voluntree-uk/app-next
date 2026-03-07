@@ -10,6 +10,7 @@ import ProfileImpact from "@components/Profile/ProfileImpact";
 import ProfileAchievements from "@components/Profile/ProfileAchievements";
 import ProfileWorkshops from "@components/Profile/ProfileWorkshops";
 import { UserProfileSettingsModal } from "@components/Profile/UserProfileSettingsModal";
+import { useRouter } from "next/navigation";
 
 interface IProps {
   profile: Profile;
@@ -36,6 +37,7 @@ export default function UserProfile({
   } = useForm();
 
   const avatar_url: string = watch("avatar_url");
+  const router = useRouter();
 
   async function updateAvatar({ avatar_url }: any) {
     try {
@@ -46,6 +48,7 @@ export default function UserProfile({
       };
 
       await clientData.updateProfile(updates);
+      router.refresh();
       toast({
         title: "Avatar updated",
         description: "Your profile picture has been updated successfully.",
