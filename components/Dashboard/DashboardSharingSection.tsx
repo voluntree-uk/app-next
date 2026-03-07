@@ -158,7 +158,7 @@ export default function DashboardSharingSection({ workshops, workshopsWithSessio
             onClick={() => router.push("/workshops/new")}
             minW={{ base: "auto", md: "200px" }}
           >
-            <Box as="span" display={{ base: "none", sm: "inline" }}>New Workshop</Box>
+            <Box as="span" display={{ base: "none", sm: "inline" }}>New Meetup</Box>
             <Box as="span" display={{ base: "inline", sm: "none" }}>New</Box>
           </Button>
         </Flex>

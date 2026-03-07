@@ -46,7 +46,7 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
       setEditModeOn(false);
       toast({
         title: "Description updated",
-        description: "Your workshop description has been saved successfully.",
+        description: "Your meetup description has been saved successfully.",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -86,7 +86,7 @@ export default function WorkshopListingDescription({ workshop, user }: IProps) {
                 minH="250px"
                 size="md"
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe what learners will gain from your workshop. Include topics covered, skill level required, and what makes your workshop unique..."
+                placeholder="Describe what learners will gain from your meetup. Include topics covered, skill level required, and what makes your meetup unique..."
                 mb={3}
               />
               <Flex justify="space-between" align="center" mb={4}>

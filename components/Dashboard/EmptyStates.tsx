@@ -90,10 +90,10 @@ export function NoSessionsEmptyState({
       title={hasWorkshops ? "No sessions scheduled" : "Start sharing your knowledge"}
       description={
         hasWorkshops
-          ? "Create sessions for your workshops to start teaching others!"
-          : "Create your first workshop and schedule sessions to share your passion with the community."
+          ? "Create sessions for your meetups to start teaching others!"
+          : "Create your first meetup and schedule sessions to share your passion with the community."
       }
-      actionLabel={hasWorkshops ? "Add Sessions" : "Create Workshop"}
+      actionLabel={hasWorkshops ? "Add Sessions" : "Create Meetup"}
       onAction={hasWorkshops ? onAddSessions : onCreateWorkshop}
       actionIcon={hasWorkshops ? MdEventAvailable : MdAdd}
     />
@@ -109,8 +109,8 @@ export function NoBookingsEmptyState({ onBrowseWorkshops }: NoBookingsEmptyState
     <EmptyState
       icon={HiOutlineBookOpen}
       title="No bookings yet"
-      description="Discover workshops and book sessions to start learning from the community!"
-      actionLabel="Browse Workshops"
+      description="Discover meetups and book sessions to start learning from the community!"
+      actionLabel="Browse Meetups"
       onAction={onBrowseWorkshops}
       actionIcon={MdSearch}
     />
@@ -143,7 +143,7 @@ export function NoUpcomingSessionsEmptyState({
         leftIcon={<Icon as={MdSearch} />}
         onClick={onFindWorkshops}
       >
-        Find Workshops
+        Find Meetups
       </Button>
     </Box>
   );
@@ -208,7 +208,7 @@ export function ScheduleSessionsCTA({
               </Text>
             </HStack>
             <Text fontSize={{ base: "xs", md: "sm" }} color="gray.600">
-              Create a session for this workshop to start teaching others
+              Create a session for this meetup to start teaching others
             </Text>
           </VStack>
           <Button

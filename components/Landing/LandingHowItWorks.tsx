@@ -7,8 +7,8 @@ import LandingHowItWorksCard from "@components/Landing/LandingHowItWorksCard";
 const learnerSteps = [
   {
     number: 1,
-    title: "Browse workshops",
-    description: "Filter by category or date to find a workshop that matches your interests and schedule.",
+    title: "Browse meetups",
+    description: "Filter by category or date to find a meetup that matches your interests and schedule.",
     duration: "2 minutes",
   },
   {
@@ -20,13 +20,13 @@ const learnerSteps = [
   {
     number: 3,
     title: "Join and learn",
-    description: "Attend the workshop in person or online. Meet other volunteers and gain practical skills together.",
+    description: "Attend the meetup in person or online. Meet other volunteers and gain practical skills together.",
     duration: "1-3 hours",
   },
   {
     number: 4,
     title: "Share feedback",
-    description: "Leave a quick review to thank the host and help others discover great workshops.",
+    description: "Leave a quick review to thank the host and help others discover great meetups.",
     duration: "1 minute",
   },
 ];
@@ -40,8 +40,8 @@ const hostSteps = [
   },
   {
     number: 2,
-    title: "Publish a workshop",
-    description: "Describe your workshop, choose a category, and add a short summary for learners.",
+    title: "Publish a meetup",
+    description: "Describe your meetup, choose a category, and add a short summary for learners.",
     duration: "5 minutes",
   },
   {
@@ -95,7 +95,7 @@ export default function LandingHowItWorks() {
             size="md"
             w="100%"
           >
-            Browse workshops
+            Browse meetups
           </Button>
         </Box>
 
@@ -129,7 +129,7 @@ export default function LandingHowItWorks() {
             size="md"
             w="100%"
           >
-            Host a workshop
+            Host a meetup
           </Button>
         </Box>
       </SimpleGrid>

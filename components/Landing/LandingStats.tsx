@@ -11,7 +11,7 @@ interface IProps {
 export default function LandingStats({ stats }: IProps) {
   const statItems = [
     {
-      label: "Workshops",
+      label: "Meetups",
       value: stats.totalWorkshops,
       icon: BiBookOpen,
       color: "blue"

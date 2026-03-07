@@ -232,7 +232,7 @@ export default function SetupProfilePage({ user, setupProfile }: IProps) {
                   Why it matters
                 </Heading>
                 <Text color="gray.600">
-                  Your profile introduces you whether you're joining a workshop to learn or hosting one to share. It helps the whole community feel confident connecting with you.
+                  Your profile introduces you whether you're joining a meetup to learn or hosting one to share. It helps the whole community feel confident connecting with you.
                 </Text>
               </Box>
               <Box bg="white" borderRadius="xl" p={{ base: 6, md: 8 }} boxShadow="sm">

@@ -52,7 +52,7 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
             Upcoming Sessions
           </Heading>
           <Text fontSize="md" color="gray.600">
-            Book a spot in one of these upcoming workshops.
+            Book a spot in one of these upcoming meetups.
           </Text>
         </Box>
 
@@ -125,11 +125,11 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
                   Explore the full schedule
                 </Heading>
                 <Text color="gray.600" fontSize="sm" mb={4}>
-                  Discover every workshop that's available right now. Find the next session that fits you.
+                  Discover every meetup that's available right now. Find the next session that fits you.
                 </Text>
                 <Link as={NextLink} href="/workshops" w={{ base: "100%", sm: "auto" }}>
                   <Button colorScheme="blue" w="100%">
-                    Browse all workshops
+                    Browse all meetups
                   </Button>
                 </Link>
               </Flex>
@@ -139,11 +139,11 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
       </Show>
 
       <Show showIf={sessions.length === 0}>
-        <NoResults message="No upcoming sessions yet. Be the first to host a workshop!" />
+        <NoResults message="No upcoming sessions yet. Be the first to host a meetup!" />
         <Box mt="6" textAlign="center">
           <Link as={NextLink} href="/workshops/new">
             <Button colorScheme="blue" size="md">
-              Create Your First Workshop
+              Create Your First Meetup
             </Button>
           </Link>
         </Box>

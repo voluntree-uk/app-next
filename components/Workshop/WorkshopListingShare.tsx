@@ -28,7 +28,7 @@ export default function WorkshopListingShare({ workshop }: IProps) {
   }, [setHost]);
 
   const shareUrl = `${host}/workshops/${workshop.id}`;
-  const title = `Checkout this free workshop at Voluntree - ${workshop.name}: `;
+  const title = `Checkout this free meetup at Voluntree - ${workshop.name}: `;
   
   return (
     <Box>
@@ -40,10 +40,10 @@ export default function WorkshopListingShare({ workshop }: IProps) {
       >
         <Box>
           <Heading as="h2" size="lg" color="gray.700" mb={2}>
-            Share This Workshop
+            Share This Meetup
           </Heading>
           <Text fontSize="sm" color="gray.600">
-            Help spread the word about this workshop
+            Help spread the word about this meetup
           </Text>
         </Box>
         <HStack spacing={3}>

@@ -14,7 +14,7 @@ export default function EmailConfirmedPage() {
           </Heading>
           <Text fontSize={{ base: "md", md: "lg" }} color="gray.600" mb={6}>
             You're all set to keep going. Finish your profile so people know who they'll be
-            collaborating with, then dive into the latest workshops.
+            collaborating with, then dive into the latest meetups.
           </Text>
           <Stack spacing={4} direction={{ base: "column", sm: "row" }}>
             <Button
@@ -32,7 +32,7 @@ export default function EmailConfirmedPage() {
               colorScheme="blue"
               size={{ base: "md", md: "lg" }}
             >
-              Browse workshops
+              Browse meetups
             </Button>
           </Stack>
         </Box>
@@ -51,7 +51,7 @@ export default function EmailConfirmedPage() {
             </ListItem>
             <ListItem>
               <ListIcon as={CheckCircleIcon} color="blue.500" />
-              When you're ready, create your own workshop and invite others to join.
+              When you're ready, create your own meetup and invite others to join.
             </ListItem>
           </List>
         </Box>

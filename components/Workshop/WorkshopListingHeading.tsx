@@ -82,7 +82,7 @@ export default function WorkshopListingHeading({
       const message = (error as any).message;
 
       toast({
-        title: "Problem canceling the workshop",
+        title: "Problem canceling the meetup",
         description: message,
         status: "error",
         duration: 4000,
@@ -102,7 +102,7 @@ export default function WorkshopListingHeading({
             <Alert rounded="lg" status="info" variant="left-accent">
               <AlertIcon />
               <Box flex="1">
-                <AlertTitle>Thank you for hosting this workshop!</AlertTitle>
+                <AlertTitle>Thank you for hosting this meetup!</AlertTitle>
                 <AlertDescription>
                   Manage your sessions and connect with learners below.
                 </AlertDescription>
@@ -154,7 +154,7 @@ export default function WorkshopListingHeading({
                     <Menu>
                       <MenuButton
                         as={IconButton}
-                        aria-label="Workshop options"
+                        aria-label="Meetup options"
                         icon={<MdMoreVert />}
                         variant="ghost"
                         size="sm"
@@ -167,13 +167,13 @@ export default function WorkshopListingHeading({
                           color="red.600"
                           onClick={onOpen}
                         >
-                          Cancel Workshop
+                          Cancel Meetup
                         </MenuItem>
                       </MenuList>
                     </Menu>
                     <ConfirmActionDialog
-                      title="Cancel Workshop"
-                      message="Are you sure you want to cancel this workshop? This action cannot be undone."
+                      title="Cancel Meetup"
+                      message="Are you sure you want to cancel this meetup? This action cannot be undone."
                       isOpen={isOpen}
                       onClose={onClose}
                       onSubmit={cancelWorkshop}

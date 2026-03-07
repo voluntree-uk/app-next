@@ -36,7 +36,7 @@ type NavLinkItem = {
 const MAIN_LINKS: NavLinkItem[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Workshops", href: "/workshops" },
+  { label: "Meetups", href: "/workshops" },
   { label: "Finances", href: "/finances" },
 ];
 
@@ -150,7 +150,7 @@ export default function Navbar({ user }: { user: User | null }) {
                 variant="solid"
                 onClick={() => router.push(CREATE_WORKSHOP_HREF)}
               >
-                Create Workshop
+                Create Meetup
               </Button>
             </HStack>
             <Flex alignItems={"center"} gap={3}>
@@ -254,7 +254,7 @@ export default function Navbar({ user }: { user: User | null }) {
                     onClose();
                   }}
                 >
-                  Create Workshop
+                  Create Meetup
                 </Button>
 
                 {!currentUser ? (

@@ -180,11 +180,11 @@ export default function ProfileAchievements({
     {
       id: "dedicated-host",
       name: "Dedicated Host",
-      description: "Hosted 3+ workshops",
+      description: "Hosted 3+ meetups",
       icon: HiOutlineAcademicCap,
       color: "indigo",
       earned: (profile.hosted_workshops || 0) >= 3,
-      progress: (profile.hosted_workshops || 0) < 3 ? `${profile.hosted_workshops || 0}/3 workshops` : undefined,
+      progress: (profile.hosted_workshops || 0) < 3 ? `${profile.hosted_workshops || 0}/3 meetups` : undefined,
     },
   ];
 

@@ -87,8 +87,8 @@ export default function WorkshopForm({ user }: { user: User }) {
         const createdWorkshop = await clientData.createWorkshop(newWorkshop);
         if (createdWorkshop.id) {
           toast({
-            title: "Workshop created successfully!",
-            description: "Now add sessions to make your workshop live",
+            title: "Meetup created successfully!",
+            description: "Now add sessions to make your meetup live",
             status: "success",
             duration: 5000,
             isClosable: true,
@@ -96,7 +96,7 @@ export default function WorkshopForm({ user }: { user: User }) {
           router.push(`/workshops/${createdWorkshop.id}`);
         } else {
           toast({
-            title: "Failed to create workshop",
+            title: "Failed to create meetup",
             description: "Please try again",
             status: "error",
             duration: 4000,
@@ -106,7 +106,7 @@ export default function WorkshopForm({ user }: { user: User }) {
         }
       } catch (error) {
         toast({
-          title: "Failed to create workshop",
+          title: "Failed to create meetup",
           description: "Please try again later",
           status: "error",
           duration: 4000,
@@ -119,7 +119,7 @@ export default function WorkshopForm({ user }: { user: User }) {
   };
 
   if (loading) {
-    return <Loader message="Creating your workshop..." fullScreen />;
+    return <Loader message="Creating your meetup..." fullScreen />;
   }
 
   return (
@@ -128,7 +128,7 @@ export default function WorkshopForm({ user }: { user: User }) {
         {/* Header */}
         <Box>
           <Heading size={{ base: "xl", md: "2xl" }} fontWeight="bold" mb={3} color="gray.700">
-            Create Your Workshop
+            Create Your Meetup
           </Heading>
           <Text fontSize={{ base: "md", md: "lg" }} color="gray.600">
             Share your skills and knowledge with the community. Fill out the details below to get started.
@@ -148,14 +148,14 @@ export default function WorkshopForm({ user }: { user: User }) {
               {/* Workshop Name */}
               <FormControl isInvalid={!!errors.name}>
                 <FormLabel htmlFor="name" fontSize="md" fontWeight="semibold" color="gray.700">
-                  Workshop Name
+                  Meetup Name
                 </FormLabel>
                 <Input
                   id="name"
                   placeholder="e.g., Intro to Web Development"
                   size="md"
                   {...register("name", {
-                    required: "Workshop name is required",
+                    required: "Meetup name is required",
                     minLength: {
                       value: 5,
                       message: "Name must be at least 5 characters",
@@ -194,7 +194,7 @@ export default function WorkshopForm({ user }: { user: User }) {
                   <FormErrorMessage>{errors.category.message}</FormErrorMessage>
                 ) : (
                   <FormHelperText color="gray.500">
-                    Help learners find your workshop by selecting the right category
+                    Help learners find your meetup by selecting the right category
                   </FormHelperText>
                 )}
               </FormControl>
@@ -348,7 +348,7 @@ export default function WorkshopForm({ user }: { user: User }) {
                 </FormHelperText>
                 <Textarea
                   id="description"
-                  placeholder="Describe what attendees will gain from your workshop. Include topics covered, skill level required, and what makes your workshop unique..."
+                  placeholder="Describe what attendees will gain from your meetup. Include topics covered, skill level required, and what makes your meetup unique..."
                   minH="200px"
                   size="md"
                   {...register("description", {
@@ -399,7 +399,7 @@ export default function WorkshopForm({ user }: { user: User }) {
                 _hover={{ boxShadow: "lg", transform: "translateY(-1px)" }}
                 transition="all 0.2s"
               >
-                Create Workshop
+                Create Meetup
               </Button>
             </Stack>
           </form>

@@ -22,7 +22,7 @@ describe("Landing", () => {
     expect(screen.getByText("Learn")).toBeInTheDocument();
     expect(screen.getByText("Host")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Browse workshops/i })
+      screen.getByRole("link", { name: /Browse meetups/i })
     ).toHaveAttribute("href", "/workshops");
   });
 
@@ -33,7 +33,7 @@ describe("Landing", () => {
       screen.getByText(/Connect with your community in person/i)
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Find in-person workshops/i })
+      screen.getByRole("link", { name: /Find in-person meetups/i })
     ).toHaveAttribute("href", "/workshops?location=in-person");
   });
 });

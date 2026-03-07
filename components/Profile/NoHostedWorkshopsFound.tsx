@@ -47,8 +47,8 @@ export default function NoHostedWorkshopsFound({ isMe }: IProps) {
                 Start Sharing
               </Heading>
               <Text fontSize="md" color="gray.600" maxW="500px">
-                You haven't hosted any workshops yet.
-                Create your first workshop and start sharing your passion with the community!
+                You haven't hosted any meetups yet.
+                Create your first meetup and start sharing your passion with the community!
               </Text>
             </VStack>
             <VStack spacing={3} w="100%" maxW="300px">
@@ -64,7 +64,7 @@ export default function NoHostedWorkshopsFound({ isMe }: IProps) {
                 }}
                 transition="all 0.2s"
               >
-                Create First Workshop
+                Create First Meetup
               </Button>
               <Text fontSize="sm" color="gray.500">
                 It only takes a few minutes to set up
@@ -74,10 +74,10 @@ export default function NoHostedWorkshopsFound({ isMe }: IProps) {
         ) : (
           <VStack spacing={2}>
             <Heading size="md" color="gray.700">
-              No Workshops Yet
+              No Meetups Yet
             </Heading>
             <Text fontSize="md" color="gray.600" maxW="400px">
-              This user hasn't hosted any workshops yet. Check back later!
+              This user hasn't hosted any meetups yet. Check back later!
             </Text>
           </VStack>
         )}

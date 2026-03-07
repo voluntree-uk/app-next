@@ -34,7 +34,7 @@ export default function TransactionsDonate({
         <Stack spacing={1}>
           <Heading size="md">Support Voluntree</Heading>
           <Text color="gray.700">
-            Your support keeps workshops running and the platform free for
+            Your support keeps meetups running and the platform free for
             everyone.
           </Text>
         </Stack>

@@ -84,7 +84,7 @@ export default function Footer({
               Home
             </Link>
             <Link as={NextLink} href={"/workshops"}>
-              Workshops
+              Meetups
             </Link>
           </Stack>
 

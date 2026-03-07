@@ -22,7 +22,7 @@ export default function FinancesOtherWaysToSupport() {
         Other ways to help
       </Heading>
       <Text color="gray.700" mb={4}>
-        Hosting a workshop or sharing a workshop with a friend makes a huge
+        Hosting a meetup or sharing a meetup with a friend makes a huge
         difference.
       </Text>
       <HStack spacing={3} flexWrap="wrap">
@@ -42,7 +42,7 @@ export default function FinancesOtherWaysToSupport() {
           colorScheme="blue"
           w={{ base: "full", sm: "auto" }}
         >
-          Browse workshops
+          Browse meetups
         </Button>
       </HStack>
     </Box>

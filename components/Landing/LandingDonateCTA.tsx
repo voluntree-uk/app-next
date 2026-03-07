@@ -26,7 +26,7 @@ export default function LandingDonateCTA() {
           <Text color="whiteAlpha.900">
             Voluntree is run entirely by volunteers, so every pound goes
             straight back into the community.
-            Your support helps us hire spaces, run workshops, and reach more
+            Your support helps us hire spaces, run meetups, and reach more
             people.
           </Text>
           <Text color="whiteAlpha.900"></Text>

@@ -31,10 +31,10 @@ export default function WorkshopList({ workshops, initialFilters }: IProps) {
           mb={3}
           color="gray.700"
         >
-          Discover Workshops
+          Discover Meetups
         </Heading>
         <Text fontSize={{ base: "md", md: "lg" }} color="gray.600" mb={6}>
-          Find workshops to learn from or share your passion with the community. Join sessions that fit your schedule and interests.
+          Find meetups to learn from or share your passion with the community. Join sessions that fit your schedule and interests.
         </Text>
         <Box mb={8}>
           <Button
@@ -43,7 +43,7 @@ export default function WorkshopList({ workshops, initialFilters }: IProps) {
             colorScheme="blue"
             size={{ base: "md", md: "lg" }}
           >
-            Create Your Workshop
+            Create Your Meetup
           </Button>
         </Box>
         <WorkshopListFilter initialFilters={initialFilters} />
@@ -52,7 +52,7 @@ export default function WorkshopList({ workshops, initialFilters }: IProps) {
         <Show showIf={workshops.length > 0}>
           <Box mb={4}>
             <Text fontSize="sm" color="gray.600">
-              Showing {workshops.length} {workshops.length === 1 ? "workshop" : "workshops"}
+              Showing {workshops.length} {workshops.length === 1 ? "meetup" : "meetups"}
             </Text>
           </Box>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
@@ -66,7 +66,7 @@ export default function WorkshopList({ workshops, initialFilters }: IProps) {
           </SimpleGrid>
         </Show>
         <Show showIf={workshops.length === 0}>
-          <NoResults message="No workshops found matching your criteria" />
+          <NoResults message="No meetups found matching your criteria" />
         </Show>
       </>
     </Container>

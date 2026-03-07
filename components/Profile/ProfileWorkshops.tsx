@@ -34,7 +34,7 @@ export default function ProfileWorkshops({ workshops, isMe }: IProps) {
       <Container maxW="7xl" px={{ base: 6, md: 10 }}>
         <VStack spacing={6} align="stretch">
           <Heading size="lg" color="gray.700">
-            Workshops
+            Meetups
           </Heading>
 
           <Show showIf={workshops.length > 0}>

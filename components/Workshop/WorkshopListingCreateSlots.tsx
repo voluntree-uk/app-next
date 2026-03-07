@@ -32,7 +32,7 @@ export default function WorkshopListingCreateSlots({
             No upcoming sessions scheduled
           </Text>
           <Text fontSize="sm" color="blue.700" textAlign="center">
-            Add availability slots so community members can book and join your workshop.
+            Add availability slots so community members can book and join your meetup.
           </Text>
         </VStack>
         <VStack spacing={3}>

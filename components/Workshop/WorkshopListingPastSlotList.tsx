@@ -30,7 +30,7 @@ export default function WorkshopListingPastSlotList({
           />
         ))}
         <Show showIf={slots.length === 0}>
-          <NoResults message="No past sessions for this workshop" />
+          <NoResults message="No past sessions for this meetup" />
         </Show>
       </Stack>
     </Box>

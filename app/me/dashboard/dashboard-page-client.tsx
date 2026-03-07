@@ -40,8 +40,8 @@ export default function DashboardPageClient({
             Dashboard
           </Heading>
           <Text fontSize="lg" color="gray.700" maxW="3xl">
-            Manage your workshops and learning journey all in one place.
-            Here you can schedule sessions for workshops you host and track the sessions you're attending.
+            Manage your meetups and learning journey all in one place.
+            Here you can schedule sessions for meetups you host and track the sessions you're attending.
           </Text>
         </VStack>
       </Box>

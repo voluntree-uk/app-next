@@ -78,7 +78,7 @@ export function ReviewModal({ booking, isOpen, onSubmit, onClose }: IProps) {
           borderColor="gray.200"
           pb={4}
         >
-          Review Workshop
+          Review Meetup
         </ModalHeader>
         <ModalCloseButton top={4} right={4} />
         <ModalBody py={6}>
@@ -149,7 +149,7 @@ export function ReviewModal({ booking, isOpen, onSubmit, onClose }: IProps) {
               <Textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Share your thoughts about the workshop..."
+                placeholder="Share your thoughts about the meetup..."
                 size="md"
                 borderRadius="lg"
                 borderColor="gray.300"

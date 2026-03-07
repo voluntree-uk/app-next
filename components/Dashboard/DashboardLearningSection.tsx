@@ -68,7 +68,7 @@ export default function DashboardLearningSection({ bookings }: IProps) {
             onClick={() => router.push("/workshops")}
             minW={{ base: "auto", md: "200px" }}
             >
-              <Box as="span" display={{ base: "none", sm: "inline" }}>Browse Workshops</Box>
+              <Box as="span" display={{ base: "none", sm: "inline" }}>Browse Meetups</Box>
               <Box as="span" display={{ base: "inline", sm: "none" }}>Browse</Box>
             </Button>
           )}

@@ -32,15 +32,15 @@ describe("Navbar", () => {
   test("renders navbar links", () => {
     render(<MockNavbar />);
 
-    const findWorkshopsLink = screen.getByRole("link", {
-      name: "Find workshops",
+    const findMeetupsLink = screen.getByRole("link", {
+      name: "Meetups",
     });
-    const createWorkshopLink = screen.queryByRole("link", {
-      name: "Create workshop",
+    const createMeetupLink = screen.queryByRole("link", {
+      name: "Create Meetup",
     });
 
-    expect(findWorkshopsLink).toBeInTheDocument();
-    expect(createWorkshopLink).toBeInTheDocument();
+    expect(findMeetupsLink).toBeInTheDocument();
+    expect(createMeetupLink).toBeInTheDocument();
   });
 
   test("renders login button when user is not authenticated", () => {
@@ -61,7 +61,7 @@ describe("Navbar", () => {
     // expect(formElement).toBeInTheDocument();
   });
 
-  test("renders create workshop button when user is authenticated", () => {
+  test("renders create meetup button when user is authenticated", () => {
     // Mocking authenticated user
     jest.mock("@util/hooks", () => ({
       useSession: jest.fn(() => ({ user: { name: "John Doe" } })),
@@ -69,14 +69,14 @@ describe("Navbar", () => {
 
     render(<MockNavbar />);
 
-    const createWorkshopButton = screen.getByRole("link", {
-      name: "Create workshop",
+    const createMeetupButton = screen.getByRole("link", {
+      name: "Create Meetup",
     });
 
-    expect(createWorkshopButton).toBeInTheDocument();
+    expect(createMeetupButton).toBeInTheDocument();
   });
 
-  test("redirects to create workshop page when create workshop button is clicked", () => {
+  test("redirects to create meetup page when create meetup button is clicked", () => {
     const router = createMockRouter({
       pathname: "/workshops/new",
     });
@@ -87,10 +87,10 @@ describe("Navbar", () => {
       </RouterContext.Provider>
     );
 
-    const createWorkshopButton = screen.getByRole("link", {
-      name: "Create workshop",
+    const createMeetupButton = screen.getByRole("link", {
+      name: "Create Meetup",
     });
-    fireEvent.click(createWorkshopButton);
+    fireEvent.click(createMeetupButton);
 
     // Check if the router's push function was called with the correct path
     expect(router.push).toHaveBeenCalled();

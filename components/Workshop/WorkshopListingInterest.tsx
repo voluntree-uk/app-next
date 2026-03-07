@@ -51,7 +51,7 @@ export default function WorkshopListingInterest({
     } catch (error) {
       toast({
         title: "Error",
-        description: "Problem expressing interest in this workshop.",
+        description: "Problem expressing interest in this meetup.",
         status: "error",
         duration: 4000,
         isClosable: true,

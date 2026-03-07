@@ -65,7 +65,7 @@ export default function LandingHeading() {
         mt={{ base: "8", sm: "0" }}
         height={{ base: "15em", lg: "22em" }}
         src={`${process.env.NEXT_PUBLIC_S3_STATIC_RESOURCES_BASE_URL}/meeting.jpg`}
-        alt="Community workshop"
+        alt="Community meetup"
         borderRadius="lg"
       />
     </MotionFlex>

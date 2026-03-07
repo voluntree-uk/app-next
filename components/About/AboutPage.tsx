@@ -112,7 +112,7 @@ export default function AboutPage() {
             maxW="3xl"
           >
             Voluntree is a volunteer-run platform where people share skills,
-            knowledge, and support through free workshops. We're here to make
+            knowledge, and support through free meetups. We're here to make
             learning and helping one another simple, open, and accessible,
             building a movement where mutual support becomes a normal, joyful part
             of daily life.
@@ -165,7 +165,7 @@ export default function AboutPage() {
             >
               Voluntree started as a small group of people who believed everyday
               acts of help should be easier. Today, the platform is shaped by
-              volunteers who share their skills, host workshops, and help run the
+              volunteers who share their skills, host meetups, and help run the
               organisation.
             </Text>
             <TeamGrid team={team} />
