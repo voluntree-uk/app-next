@@ -152,7 +152,7 @@ export default function WorkshopForm({ user }: { user: User }) {
                 </FormLabel>
                 <Input
                   id="name"
-                  placeholder="e.g., Intro to Web Development"
+                  placeholder="e.g. Intro to Web Development"
                   size="md"
                   {...register("name", {
                     required: "Workshop name is required",
@@ -300,7 +300,7 @@ export default function WorkshopForm({ user }: { user: User }) {
                     </FormLabel>
                     <Input
                       id="city"
-                      placeholder="e.g., Bristol, London, Manchester"
+                      placeholder="e.g. Bristol, London, Manchester"
                       size="md"
                       {...register("city", {
                         required: "City is required for in-person sessions",
@@ -320,7 +320,7 @@ export default function WorkshopForm({ user }: { user: User }) {
                     </FormLabel>
                     <Input
                       id="postcode"
-                      placeholder="e.g., BS1 5TJ"
+                      placeholder="e.g. BS1 5TJ"
                       size="md"
                       maxLength={8}
                       {...register("postcode", {

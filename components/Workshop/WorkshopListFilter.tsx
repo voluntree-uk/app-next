@@ -39,7 +39,7 @@ export default function WorkshopListFilter({ initialFilters }: IProps) {
     }, 100);
   }, [router]);
 
-  // Update filters when URL searchParams change (e.g., browser back/forward)
+  // Update filters when URL searchParams change (e.g. browser back/forward)
   // Only sync from URL if we're not currently updating from user input
   useEffect(() => {
     if (isUpdatingFromURL.current) return;
@@ -56,7 +56,7 @@ export default function WorkshopListFilter({ initialFilters }: IProps) {
       location: (searchParams.get("location") as LocationFilter) || "all",
     };
 
-    // Always update from URL when URL changes (e.g., browser navigation)
+    // Always update from URL when URL changes (e.g. browser navigation)
     lastURLStringRef.current = currentURLString;
     setFilters(urlFilters);
   }, [searchParams]);
