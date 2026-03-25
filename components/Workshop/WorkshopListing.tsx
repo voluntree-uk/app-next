@@ -204,7 +204,7 @@ export default function WorkshopListing({
         )}
 
         {/* Reviews Section */}
-        <Show showIf={reviews && reviews.length > 0}>
+        <Show showIf={Boolean(reviews && reviews.length > 0)}>
           <WorkshopListingReviews reviews={reviews!} workshop={workshop} />
         </Show>
 
