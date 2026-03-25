@@ -320,7 +320,7 @@ export function WorkshopListingNewSlotModal({
                     },
                     valueAsNumber: true,
                   })}
-                  placeholder="e.g., 5"
+                  placeholder="e.g. 5"
                 />
                 {errors.capacity ? (
                   <FormErrorMessage>{errors.capacity.message}</FormErrorMessage>

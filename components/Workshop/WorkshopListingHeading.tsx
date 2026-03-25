@@ -203,7 +203,7 @@ export default function WorkshopListingHeading({
                     <HStack spacing={1}>
                       <Box as={workshop.virtual ? BiVideo : BiMap} />
                       <Text>
-                        {workshop.virtual ? "Online" : workshop.city || "In-person"}
+                        {workshop.virtual ? "Online" : "In-person"}
                       </Text>
                     </HStack>
                   </Badge>

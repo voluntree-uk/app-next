@@ -203,6 +203,13 @@ class SupabaseDataAccessor implements DataAccessor {
       query.or(`name.ilike.${searchTerm},description.ilike.${searchTerm}`);
     }
 
+    if (filters.location === "online") {
+      query.eq("virtual", true);
+    }
+    if (filters.location === "in-person") {
+      query.eq("virtual", false);
+    }
+
     if (isTimeFilterSelected) {
       query.eq("slot.at_capacity", false);
       switch (filters.time) {
@@ -584,7 +591,7 @@ class SupabaseDataAccessor implements DataAccessor {
           .from("booking")
           .select(`
             *,
-            workshop:workshop_id(name,user_id,meeting_link),
+            workshop:workshop_id(name,user_id,meeting_link,virtual,postcode,city,meeting_place),
             slot:slot_id(date,start_time,end_time)
           `)
           .eq(`slot_id`, slot.id)

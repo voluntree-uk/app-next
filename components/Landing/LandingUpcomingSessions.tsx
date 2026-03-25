@@ -52,7 +52,7 @@ export default function LandingUpcomingSessions({ sessions }: IProps) {
             Upcoming Sessions
           </Heading>
           <Text fontSize="md" color="gray.600">
-            Book a spot in one of these upcoming workshops
+            Book a spot in one of these upcoming workshops.
           </Text>
         </Box>
 

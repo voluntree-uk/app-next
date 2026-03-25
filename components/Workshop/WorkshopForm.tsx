@@ -23,7 +23,9 @@ import {
   Radio,
   RadioGroup,
   Flex,
-  Tooltip,
+  Alert,
+  AlertDescription,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { capitalize } from "lodash";
 import { BiMap, BiVideo } from "react-icons/bi";
@@ -39,6 +41,8 @@ interface WorkshopFormData {
   description: string;
   virtual: boolean;
   city?: string;
+  postcode?: string;
+  meeting_place?: string;
 }
 
 export default function WorkshopForm({ user }: { user: User }) {
@@ -75,6 +79,8 @@ export default function WorkshopForm({ user }: { user: User }) {
         category: data.category,
         virtual: data.virtual,
         city: data.virtual ? undefined : data.city,
+        postcode: data.virtual ? undefined : data.postcode?.toUpperCase().trim(),
+        meeting_place: data.virtual ? undefined : data.meeting_place,
       };
 
       try {
@@ -101,12 +107,12 @@ export default function WorkshopForm({ user }: { user: User }) {
       } catch (error) {
         toast({
           title: "Failed to create workshop",
-          description: "Please finish setting up your profile",
+          description: "Please try again later",
           status: "error",
           duration: 4000,
           isClosable: true,
         });
-        router.push("/me");
+        router.push("/");
         setLoading(false);
       }
     }
@@ -146,7 +152,7 @@ export default function WorkshopForm({ user }: { user: User }) {
                 </FormLabel>
                 <Input
                   id="name"
-                  placeholder="e.g., Intro to Web Development"
+                  placeholder="e.g. Intro to Web Development"
                   size="md"
                   {...register("name", {
                     required: "Workshop name is required",
@@ -227,71 +233,109 @@ export default function WorkshopForm({ user }: { user: User }) {
                         </VStack>
                       </HStack>
                     </Box>
-                    <Tooltip
-                      label="In-person workshops are not available yet. We're working on securing communal spaces where hosts can run their workshops. Once available, we'll notify all users."
-                      hasArrow
-                      placement="top"
-                      bg="gray.700"
-                      color="white"
-                      px={4}
-                      py={2}
-                      borderRadius="md"
-                      fontSize="sm"
-                      maxW="300px"
+                    <Box
+                      as="label"
+                      cursor="pointer"
+                      borderWidth="2px"
+                      borderColor={!isVirtual ? "blue.500" : "gray.200"}
+                      borderRadius="lg"
+                      p={4}
+                      bg={!isVirtual ? "blue.50" : "white"}
+                      _hover={{ borderColor: !isVirtual ? "blue.600" : "gray.300" }}
+                      transition="all 0.2s"
                     >
-                      <Box
-                        borderWidth="2px"
-                        borderColor="gray.200"
-                        borderRadius="lg"
-                        p={4}
-                        bg="gray.50"
-                        opacity={0.6}
-                        cursor="not-allowed"
-                        transition="all 0.2s"
-                        position="relative"
-                        onClick={(e) => e.preventDefault()}
-                        onMouseDown={(e) => e.preventDefault()}
-                      >
-                        <Radio value="in-person" size="lg" colorScheme="blue" display="none" disabled />
-                        <HStack spacing={3}>
-                          <Box as={BiMap} fontSize="xl" color="gray.400" />
-                          <VStack align="start" spacing={0}>
-                            <Text fontWeight="semibold" color="gray.500">
-                              In-Person
-                            </Text>
-                            <Text fontSize="sm" color="gray.500">
-                              Meet at a physical location
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                    </Tooltip>
+                      <Radio value="in-person" size="lg" colorScheme="blue" display="none" />
+                      <HStack spacing={3}>
+                        <Box as={BiMap} fontSize="xl" color={!isVirtual ? "blue.500" : "gray.400"} />
+                        <VStack align="start" spacing={0}>
+                          <Text fontWeight="semibold" color={!isVirtual ? "blue.700" : "gray.700"}>
+                            In-Person
+                          </Text>
+                          <Text fontSize="sm" color="gray.600">
+                            Meet at a physical location
+                          </Text>
+                        </VStack>
+                      </HStack>
+                    </Box>
                   </Stack>
                 </RadioGroup>
               </FormControl>
 
-              {/* City (only for in-person) */}
+              {/* In-person location (only when in-person) */}
               {!isVirtual && (
-                <FormControl isInvalid={!!errors.city}>
-                  <FormLabel htmlFor="city" fontSize="md" fontWeight="semibold" color="gray.700">
-                    City
-                  </FormLabel>
-                  <Input
-                    id="city"
-                    placeholder="e.g., London, Manchester, Birmingham"
-                    size="lg"
-                    {...register("city", {
-                      required: !isVirtual ? "City is required for in-person workshops" : false,
-                    })}
-                  />
-                  {errors.city ? (
-                    <FormErrorMessage>{errors.city.message}</FormErrorMessage>
-                  ) : (
-                    <FormHelperText color="gray.500">
-                      The city where your workshop will take place
-                    </FormHelperText>
-                  )}
-                </FormControl>
+                <>
+                  <Alert status="info" borderRadius="md" bg="blue.50">
+                    <AlertIcon />
+                    <AlertDescription>
+                      We encourage meeting in a public space, e.g. a park, cafe, or library, so everyone feels safe and welcome.
+                    </AlertDescription>
+                  </Alert>
+                  <FormControl isInvalid={!!errors.meeting_place}>
+                    <FormLabel htmlFor="meeting_place" fontSize="md" fontWeight="semibold" color="gray.700">
+                      Name of the place
+                    </FormLabel>
+                    <Input
+                      id="meeting_place"
+                      placeholder="e.g. College Green, The Coffee House, Central Library"
+                      size="md"
+                      {...register("meeting_place", {
+                        required: "Name of the place is required for in-person sessions",
+                        minLength: {
+                          value: 2,
+                          message: "Please enter the name of the venue or public space",
+                        },
+                      })}
+                    />
+                    {errors.meeting_place ? (
+                      <FormErrorMessage>{errors.meeting_place.message}</FormErrorMessage>
+                    ) : (
+                      <FormHelperText color="gray.500">
+                        The cafe, park, library, or other public space where you'll meet
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                  <FormControl isInvalid={!!errors.city}>
+                    <FormLabel htmlFor="city" fontSize="md" fontWeight="semibold" color="gray.700">
+                      City
+                    </FormLabel>
+                    <Input
+                      id="city"
+                      placeholder="e.g. Bristol, London, Manchester"
+                      size="md"
+                      {...register("city", {
+                        required: "City is required for in-person sessions",
+                      })}
+                    />
+                    {errors.city ? (
+                      <FormErrorMessage>{errors.city.message}</FormErrorMessage>
+                    ) : (
+                      <FormHelperText color="gray.500">
+                        The city where the session will take place
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                  <FormControl isInvalid={!!errors.postcode}>
+                    <FormLabel htmlFor="postcode" fontSize="md" fontWeight="semibold" color="gray.700">
+                      Postcode
+                    </FormLabel>
+                    <Input
+                      id="postcode"
+                      placeholder="e.g. BS1 5TJ"
+                      size="md"
+                      maxLength={8}
+                      {...register("postcode", {
+                        required: "Postcode is required for in-person sessions",
+                      })}
+                    />
+                    {errors.postcode ? (
+                      <FormErrorMessage>{errors.postcode.message}</FormErrorMessage>
+                    ) : (
+                      <FormHelperText color="gray.500">
+                        UK postcode
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </>
               )}
 
               {/* Description */}
@@ -299,9 +343,12 @@ export default function WorkshopForm({ user }: { user: User }) {
                 <FormLabel htmlFor="description" fontSize="md" fontWeight="semibold" color="gray.700">
                   Description
                 </FormLabel>
+                <FormHelperText color="gray.500" mt={0} mb={2}>
+                  Write at least {minDescriptionLength} characters so attendees know what to expect
+                </FormHelperText>
                 <Textarea
                   id="description"
-                  placeholder="Describe what learners will gain from your workshop. Include topics covered, skill level required, and what makes your workshop unique..."
+                  placeholder="Describe what attendees will gain from your workshop. Include topics covered, skill level required, and what makes your workshop unique..."
                   minH="200px"
                   size="md"
                   {...register("description", {
@@ -312,15 +359,11 @@ export default function WorkshopForm({ user }: { user: User }) {
                     },
                   })}
                 />
-                <Flex justify="space-between" mt={2}>
-                  {errors.description ? (
+                <Flex justify="space-between" align="center" mt={2} gap={3} flexWrap="wrap">
+                  {errors.description && (
                     <FormErrorMessage mb={0}>
                       {errors.description.message}
                     </FormErrorMessage>
-                  ) : (
-                    <FormHelperText color="gray.500" mb={0}>
-                      Provide detailed information to help learners understand what they'll learn
-                    </FormHelperText>
                   )}
                   <Text
                     fontSize="sm"
@@ -329,11 +372,17 @@ export default function WorkshopForm({ user }: { user: User }) {
                         ? "red.500"
                         : descriptionLength < minDescriptionLength + 50
                         ? "orange.500"
-                        : "gray.500"
+                        : "green.600"
                     }
                     fontWeight="medium"
+                    whiteSpace="nowrap"
                   >
-                    {descriptionLength} / {minDescriptionLength} characters
+                    {descriptionLength < minDescriptionLength && (
+                      <>
+                        add at least{" "}
+                        {minDescriptionLength - descriptionLength} more characters (minimum {minDescriptionLength})
+                      </>
+                    )}
                   </Text>
                 </Flex>
               </FormControl>

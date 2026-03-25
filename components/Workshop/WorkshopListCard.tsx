@@ -155,7 +155,6 @@ export default function WorkshopCard({ item, navigate }: IProps) {
             />
             <VStack align="flex-start" spacing={0}>
               <HStack spacing={1}>
-                <Box as={BiUser} fontSize="xs" color="gray.500" />
                 <Text fontSize="xs" color="gray.600" fontWeight="medium">
                   {hostName}
                 </Text>

@@ -24,6 +24,7 @@ export interface Workshop {
   street?: string;
   postcode?: string;
   city?: string;
+  meeting_place?: string;
   virtual: boolean;
   meeting_link?: string;
 }
@@ -78,11 +79,14 @@ export enum SortOption {
   MOST_POPULAR = "most_popular"
 }
 
+export type LocationFilter = "all" | "online" | "in-person";
+
 export interface FilterProps {
   text: string;
   category: string;
   time: TimeFilter;
   sort: SortOption;
+  location: LocationFilter;
 }
 
 export interface PlatformStats {
@@ -104,8 +108,9 @@ export const DefaultFilterProps: FilterProps = {
   text: "",
   category: "",
   time: TimeFilter.ANY_TIME,
-  sort: SortOption.SOONEST
-}
+  sort: SortOption.SOONEST,
+  location: "all",
+};
 
 export interface UpcomingSession {
   workshop: Workshop;

@@ -4,7 +4,7 @@ import { createBrowserlessClient } from "@util/supabase/server";
 import { unstable_cache } from "next/cache";
 import { SupabaseDataAccessor } from "@data/supabase";
 import WorkshopList from "@components/Workshop/WorkshopList";
-import { FilterProps, DefaultFilterProps, TimeFilter, SortOption } from "@schemas";
+import { FilterProps, DefaultFilterProps, TimeFilter, SortOption, LocationFilter } from "@schemas";
 
 interface PageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -16,6 +16,7 @@ function parseFiltersFromSearchParams(searchParams: PageProps["searchParams"]): 
     category: (searchParams.category as string) || DefaultFilterProps.category,
     time: (searchParams.time as TimeFilter) || DefaultFilterProps.time,
     sort: (searchParams.sort as SortOption) || DefaultFilterProps.sort,
+    location: (searchParams.location as LocationFilter) || DefaultFilterProps.location,
   };
 }
 
@@ -26,7 +27,7 @@ function getWorkshopsData(filters: FilterProps) {
       const data = new SupabaseDataAccessor(supabase);
       return await data.filterAvailableWorkshops(filters);
     },
-    [`workshops-${filters.text}-${filters.category}-${filters.time}-${filters.sort}`],
+    [`workshops-${filters.text}-${filters.category}-${filters.time}-${filters.sort}-${filters.location}`],
     { revalidate: 300 } // Revalidate every 5 minutes
   )();
 }
