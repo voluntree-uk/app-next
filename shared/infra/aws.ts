@@ -82,7 +82,6 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
             location: workshopToReadableAddress(booking.workshop),
           },
         }
-        console.log(JSON.stringify(data));
         this.axios_instance.post(
           `${apiGatewayBaseUrl}/booking/confirm`,
           JSON.stringify(data),
