@@ -74,8 +74,6 @@ const team: TeamMember[] = [
   },
 ];
 
-const calendarLink = process.env.NEXT_PUBLIC_COMMUNITY_CALENDAR_LINK || "";
-
 const SectionHeader = ({ text }: { text: string }) => {
   return (
     <Heading
@@ -89,7 +87,7 @@ const SectionHeader = ({ text }: { text: string }) => {
   );
 };
 
-export default function AboutPage() {
+export default function AboutPage({ calendarLink }: { calendarLink: string }) {
   return (
     <Container p={{ base: "6", sm: "0" }} maxW={"7xl"}>
       <Stack spacing={{ base: 12, md: 16 }}>
@@ -212,7 +210,7 @@ export default function AboutPage() {
                   </Button>
                 </Stack>
                 <Text fontSize="xs" color="green.700" mt={2} textAlign="center">
-                  Mondays at 6pm UK time • Every two weeks
+                  Wednesdays at 6pm UK time • Every two weeks
                 </Text>
               </Box>
             </Stack>
