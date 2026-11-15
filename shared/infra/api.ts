@@ -62,6 +62,8 @@ export interface InfrastructureAPI {
    * @param message The contact's message
    */
   contactUs({name, email, purpose, message}: {name: string, email: string, purpose: string, message: string}): Promise<void>
+
+  subscribeNewsletter(email: string, source: "landing" | "about"): Promise<void>
 }
 
 export enum ActionTrigger {
