@@ -9,6 +9,7 @@ import LandingHowItWorks from "@components/Landing/LandingHowItWorks";
 import LandingInvite from "@components/Landing/LandingInvite";
 import LandingDonateCTA from "@components/Landing/LandingDonateCTA";
 import { UpcomingSession, PlatformStats } from "@schemas";
+import NewsletterSubscribe from "@components/Newsletter/NewsletterSubscribe";
 
 interface LandingProps {
   upcomingSessions: UpcomingSession[];
@@ -26,6 +27,7 @@ export default function Landing({
         <LandingUpcomingSessions sessions={upcomingSessions} />
         <LandingDonateCTA />
         <LandingBenefits />
+        <NewsletterSubscribe source="landing" />
         <LandingHowItWorks />
         <LandingInvite />
       </Stack>
