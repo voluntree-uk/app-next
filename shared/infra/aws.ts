@@ -277,7 +277,11 @@ async subscribeNewsletter(email:string, source: "landing" | "about"): Promise<vo
       source,
     };
 
-    await this.axios_instance.post(`${apiGatewayBaseUrl}/subscribe`,data);
+    await this.axios_instance
+      .post(`${apiGatewayBaseUrl}/newsletter/subscribe`, JSON.stringify(data))
+      .catch((err) => {
+        console.error(`Failed to subscribe to newsletter: ${err}`);
+      });
   }
 }
 
