@@ -270,6 +270,15 @@ class AWSInfrastructureAPI implements InfrastructureAPI {
         console.error(`Failed to send contact form email: ${err}`);
       });
   }
+
+async subscribeNewsletter(email:string, source: "landing" | "about"): Promise<void> {
+    const data = {
+      email: email.trim().toLowerCase(),
+      source,
+    };
+
+    await this.axios_instance.post(`${apiGatewayBaseUrl}/subscribe`,data);
+  }
 }
 
 const apiGatewayBaseUrl: string = process.env.NEXT_PUBLIC_AWS_GATEWAY_BASE_URL || "";

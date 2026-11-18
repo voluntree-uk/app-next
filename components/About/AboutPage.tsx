@@ -13,6 +13,7 @@ import {
 import ValueList from "@components/About/ValueList";
 import TeamGrid from "@components/About/TeamGrid";
 import { AboutValue, TeamMember } from "@schemas";
+import NewsletterSubscribe from "@components/Newsletter/NewsletterSubscribe";
 
 const values: AboutValue[] = [
   {
@@ -151,6 +152,8 @@ export default function AboutPage({ calendarLink }: { calendarLink: string }) {
           </Stack>
         </Stack>
 
+        <NewsletterSubscribe source="about" />
+        
         {/* Team */}
         <Stack spacing={{ base: 8, md: 10 }}>
           <Stack spacing={5} mt={{ base: 4, md: 6 }}>
